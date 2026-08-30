@@ -434,6 +434,99 @@ larger product phase remains.
       distilled Attach context are complete locally. Deploy ai-proxy first, then Pages,
       and live-test RLS, conflict handling, resume, distillation, and export.
 
+## Owner vision — adaptive interfaces and persona workspaces (2026-08-30)
+
+Everything in this section is proposed roadmap scope, not implemented or approved for
+release. It extends the existing declarative page designer, persona view, private context,
+business governance, and Personas desktop-companion direction.
+
+### Near-term MyPersonas owner experience
+
+- [ ] **Business / manager relationships:** add explicit owner-invited relationships
+      between businesses, personas, and their managers. This is separate from shared
+      provider-account management. Each relationship needs a bounded role, permission
+      set, scope, acceptance state, optional expiry, revocation, and audit history; a
+      manager relationship never implies account ownership, legal authority, access to
+      private canon, or provider credentials.
+- [ ] **Pinned Save control:** keep the primary Save bar pinned to the bottom safe area on
+      long persona, page, business, and manager editors. It must show dirty/saving/saved/
+      conflict state, stay keyboard-accessible, avoid covering the last field, and retain
+      the existing review invalidation and AAL2 rules for sensitive changes.
+- [ ] **Dismissible companion dialogue:** give the dialogue window above the selected
+      persona in the lower-left companion a clear Close control. Remember the owner's
+      preference without deleting the conversation, provide a visible way to restore it,
+      and keep persona selection synchronized across routes, reloads, and history.
+
+### AI-assisted interface and audience-specific pages
+
+- [ ] **AI-assisted interface studio:** let an owner describe how their AliaSpaces
+      interface should work and have AI generate a bounded declarative layout, theme,
+      and widget configuration. Preview generated changes as a visual diff before using
+      them. Do not execute arbitrary public JavaScript or give generated code access to
+      secrets, provider tokens, local files, owner-private data outside its declared
+      inputs, or unrestricted network destinations.
+- [ ] **Ephemeral customization sandbox:** run generated interface code/configuration in
+      an isolated, capability-allowlisted sandbox with CPU, memory, time, storage, and
+      network ceilings. Reset the sandbox on logout, account switch, session expiry, or
+      owner request. A sandbox result is never automatically a public-page revision.
+- [ ] **Saved templates and defaults:** let owners save reviewed interface templates,
+      version them, name the persona/audience/device scopes they apply to, and choose an
+      explicit default workspace for login. Preserve a known-safe reset template and
+      allow rollback; saving a template retains configuration, not the sandbox's runtime
+      state or secrets.
+- [ ] **Audience-specific page compositions:** support separately reviewed page variants
+      for family, friends, fans/followers, and new or anonymous visitors. Variants may
+      change layout, navigation, boxes, and data sources—not only hide fields. Examples:
+      music-first, products/offers-first, brand-feed-first, personal-feed-first, or a
+      minimal introduction. The server must determine the viewer relationship; blocks,
+      mutes, age gates, page visibility, and field-level privacy always override layout.
+      Include deterministic fallback rules and owner previews for each audience class so
+      an absent or stale relationship can never expose a more privileged variant.
+- [ ] **Trending-post collage background:** offer a continuously scrolling collage of
+      eligible top-trending public posts on the main interface. Ranking must exclude
+      private/unlisted/unreviewed content, honor blocks, mutes, age and topic filters,
+      resist manipulation, and expose why an item is present. Provide Pause, reduced-
+      motion, low-data, keyboard, contrast, and screen-reader alternatives; use bounded
+      pagination and media budgets rather than loading the entire feed at once.
+
+### Persona learning and staged change review
+
+- [ ] **Learning-to-staging pipeline:** as research develops and a persona "learns," AI
+      may propose staged patches to the biography, personality traits, private/public
+      context, and document repository. Every proposal must include its source/evidence,
+      model or tool, timestamp, exact before/after diff, confidence or uncertainty, and
+      public/private/canon classification. Research results are proposals, not lived
+      experience or established canon.
+- [ ] **Field-by-field approval and history:** let the owner accept, revise, or reject
+      each proposed change independently, retain document versions and provenance, and
+      roll back an accepted revision. Staged learning must never silently edit canon,
+      change a published page, alter personality controls, approve content, or grant a
+      model/provider more access. Any accepted public-page effect returns the page to the
+      existing exact-review workflow.
+
+### Personas desktop companion and command center
+
+- [ ] **Side-scrolling persona selector:** create a horizontal, keyboard-accessible
+      persona rail/carousel for the desktop app with search, grouping, and single- or
+      multi-select. Always show which persona is actively speaking or acting even when a
+      multi-persona workspace is selected.
+- [ ] **Persona-scoped widget command center:** after selecting one or more personas,
+      let the owner compose a dashboard from widgets for the AI tools, social platforms,
+      businesses, feeds, drafts, approvals, research, and documents associated with that
+      selection. Save named widget layouts and choose a reviewed login default. Each
+      widget must resolve permissions and connections per persona; no multi-persona view
+      may merge private context, provider authority, or action approval implicitly.
+- [ ] **Shared web/desktop template contract:** use the same versioned, exportable,
+      resettable template format for web-interface defaults and desktop workspaces where
+      practical, while keeping device-only state local and keeping credentials in their
+      existing server/Vault or local secure-storage boundary.
+
+Suggested delivery order: ship the pinned Save and closable dialogue first; define the
+business/manager and audience-variant authorization models; extend the declarative
+template format; prototype the reset-on-logout sandbox; add sourced staged-learning
+review; then build the desktop multi-persona widget workspace and the moderation-aware
+trending collage.
+
 ## v1 — The platform (major milestone)
 
 - [ ] Persona-to-persona direct messages (privacy-preserving)
