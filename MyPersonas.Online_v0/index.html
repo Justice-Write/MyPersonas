@@ -26,7 +26,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="AliaSpaces">
 <link rel="apple-touch-icon" sizes="180x180" href="./brand/app-icon/icon-180.png">
-<link rel="stylesheet" href="./owner-app.css?v=20260829-1">
+<link rel="stylesheet" href="./owner-app.css?v=20260831-1">
 <link rel="stylesheet" href="./persona-view.css?v=20260822-2">
 <link rel="stylesheet" href="./platform-governance.css?v=20260822-1">
 <link rel="stylesheet" href="./agent-board.css?v=20260822-2">
@@ -81,10 +81,14 @@ body.stale main{opacity:.55;pointer-events:none;filter:grayscale(.4)}
 label{display:block;font-size:13px;color:var(--dim);margin:12px 0 4px;font-weight:600}
 .field-help{position:relative;display:inline-grid;place-items:center;width:18px;height:18px;margin-left:4px;border:1px solid #9aabc0;border-radius:50%;background:#f7faff;color:#35628f;font-size:12px;font-weight:850;line-height:1;vertical-align:-3px;cursor:help;outline:none}
 .field-help:hover,.field-help:focus{border-color:var(--accent);background:#eaf3ff;color:#125fb9;box-shadow:0 0 0 2px rgba(24,119,242,.14)}
-.field-help-popover{position:absolute;left:50%;top:calc(100% + 9px);z-index:420;width:min(350px,calc(100vw - 40px));padding:12px 13px;border:1px solid #cdd9e8;border-radius:10px;background:#102a49;color:#fff;font-size:12px;font-weight:450;line-height:1.45;letter-spacing:0;white-space:normal;text-align:left;box-shadow:0 10px 28px rgba(15,39,73,.25);opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,4px);transition:opacity .12s ease,transform .12s ease,visibility .12s ease}
+.field-help-popover{position:absolute;left:auto;right:0;top:calc(100% + 9px);z-index:420;width:min(350px,calc(100vw - 40px));padding:12px 13px;border:1px solid #cdd9e8;border-radius:10px;background:#102a49;color:#fff;font-size:12px;font-weight:450;line-height:1.45;letter-spacing:0;white-space:normal;text-align:left;box-shadow:0 10px 28px rgba(15,39,73,.25);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(4px);transition:opacity .12s ease,transform .12s ease,visibility .12s ease}
 .field-help-popover strong{display:block;margin-bottom:4px;color:#fff;font-size:13px}.field-help-popover em{display:block;margin-top:8px;color:#a9d1ff;font-style:normal;font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:10px}.field-help-example{display:block;margin-top:3px;color:#eef6ff;white-space:pre-wrap;font-family:inherit}
-.field-help:hover .field-help-popover,.field-help:focus .field-help-popover{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.field-help:hover .field-help-popover,.field-help:focus .field-help-popover{opacity:1;visibility:visible;transform:translateY(0)}
 @media(max-width:600px){.field-help-popover{position:fixed;left:16px;right:16px;top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 82px);width:auto;transform:translateY(4px)}.field-help:hover .field-help-popover,.field-help:focus .field-help-popover{transform:translateY(0)}}
+.persona-edit-footer{min-height:86px;padding-bottom:70px}
+.persona-edit-save-dock{position:fixed;left:calc((100vw + 214px)/2);bottom:calc(12px + env(safe-area-inset-bottom));z-index:155;width:min(884px,calc(100vw - 262px));display:flex;gap:8px;justify-content:flex-end;padding:10px 12px;border:1px solid rgba(196,209,226,.95);border-radius:15px;background:rgba(255,255,255,.96);box-shadow:0 14px 38px rgba(15,39,73,.2);backdrop-filter:blur(12px);transform:translateX(-50%)}
+.persona-edit-save-dock .btn{min-height:44px}
+@media(max-width:820px){.persona-edit-footer{padding-bottom:154px}.persona-edit-save-dock{left:50%;bottom:calc(92px + env(safe-area-inset-bottom));width:calc(100vw - 24px)}}
 input,select,textarea{width:100%;background:#fff;border:1px solid #ccd0d5;border-radius:8px;color:var(--text);padding:10px 12px;font-size:15px;font-family:inherit}
 textarea{resize:vertical;min-height:64px}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(24,119,242,.15)}
@@ -144,6 +148,8 @@ input[type=checkbox]{width:auto}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1c1e21;color:#fff;padding:12px 24px;border-radius:8px;display:none;z-index:200;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.3)}
 .empty{text-align:center;color:var(--dim);padding:48px 0;font-size:16px}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:150;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;padding:20px}
+.report-dialog{width:min(560px,100%);max-height:min(720px,calc(100vh - 40px));overflow:auto;text-align:left;color:var(--text);background:#fff;border-radius:16px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.report-dialog h2{margin:0 0 8px}.report-dialog p{margin:0 0 14px}.report-dialog textarea{min-height:150px;resize:vertical}.report-dialog-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:16px}
 .linkrow{display:flex;gap:8px;align-items:center;margin-bottom:6px}
 .gate h2{font-size:24px;font-weight:800;margin-bottom:10px}
 a{color:var(--accent)}
@@ -447,15 +453,16 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
     <button id="ownerCompanionDialogue" class="oa-companion-dialogue" type="button" onclick="ownerAppOpenCompanionNotice()" aria-live="polite" aria-describedby="ownerCompanionMessage">
       <span id="ownerCompanionKicker">Ready</span><b id="ownerCompanionMessage">Choose what we work on next.</b>
     </button>
+    <button id="ownerCompanionDialogueClose" class="oa-companion-dialogue-close" type="button" onclick="ownerAppDismissCompanionTagline()" aria-label="Close companion message" title="Close companion message" hidden>×</button>
     <div class="oa-companion-card">
       <button id="ownerCompanionPortrait" class="oa-companion-portrait" type="button" onclick="ownerAppTalkToCompanion()" aria-label="Chat with selected persona"><span id="ownerCompanionBadge" hidden></span></button>
       <div class="oa-companion-copy"><b id="ownerCompanionName">Persona</b><small id="ownerCompanionHandle">Owner companion</small>
-        <div class="oa-companion-actions"><button id="pageChatBtn" type="button" onclick="openHQ()" title="Open HQ Assistant">HQ</button><button type="button" onclick="reportError()" title="Report a problem" aria-label="Report a problem">🐞</button></div>
+        <div class="oa-companion-actions"><button id="pageChatBtn" type="button" onclick="openHQ()" title="Open HQ Assistant">HQ</button><button id="ownerCompanionDialogueRestore" type="button" onclick="ownerAppRestoreCompanionTagline()" title="Show the companion message again" hidden>Show message</button><button type="button" onclick="reportError()" title="Report a problem" aria-label="Report a problem">🐞</button></div>
       </div>
     </div>
   </aside>
 </div>
-<script src="./owner-app.js?v=20260830-1"></script>
+<script src="./owner-app.js?v=20260831-1"></script>
 <script src="./persona-view.js?v=20260823-1"></script>
 <script src="./platform-governance.js?v=20260830-1"></script>
 <script src="./agent-board.js?v=20260822-4"></script>
@@ -556,13 +563,22 @@ let pageState={},editLinks=[],editInitialLinks=[],editT8=[],editId=null,editAlbu
 let pageLayoutReady=true,editPageLayout=null,editInitialPageLayout=null,editPageSnippets=[],pageBuilderBaseline=null,pendingPageBuilderPersonaId="";
 const app=document.getElementById("app");
 const errBuf=[];
+let reportErrorReturnFocus=null,reportErrorBusy=false;
 function logErr(kind,msg){errBuf.push({t:new Date().toISOString(),kind,msg:String(msg).slice(0,500)});if(errBuf.length>25)errBuf.shift()}
 window.addEventListener("error",e=>logErr("js",e.message+" @ "+e.filename+":"+e.lineno));
 window.addEventListener("unhandledrejection",e=>logErr("promise",e.reason&&e.reason.message||e.reason));
 function toast(m){logErr("toast",m);const t=document.getElementById("toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",2500)}
 function inputsWithinUtf8Limits(rules){for(const rule of rules){const[id,max,label,original]=rule,el=document.getElementById(id),value=el?.value||"",size=new TextEncoder().encode(value).length,unchangedLegacy=rule.length>3&&value===String(original??"");if(size>max&&!unchangedLegacy){toast(`${label} is ${size} bytes; shorten it to ${max} UTF-8 bytes or less`);el?.focus();return false}}return true}
-async function reportError(){
-  const note=prompt("What were you doing when it broke? (optional)")||"";
+function closeReportErrorDialog(){
+  document.getElementById("reportErrorOv")?.remove();
+  const target=reportErrorReturnFocus;reportErrorReturnFocus=null;
+  if(target?.isConnected)target.focus();
+}
+async function submitErrorReport(){
+  if(reportErrorBusy)return;
+  const overlay=document.getElementById("reportErrorOv"),note=document.getElementById("reportErrorNote")?.value||"",send=document.getElementById("reportErrorSend");
+  if(!overlay)return;
+  reportErrorBusy=true;if(send){send.disabled=true;send.textContent="Sending…"}
   try{
     const{data:au}=await sb.auth.getUser();
     if(!au?.user){toast("Sign in to send a private diagnostic report");return}
@@ -571,8 +587,22 @@ async function reportError(){
       p_context:{page:location.hash.slice(0,500),user_agent:navigator.userAgent.slice(0,300),recent:errBuf.slice(-15).map(row=>({kind:String(row.kind||"").slice(0,40),message:governanceRedactExternalText(row.msg||"").slice(0,500)}))}
     });
     if(error)throw error;
+    closeReportErrorDialog();
     toast("Report sent — thank you");
   }catch(e){toast("Couldn't send report: "+e.message)}
+  finally{reportErrorBusy=false;if(send?.isConnected){send.disabled=false;send.textContent="Send private report"}}
+}
+async function reportError(){
+  const existing=document.getElementById("reportErrorOv");if(existing){document.getElementById("reportErrorNote")?.focus();return}
+  try{
+    const{data:au}=await sb.auth.getUser();
+    if(!au?.user){toast("Sign in to send a private diagnostic report");return}
+  }catch(e){toast("Couldn't open the report form: "+e.message);return}
+  reportErrorReturnFocus=document.activeElement;
+  const overlay=document.createElement("div");overlay.className="overlay";overlay.id="reportErrorOv";
+  overlay.innerHTML=`<div class="report-dialog" role="dialog" aria-modal="true" aria-labelledby="reportErrorTitle" aria-describedby="reportErrorDescription"><h2 id="reportErrorTitle">Report a problem</h2><p id="reportErrorDescription">Describe what you were doing. The report privately includes this page, your browser type, and recent in-app errors. Never include passwords, verification codes, recovery codes, cookies, or API keys.</p><label for="reportErrorNote">What happened? <span class="muted">(optional)</span></label><textarea id="reportErrorNote" maxlength="1000" placeholder="What did you expect, and what happened instead?"></textarea><div class="report-dialog-actions"><button class="btn sec" type="button" onclick="closeReportErrorDialog()">Cancel</button><button class="btn" id="reportErrorSend" type="button" onclick="submitErrorReport()">Send private report</button></div></div>`;
+  overlay.addEventListener("keydown",event=>{if(event.key==="Escape"){event.preventDefault();closeReportErrorDialog()}});
+  document.body.appendChild(overlay);document.getElementById("reportErrorNote")?.focus();
 }
 function esc(s){return (s||"").toString().replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 const PERSONA_FIELD_GUIDES=Object.freeze({
@@ -3132,9 +3162,9 @@ async function renderEdit(id,epoch=++renderEpoch){
     <h3>Private notes (only you can ever see these — account emails, reminders. Never store passwords.) ${fieldHelp("privateNotes","Private notes")}</h3>
     <textarea id="eNotes" placeholder="${fieldTemplate("privateNotes")}">${esc(notes.content||"")}</textarea>
     </div>
-    <div style="display:flex;gap:8px;margin-top:16px;justify-content:space-between">
+    <div class="persona-edit-footer" style="display:flex;gap:8px;margin-top:16px;justify-content:space-between">
       ${editId?`<button class="btn danger" onclick="deletePersona()">Delete persona</button>`:"<span></span>"}
-      <div style="display:flex;gap:8px">
+      <div class="persona-edit-save-dock" role="group" aria-label="Persona editor actions">
         <button class="btn sec" onclick="go('studio')">Cancel</button>
         <button class="btn" onclick="savePersona()">Save</button>
       </div>
@@ -3454,11 +3484,11 @@ function openChat(opts){
     ${opts.personaId&&!opts.extract?`<button class="btn sm" style="background:rgba(255,255,255,.25);box-shadow:none" onclick="openChatWorkspaces('${opts.personaId}')">Workspaces</button><button class="btn sm" style="background:rgba(255,255,255,.25);box-shadow:none" onclick="openAttachContext()">Attach</button><button class="btn sm" style="background:rgba(255,255,255,.25);box-shadow:none" onclick="saveChatToContext()">Save context</button>`:""}
     ${opts.extract||opts.allowSaveDraft===false?"":`<button class="btn sm" style="background:rgba(255,255,255,.25);box-shadow:none" onclick="saveChatDraft()">${esc(opts.saveDraftLabel||"Save draft")}</button>`}
     <button class="btn sm" style="background:rgba(255,255,255,.25);box-shadow:none" onclick="clearChatHistory()">Clear</button>
-    <button class="btn sm" style="background:rgba(255,255,255,.25);box-shadow:none" onclick="closeChat()">✕</button></span></div>
+    <button class="btn sm" style="background:rgba(255,255,255,.25);box-shadow:none" onclick="closeChat()" aria-label="Close persona chat" title="Close persona chat">✕</button></span></div>
     <div class="chatattached" id="chatAttached"></div>
     <div class="cm" id="chatMsgs"></div>
     <div class="ci"><textarea id="chatIn" placeholder="type…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend()}"></textarea>
-    <button class="btn" onclick="chatSend()">➤</button></div>`;
+    <button class="btn" onclick="chatSend()" aria-label="Send message" title="Send message">➤</button></div>`;
   document.body.appendChild(d);
   renderChatMsgs();
   loadChatHistory(opts.autoSend||"");

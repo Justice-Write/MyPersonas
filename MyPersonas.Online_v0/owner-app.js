@@ -414,7 +414,28 @@ function ownerAppDismissCompanionTagline(action = ownerAppState.companionAction 
   }
   const dialogue = document.getElementById("ownerCompanionDialogue");
   if (dialogue) dialogue.hidden = true;
-  document.getElementById("ownerCompanionPortrait")?.focus();
+  const close = document.getElementById("ownerCompanionDialogueClose");
+  const restore = document.getElementById("ownerCompanionDialogueRestore");
+  if (close) close.hidden = true;
+  if (restore) { restore.hidden = false; restore.focus(); }
+  else document.getElementById("ownerCompanionPortrait")?.focus();
+  return true;
+}
+
+function ownerAppRestoreCompanionTagline(action = ownerAppState.companionAction || ownerAppCompanionNotice(ownerAppPersona())) {
+  if (action?.kind !== "tagline") return false;
+  const persona = ownerAppPersona();
+  const key = ownerAppCompanionTaglineKey(persona?.id);
+  if (key) {
+    try { sessionStorage.removeItem(key); } catch (_) {}
+  }
+  const dialogue = document.getElementById("ownerCompanionDialogue");
+  const close = document.getElementById("ownerCompanionDialogueClose");
+  const restore = document.getElementById("ownerCompanionDialogueRestore");
+  if (dialogue) dialogue.hidden = false;
+  if (close) close.hidden = false;
+  if (restore) restore.hidden = true;
+  dialogue?.focus();
   return true;
 }
 
@@ -429,6 +450,8 @@ function ownerAppSyncCompanion() {
   const kicker = document.getElementById("ownerCompanionKicker");
   const message = document.getElementById("ownerCompanionMessage");
   const dialogue = document.getElementById("ownerCompanionDialogue");
+  const dialogueClose = document.getElementById("ownerCompanionDialogueClose");
+  const dialogueRestore = document.getElementById("ownerCompanionDialogueRestore");
   if (portrait) {
     const avatar = safeHttpUrl(persona?.avatar_url || "");
     portrait.style.backgroundImage = avatar ? `url("${avatar.replace(/["\\]/g, "")}")` : "";
@@ -443,8 +466,9 @@ function ownerAppSyncCompanion() {
   ownerAppState.companionAction = ownerAppCompanionNotice(persona);
   const action = ownerAppState.companionAction;
   const tagline = action.kind === "tagline";
+  const taglineHidden = tagline && ownerAppCompanionTaglineDismissed(persona, action);
   if (dialogue) {
-    dialogue.hidden = tagline && ownerAppCompanionTaglineDismissed(persona, action);
+    dialogue.hidden = taglineHidden;
     if (tagline) {
       dialogue.dataset.dismissible = "true";
       dialogue.setAttribute("aria-label", `Hide ${persona.name} tagline`);
@@ -455,6 +479,8 @@ function ownerAppSyncCompanion() {
       dialogue.title = action.kind === "chat" ? "Chat with selected persona" : `Open ${action.kicker}`;
     }
   }
+  if (dialogueClose) dialogueClose.hidden = !tagline || taglineHidden;
+  if (dialogueRestore) dialogueRestore.hidden = !tagline || !taglineHidden;
   if (kicker) kicker.textContent = action.kicker;
   if (message) message.textContent = action.message;
 }

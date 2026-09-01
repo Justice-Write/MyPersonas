@@ -436,9 +436,9 @@ larger product phase remains.
 
 ## Owner vision — adaptive interfaces and persona workspaces (2026-08-30)
 
-Everything in this section is proposed roadmap scope, not implemented or approved for
-release. It extends the existing declarative page designer, persona view, private context,
-business governance, and Personas desktop-companion direction.
+This section extends the existing declarative page designer, persona view, private context,
+business governance, and Personas desktop-companion direction. Items remain proposed unless
+their own status says otherwise; local completion is not deployment approval.
 
 ### Near-term MyPersonas owner experience
 
@@ -448,14 +448,16 @@ business governance, and Personas desktop-companion direction.
       set, scope, acceptance state, optional expiry, revocation, and audit history; a
       manager relationship never implies account ownership, legal authority, access to
       private canon, or provider credentials.
-- [ ] **Pinned Save control:** keep the primary Save bar pinned to the bottom safe area on
-      long persona, page, business, and manager editors. It must show dirty/saving/saved/
-      conflict state, stay keyboard-accessible, avoid covering the last field, and retain
-      the existing review invalidation and AAL2 rules for sensitive changes.
-- [ ] **Dismissible companion dialogue:** give the dialogue window above the selected
-      persona in the lower-left companion a clear Close control. Remember the owner's
-      preference without deleting the conversation, provide a visible way to restore it,
-      and keep persona selection synchronized across routes, reloads, and history.
+- [~] **Pinned Save control:** the existing-persona editor now has a responsive, accessible
+      pinned action dock above the desktop/mobile safe area. Extend the same dirty/saving/
+      saved/conflict pattern to long page, business, and manager editors before closing this
+      item. The dock must avoid covering the last field and retain the existing review
+      invalidation and AAL2 rules for sensitive changes.
+- [x] **Dismissible companion dialogue (local):** the lower-left companion now has a real,
+      labeled Close control plus a visible Show message action. Dismissal is remembered per
+      owner/persona for the session without deleting any conversation; a changed tagline or
+      actionable notice reopens it, and route/reload persona selection stays synchronized.
+      Deployment remains a separate owner-approved release action.
 
 ### AI-assisted interface and audience-specific pages
 
