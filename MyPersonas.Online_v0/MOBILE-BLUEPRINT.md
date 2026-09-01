@@ -59,6 +59,35 @@ The **app is a companion** for the two things you do daily: **talk to your perso
    (APNs/FCM), biometric unlock, share-sheet ("send this to a persona").
 3. **Deepen** only where native pays off (camera/share for content, background sync).
 
+### Native implementation state (2026-09-01)
+
+- [x] `apps/mobile` is an Expo SDK 57 / React Native / Expo Router TypeScript client with
+  the existing AliaSpaces icon set and a private `.env.example` contract. It never embeds a
+  service-role key; only the public project URL and publishable key are accepted.
+- [x] Native sessions use bounded Expo SecureStore chunks so a Supabase session is not put
+  into plaintext AsyncStorage or truncated at SecureStore's per-value limit. The web export
+  uses AsyncStorage as recommended for its platform. Google login uses Supabase PKCE and a
+  one-time authorization-code exchange; no password or MFA field exists in the client.
+- [x] Persona chat reads `my_personas()`, uses owner-scoped `chat_workspaces`, saves through
+  `append_agent_messages`, and calls the authenticated `ai-proxy` owner-chat contract only
+  after the owner presses Send and acknowledges that the linked model may incur billing.
+- [~] Approvals read current `post_drafts` and show each platform's destination/copy/media/
+  placement/time state. The screen is intentionally non-committing because visibility,
+  disclosures, every exact provider target, and the one-use server preview receipt are not
+  yet frozen there. It links to the existing web review; no native approve/schedule/send/
+  publish action exists until exact-preview receipt parity is implemented and tested.
+- [~] Feed reads the existing owner-only `persona_research_briefs`, exposes stored findings,
+  and opens only valid HTTP(S) source links. This is a sourced briefing stream, not the still-
+  proposed dedicated ranked `feed_items` research pipeline.
+- [x] Local verification passes: dependency install with optional downloader scripts denied,
+  ESLint, strict TypeScript, Expo static export (nine routes), branded asset inspection, and
+  rendered signed-out browser QA. Privacy and Terms destinations returned HTTP 200.
+- [ ] Owner/release gates: privately configure the publishable client values; allow-list
+  `aliaspaces://auth/callback`; personally complete Google consent/login/MFA if requested;
+  live-test RLS/workspace/AI contracts; implement native exact-preview receipt parity; test
+  iOS and Android physical devices; choose bundle IDs/store listings; obtain signing; review
+  accessibility/device security; then separately scope biometric unlock, push, and sharing.
+
 ### App surfaces (v1 of the app)
 
 - **Persona chat** — owner↔persona conversations (the existing `agent_messages` model),

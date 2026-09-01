@@ -427,8 +427,14 @@ larger product phase remains.
       syntax check passes, backup in _to_delete/backups/. PENDING: sticky mobile CTA
       (needs logged-in visual verify) — MOBILE-BLUEPRINT.md
 - [~] Native apps: the PWA manifest/install/public-offline shell is complete locally.
-      Push notifications remain a separate permission/backend phase; Expo/React Native
-      comes later for chat, approvals, share/camera, and the sourced AI feed.
+      A real Expo SDK 57 client now exists at `apps/mobile`: branded iOS/Android shell,
+      encrypted device-session adapter, Google PKCE handoff, owner-scoped persona chat and
+      resumable workspaces, read-only publication-review inventory, and sourced research
+      briefs. Lint, strict TypeScript, static export, and signed-out rendered QA pass locally.
+      It deliberately cannot approve/schedule/publish until the native screen reaches parity
+      with the one-use exact-preview receipt. Owner private environment configuration,
+      redirect allow-list/Google consent, live account tests, physical iOS/Android tests,
+      store identities/signing, push, biometric unlock, and share/camera remain.
 - [~] Chat workspaces: migration 031 APPLIED + verified; owner-scoped list/create/rename/
       pin/resume, workspace messages, inclusion in the full account export, owner-reviewed Save context, and max-three
       distilled Attach context are complete locally. Deploy ai-proxy first, then Pages,
@@ -548,6 +554,10 @@ trending collage.
 - [ ] Moderation pipeline: user reports on content/personas, review queue
 - [~] PWA: install/offline shell complete locally; real-device release verification and
       a separate push-notification permission/subscription/delivery phase remain
+- [~] Expo mobile companion: focused local client is implemented at `apps/mobile`; complete
+      exact-preview receipt parity, live owner-account contract tests, real-device QA,
+      accessibility/device-security review, store identifiers/signing, and distribution
+      before calling either mobile platform released
 - [ ] Custom auth domain (auth.aliaspaces.com) for branded OAuth consent
 - [ ] Profile analytics for owners (views, clicks on links/albums)
 

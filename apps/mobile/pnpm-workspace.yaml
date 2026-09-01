@@ -1,0 +1,6 @@
+allowBuilds:
+  # Optional platform bindings are already present; do not run its postinstall downloader.
+  unrs-resolver: false
+overrides:
+  'decode-uri-component@<=0.4.2': 0.5.0
+  'uuid@<11.1.1': 11.1.1
