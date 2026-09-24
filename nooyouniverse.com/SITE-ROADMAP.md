@@ -1,33 +1,38 @@
 # nooyouniverse.com — Site Roadmap
 
-Updated: 2026-08-26 (Phase 3 deployed and independently verified live) · Owner: Christian · Persona: Cillian O'Sullivan / Noo YouNiverse
+Updated: 2026-09-24 (live-state reconciliation and safe roadmap continuation prepared locally; no new deployment) · Owner: Christian · Persona: Cillian O'Sullivan / Noo YouNiverse
 
 Stack: static site → **Cloudflare Worker with static assets** + Supabase free-tier email waitlist. This is not Cloudflare Pages. GitHub Pages remains a fallback (CNAME file included). Recorded infrastructure cost: $0/month; billing was not re-audited in this session.
 
-## Status — 🟢 LIVE at https://nooyouniverse.com (Phase 3 verified 2026-08-26)
+## Status — 🟢 LIVE at https://nooyouniverse.com (fresh read-only verification 2026-09-24)
 
 | Item | State |
 |---|---|
 | Landing page | ✅ Live |
-| Mission Log — 10 concepts (`/log`) | ✅ Live |
+| Mission Log — 11 entries (`/log`) | ✅ Live; Mission 11 is **Sleep before stack**, published 2026-09-18 |
 | 404 page, robots, sitemap | ✅ Live |
 | Waitlist table + RLS (migration 027) | ✅ Run in Supabase |
-| Waitlist end-to-end | ✅ Previously verified: insert 201 · duplicate 409 · bad email 400 · anon read 401 (denied); not rerun for Phase 3 |
-| Deploy repo `castleism/nooyouniverse` | ✅ Phase 3 commit `e8971ad` pushed to `main` |
-| Cloudflare Worker + apex domain | ✅ HTTPS live; Phase 3 Worker version 4 serves 20 public files |
+| Waitlist end-to-end | ✅ Dated prior verification: insert 201 · duplicate 409 · bad email 400 · anon read 401 (denied); not rerun on 2026-09-24 |
+| Deploy repo `castleism/nooyouniverse` | ✅ Current inspected `origin/main` is `12ca11f`; Mission 11 entered in `5df5dd6` |
+| Canonical source mirror | ⚠️ Mission 11 parity repair prepared and tested on an isolated local branch; not pushed or merged |
+| Cloudflare Worker + apex domain | ✅ `/`, `/log`, `/sources`, `/corrections`, sitemap, robots, and favicon returned `200` on 2026-09-24; custom 404 confirmed |
+| Deploy-only `.deploy-poke` | ⚠️ Still publicly reachable with `200` on 2026-09-24; local deploy candidate removes it, but that cleanup is not deployed |
 | `www.nooyouniverse.com` | ✅ Resolves; pages declare apex canonicals; a host-level redirect is not configured |
 | **Phase 3** — source badges, `/sources`, `/corrections` | ✅ **Verified live — 2026-08-26** |
-| **Package A** — Missions 11–14 | 📝 Four internal copy drafts + four visual candidates — **zero approved; not in site source; not deployed** |
+| **Legacy Package A** — four drafts originally labeled Missions 11–14 | 📝 **Zero approved and zero deployed**; proposed collision-free public numbers are Missions 12–15, pending owner decision |
+| Static security headers | 🧪 Conservative `_headers` candidate and QA prepared locally; not deployed |
 
 ### Outstanding — operations and owner-only follow-up
 
-1. **Repair or revalidate the Cloudflare Git build hook.** The 2026-08-26 push did not automatically create a build. The existing Cloudflare build trigger was therefore invoked manually for the exact pushed commit, and that build completed successfully. Do not assume a future push will deploy until the automatic path is tested again.
-2. **Verify, then delete, 2 recorded test rows** in Supabase → Table Editor → `noo_waitlist`: `deploy-test-2026-08-09@nooyouniverse.com` and one `verify-…@example.com`. Their current presence was not rechecked in this session; confirm exact rows before deletion.
-3. **Optional domain cleanup:** decide whether `www` should redirect to the apex at the host level. It currently serves successfully and declares the apex canonical, but does not redirect the browser.
+1. **Merge the canonical-source parity repair through the protected MyPersonas pull-request workflow.** This records already-public Mission 11 in source; it does not authorize another public content release.
+2. **Approve an exact deploy cleanup/hardening release or keep it on hold.** The local candidate removes the publicly exposed `.deploy-poke` operational note and adds `_headers` with CSP, framing, MIME-sniffing, referrer, and browser-permission controls. It deliberately omits HSTS until the owner accepts the domain-wide operational commitment. Any release still requires preview, exact approval, deploy, and full live readback.
+3. **Repair or revalidate the Cloudflare Git build hook.** The 2026-08-26 push did not automatically create a build. Do not assume a future push will deploy until the automatic path is tested again.
+4. **Verify, then delete, 2 recorded test rows** in Supabase → Table Editor → `noo_waitlist`: `deploy-test-2026-08-09@nooyouniverse.com` and one `verify-…@example.com`. Their current presence was not rechecked in this session; confirm exact rows before deletion.
+5. **Optional domain cleanup:** decide whether `www` should redirect to the apex at the host level. It currently serves successfully and declares the apex canonical, but does not redirect the browser.
 
 ## Phase 3 (built 2026-08-09; deployed and verified 2026-08-26)
 
-- **Source-basis badges** on all ten Mission Log entries. They label *what kind of support an entry rests on* — Health-agency source / Methodology reference / Regulatory guidance / Editorial promise · no efficacy claim / Introduction · no factual claim. Classifications taken verbatim from `SOURCE-AND-POLICY-LEDGER.md`; deliberately **not** framed as evidence tiers, because most entries teach method rather than assert empirical claims. Inventing a tier for a non-claim would be exactly the certainty theater the charter forbids.
+- **Source-basis badges** on all ten entries included in the dated Phase 3 release. They label *what kind of support an entry rests on* — Health-agency source / Methodology reference / Regulatory guidance / Editorial promise · no efficacy claim / Introduction · no factual claim. Classifications taken verbatim from `SOURCE-AND-POLICY-LEDGER.md`; deliberately **not** framed as evidence tiers, because most entries teach method rather than assert empirical claims. Inventing a tier for a non-claim would be exactly the certainty theater the charter forbids. The later Mission 11 also carries a source-basis badge and source-ledger row.
 - **`/sources`** — badge legend, per-mission source table with live links to NCCIH/AHRQ/NHLBI/FDA/FTC, the publication standard, and the hard-limits list ("what this project will never do").
 - **`/corrections`** — the charter promises corrections at equal visibility; this makes the publication log operational before it is needed. Four change grades (Note / Clarification / Correction / Retraction), the five-step process, an append-only commitment, reporting guidance, and an honest empty state. It is informational; a data-minimizing public correction-intake channel is still unverified.
 
@@ -40,24 +45,35 @@ Both pages are linked from the nav, the homepage evidence + charter sections, an
 - Cloudflare build: `9f5e67e9-4ba0-4242-b66b-2107fbd5cd99`, successful at `2026-08-27T02:54:04.800Z` (`2026-08-26` in Alaska).
 - Cloudflare deployment: `13ec93d6-7ba7-411b-864f-b7fd8cdcbdc9`; Worker version 4 ID `b6939236-5037-42a8-a659-b3f9219ca2e4`; 100% traffic.
 - Independent HTTP checks passed for `/`, `/log`, `/sources`, `/corrections`, the custom 404, apex canonicals, and the `www` host.
-- The live Mission Log contains exactly 10 missions, 10 source-basis badges, 10 Transparency lines, and 10 mission image references. Package A titles, IDs, and assets found: zero.
+- At that dated verification, the live Mission Log contained exactly 10 missions, 10 source-basis badges, 10 Transparency lines, and 10 mission image references, with zero legacy Package A titles, IDs, or assets. A separate Mission 11 was published later.
 - All nine checked source/property links returned successful responses: eight `200` responses and an accepted `202` from AHRQ.
 - The waitlist write path was deliberately not rerun during this content release, so no new test row was created or deleted. Its earlier end-to-end result remains a dated prior verification, not a fresh runtime claim.
 
-## Package A continuation (drafted 2026-08-13)
+## 2026-09-24 source and roadmap continuation — local only
 
-Four approval-only Mission Log drafts now live at `outputs/cillian-noo-youniverse/mission-log/NOO-MISSION-LOG-PACKAGE-A-DRAFTS-2026-08-13.md`:
+- Reconciled the already-public Mission 11 (`Sleep before stack`) from deploy commit `5df5dd6` into the isolated canonical-source worktree, including homepage link, log entry, source-ledger row, sitemap dates, and the exact image asset.
+- Added an eleven-test static-site and release contract covering Missions 01–11, table-of-contents and source-ledger parity, local assets, routes and fragments, apex canonicals and sitemap, public disclosure boundaries, the exact security-header allowlist, release-helper guards, a temporary-repository case/hidden-file preview regression, and legacy-candidate exclusion. All eleven tests pass locally.
+- Added a conservative Cloudflare Workers static-assets `_headers` candidate and taught the preview-first deploy helper to include it. Current inline CSS/JavaScript and the exact Supabase waitlist origin are explicitly allowed; framing, plugins, MIME sniffing, referrer leakage, and unused browser capabilities are restricted. HSTS remains deliberately undecided.
+- Found `public/.deploy-poke` in the deploy repository and confirmed it is publicly reachable. Its exact local deletion is prepared in the isolated deploy worktree. The live file remains until a separately approved deploy.
+- Added `MISSION-LOG-RELEASE-QUEUE.md` to resolve the Mission 11 numbering collision without rewriting provenance.
+- Added `REVENUE-MODEL.md` to turn the six-year portfolio scenario into a gate-controlled proposal. It records `$0` verified revenue from the dated administrative baseline and treats every price, goal, offer, app, and B2B engine as unapproved.
+- Added `ROADMAP-PROGRESS-2026-09-24.md` as the current evidence, completed-work, blocker, backlog, and smallest-owner-action handoff.
+- No file was pushed, merged, deployed, posted, sent, purchased, or used to change an external account during this continuation.
 
-- Mission 11 — The P-Value Is Not the Payload (`Methodology reference`)
-- Mission 12 — The Claim Is the Whole Constellation (`Regulatory guidance`)
-- Mission 13 — Read the Flight Plan Before the Landing (`Methodology reference`)
-- Mission 14 — Tracker Build Diary: A Field Is Not Yet a Measurement (`Methodology reference`)
+## Legacy Package A continuation (drafted 2026-08-13; numbering reconciled 2026-09-24)
 
-State: **four copy drafts and four visual candidates prepared; zero owner approvals; zero human-review approvals; zero approved public assets; zero entries added to `log.html` or `sources.html`; zero deploys.** The visual-candidate folder includes provenance, literal alt text, QA notes, and checksums; candidates are not approvals. The first ten CIL-LW01 missions remain a closed launch sequence. The package proposes `CIL-ML02` as the new draft sequence key, but Christian must confirm it before use. If approved later, the new work should append as Missions 11–14.
+Four approval-only Mission Log drafts remain in `outputs/cillian-noo-youniverse/mission-log/NOO-MISSION-LOG-PACKAGE-A-DRAFTS-2026-08-13.md`. Their original labels are preserved for provenance, but an unrelated Mission 11 is now public. The collision-free proposal is therefore:
 
-The sources were checked on their current primary or official pages on August 13, 2026 and recorded in `SOURCE-AND-POLICY-LEDGER.md`. Mission 14 uses FDA measurement guidance only as a bounded design influence; it does not imply that the unbuilt consumer tracker is FDA governed, validated, compliant, cleared, or approved. Track A remains a recommendation awaiting an owner decision.
+- Proposed Mission 12 — The P-Value Is Not the Payload (`Methodology reference`)
+- Proposed Mission 13 — The Claim Is the Whole Constellation (`Regulatory guidance`)
+- Proposed Mission 14 — Read the Flight Plan Before the Landing (`Methodology reference`)
+- Proposed Mission 15 — Tracker Build Diary: A Field Is Not Yet a Measurement (`Methodology reference`)
 
-Publication gates remain unchanged: Christian must decide per entry; proposed public Transparency lines cannot be treated as human-reviewed until a human actually reviews them; Mission 14 additionally needs product, privacy, legal, health-safety, and technical review. Any later site integration must update the hard-coded ten-entry copy, table of contents, source table, and sitemap dates. Do not deploy Package A merely because Phase 3 is now live.
+State: **four copy drafts and four visual candidates prepared; zero owner approvals; zero human-review approvals; zero approved public assets; zero legacy Package A entries added to the site; zero Package A deploys.** Keep original filenames and checksums unchanged. Create remapped publication copies only after approval. `CIL-ML02` and its proposed start at Mission 12 remain owner decisions.
+
+The sources were checked on their current primary or official pages on August 13, 2026 and recorded in `SOURCE-AND-POLICY-LEDGER.md`; every source must be rechecked immediately before integration. Proposed Mission 15 uses FDA measurement guidance only as a bounded design influence. It does not imply that the unbuilt consumer tracker is FDA governed, validated, compliant, cleared, or approved. Track A remains a recommendation awaiting an owner decision.
+
+Publication gates remain unchanged: Christian must decide per entry and per visual; proposed public Transparency lines cannot be treated as human-reviewed until a human actually reviews them. Proposed Mission 15 additionally needs product, privacy, legal/regulatory, health-safety, and technical review. Use `MISSION-LOG-RELEASE-QUEUE.md` as the current gate record. Do not deploy any legacy Package A work merely because Phase 3 and the separate Sleep before stack mission are live.
 
 ## Deploy architecture (as built)
 
@@ -66,6 +82,8 @@ Cloudflare **Worker with static assets** (not Pages — Cloudflare's Git-connect
 - `wrangler.jsonc` at deploy-repo root declares `./public` as the asset dir, `not_found_handling: "404-page"`.
 - Build settings: build command *none*, deploy command `npx wrangler deploy`, root `/`.
 - Everything served lives in `public/`; nothing above it is public.
+- Cloudflare Workers static assets support a `public/_headers` file. The 2026-09-24 candidate is locally prepared only. Verification after any approved release must include response-header readback and a browser-side CSP-console plus waitlist submission check using an owner-approved test address, Supabase row readback, and exact-row cleanup; otherwise the waitlist path remains unverified under the new CSP.
+- The deploy helper is now source-first and exact-sync: the reviewed source must already be merged to protected MyPersonas `main`; both canonical repositories must be clean and equal to `origin/main`; deploy-only public files are removed; native Git failures are checked; and only the deploy repository is committed and pushed. A worktree cannot publish.
 
 ### Gotchas learned during this deploy
 
@@ -73,12 +91,12 @@ Cloudflare **Worker with static assets** (not Pages — Cloudflare's Git-connect
 - **Worker ≠ Pages:** a dashboard-created Worker ships a "Hello world" script that serves the domain until a successful asset build replaces it. Seeing "Hello world" means the build never succeeded.
 - **Clean URLs:** Workers assets redirect `/log.html` → `/log` (a `307` was observed on 2026-08-26). Internal links, canonicals, og:url and sitemap all use the extensionless form.
 - **Git hook drift:** the Phase 3 push did not automatically create a Cloudflare build even though the repository connection and trigger still existed. The existing trigger was manually invoked for the exact pushed commit; repair or revalidate automatic delivery before relying on it again.
-- **Sandbox git:** locks can't be unlinked on this mount — rename them aside and commit via `GIT_INDEX_FILE` + `write-tree`/`commit-tree`/`update-ref`. `_ops/deploy-nooyouniverse.ps1` sweeps the debris.
+- **Sandbox git history:** a prior mount required Git plumbing to avoid lock-file failures. The current deploy helper does not broadly delete `.git` locks; diagnose any future lock against the exact repository and process instead of assuming it is stale.
 
 ## Overnight session notes (2026-08-09)
 
 - Blanket owner authorization given for roadmap execution ("full permissions"); safety classifier still blocked unattended browser writes to Supabase/GitHub dashboards — those remain the only human steps.
-- Sandbox git cannot unlink lock files on this mount; commits were made via plumbing (`GIT_INDEX_FILE` + `commit-tree` + `update-ref`). Stale `*.lock*`/`tmp_obj_*` debris in both repos' `.git` is harmless; the deploy script cleans it.
+- That session used plumbing (`GIT_INDEX_FILE` + `commit-tree` + `update-ref`) around lock-file failures. This is dated history, not permission to remove unknown locks or bypass the current protected-source workflow.
 - Supabase SQL editor tab may contain a partial paste of migration 027 (typing was interrupted by the classifier ~line 8). Clear the editor and paste the file fresh — running the partial fragment would error harmlessly, but don't.
 
 ## Owner approvals — treated as granted 2026-08-09 ("full permissions" instruction), revert on request
@@ -97,7 +115,8 @@ The exact Phase 3-only release was authorized, deployed, and independently verif
 - **Phase 4 (newsletter):** the double-opt-in contract, lifecycle copy, ESP/compliance audit, QA, and owner-decision package are drafted under `outputs/cillian-noo-youniverse/newsletter/`. The waitlist currently stores emails only; nothing is sent. Before the first send: owner/operator decisions, lawful consent treatment, unsubscribe, sender identity and postal address, mailbox/domain authentication, current DNS verification, and restating Cillian's fictional identity in every email.
 - **Phase 5 (product):** Observation Log build-diary series → waitlist segmentation. Requires product, privacy, security, legal and health review before *any* capability claim. Mission 09 describes it as unbuilt — that must stay accurate.
 - **Press/collab kit:** blocked until a qualified reviewer is named (see below).
-- **Content cadence:** publish future approved concepts as new `/log` entries as they clear the social approval queue (source of truth: `outputs/cillian-noo-youniverse/`). Give each a source-basis badge and add its source to `/sources`.
+- **Content cadence:** preserve the already-public Mission 11, then evaluate the four legacy Package A drafts under `MISSION-LOG-RELEASE-QUEUE.md` as proposed Missions 12–15. Publish only an exact cleared subset after separate copy, visual, source, specialist, integration, and release decisions. Give each released entry a source-basis badge and a matching `/sources` row.
+- **Revenue path:** use `REVENUE-MODEL.md`. The lowest-risk first test is a bounded educational mission pack or source-reading tool, but even that needs a real audience baseline, owner-approved scope and price, rights/source/accessibility review, terms/refund/tax/payment decisions, and a capped pilot. App, B2B, sponsorship/affiliate, and physical-product engines remain progressively higher-gate proposals.
 
 ## Adjacent workstreams (specced 2026-08-13, unapproved)
 
@@ -110,6 +129,8 @@ The website is now the smallest piece of the plan. Current drafts and operating 
 - `app/NOO-APP-SECURITY-COMPLIANCE.md` v0.2 — auth, encryption, RLS, audit, health-privacy posture, FDA function review, detached-publication addendum
 - `app/implementation/` — boundary ADR, gated backlog, private-log contracts, 40 tier cases, 54 acceptance criteria, detached-publication blockers, and a synthetic local prototype plan; documentation only
 - `mission-log/` — four Package A copy drafts and four unapproved visual candidates with provenance, alt text, QA, and checksums
+- `MISSION-LOG-RELEASE-QUEUE.md` — current numbering, gate, and owner-decision record for those legacy drafts
+- `REVENUE-MODEL.md` — proposed six-year business model, evidence gates, experiment ladder, and kill/pivot conditions; no forecast or commerce authority
 - `evidence-library/` — nine provisional claim cards plus schema/JSON and approval record; qualified review still required
 - `questionnaire/` — complete copy/field contract, tier and crisis messaging, 48-case QA, and owner choices; no intake system built
 - `newsletter/` — double-opt-in integration contract, ESP/compliance audit, lifecycle copy, 53 QA checks, and owner decisions; no account or send
@@ -143,6 +164,9 @@ From the master roadmap, still genuinely unresolved — the site is built to be 
 
 - **No named human health-claim approver.** Until one exists, content stays on methodology, regulatory explanation and agency summaries. Ingredient-, dose-, interaction- or condition-specific content is gated on this.
 - **Social accounts unverified.** Instagram/Facebook/X appear as unlinked text ("coming online"). Link them only once ownership and write access are confirmed — a dead link on a trust-focused site is a self-inflicted wound.
+- **No newsletter operating identity.** Legal sender/operator, physical postal address, monitored mailbox, sending domain, ESP, legacy-row treatment, and consent/retention decisions remain open. Existing waitlist rows are not confirmed newsletter subscribers.
+- **No commerce authority or demand evidence.** The revenue model is planning only. No price, checkout, processor, entity/tax path, paid offer, outreach, spend, or revenue claim is approved.
+- **No app/community build authority.** The reconciled product, privacy, security, legal, moderation, and health gates remain binding; documents and synthetic test plans are not a working product.
 
 ### MyPersonas profile — live verification closed 2026-08-13
 
@@ -150,7 +174,7 @@ The signed-in profile was reopened in read-only mode and independently checked. 
 
 ## Guardrails baked into the site
 
-- Fictional/AI disclosure: hero chip, per-entry Transparency lines (×10), footer block, meta descriptions.
+- Fictional/AI disclosure: hero chip, per-entry Transparency lines (×11), footer block, meta descriptions.
 - No dosing, stacks, product claims, or first-person supplement stories anywhere; Mission 03/09 boundary language preserved verbatim.
 - Evidence-tier legend matches the master roadmap taxonomy exactly.
 - Social handles unlinked text until verified; only verified property linked is the AliaSpaces profile.
