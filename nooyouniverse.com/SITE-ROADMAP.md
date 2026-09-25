@@ -54,6 +54,24 @@ Both pages are linked from the nav, the homepage evidence + charter sections, an
 - All nine checked source/property links returned successful responses: eight `200` responses and an accepted `202` from AHRQ.
 - The waitlist write path was deliberately not rerun during this content release, so no new test row was created or deleted. Its earlier end-to-end result remains a dated prior verification, not a fresh runtime claim.
 
+## PWA — added 2026-09-25 (committed, awaiting push)
+
+The site is now a real installable Progressive Web App. **This closed a live defect**, not just a feature request.
+
+**The defect:** since the favicon release, all five pages carried `<link rel="manifest" href="/manifest.webmanifest">` and registered `/sw.js` — but **neither file has ever existed**, in either repo. The site was advertising itself as installable and silently failing every install attempt and every service-worker registration.
+
+**Root cause:** `_ops/deploy-nooyouniverse.ps1` syncs a *fixed list* of filenames. `manifest.webmanifest` and `sw.js` were not on it, so they could never have reached the deploy repo even once written. The list has been extended.
+
+**Added:**
+
+- `manifest.webmanifest` — standalone display, five icons including maskable, app shortcuts to Mission Log / Sources / Corrections.
+- `sw.js` — **network-first for documents, deliberately.** A cache-first document strategy would let an installed copy keep serving a page that has since been corrected, which would directly break the charter's corrections promise. Static assets are cache-first. Only same-origin GETs are intercepted, so the Supabase waitlist POST passes through untouched. Mission-log photography (~1 MB) is not precached.
+- `offline.html` — this file already existed in the deploy repo, untracked, with **doubled `{{ }}` braces left over from an unrendered Python template**, making its CSS invalid. Fixed, brand-styled, added to source, and wired in as the service worker's offline fallback.
+
+**Also reconciled:** the source repo had drifted behind the deploy repo *and* behind `origin/main` — missing Mission 11, the theme-colour/favicon head changes, and the PWA icons. Source now matches what is actually deployed. Note this drift is an upstream problem too: `origin/main`'s copy of `nooyouniverse.com/log.html` still has no Mission 11.
+
+**Install path (no APK required):** Chrome on Android → nooyouniverse.com → ⋮ → *Install app*. Self-updating on every deploy, no sideloading, no signing keys. See `_ops/OWNER-ACTIONS-2026-09-25.md`.
+
 ## September reconciliation — 2026-09-24
 
 The roadmap had drifted about four weeks behind the live site. Reconciled against `https://nooyouniverse.com` and both git remotes on 2026-09-24.
