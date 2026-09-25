@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0e24">
 <title>Sources &amp; standards — Noo YouNiverse</title>
 <meta name="description" content="Every source behind the Noo YouNiverse mission log, the standard each entry is held to, and the rules this project will not cross.">
 <link rel="canonical" href="https://nooyouniverse.com/sources">
@@ -14,7 +15,7 @@
 <meta property="og:description" content="Every source behind the mission log, and the standard each entry is held to.">
 <meta property="og:image" content="https://nooyouniverse.com/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <style>
 :root{
   --ink:#0b0e24;--navy:#121736;--navy2:#1a2047;--line:#2b3163;
@@ -72,6 +73,10 @@ footer{border-top:1px solid var(--line);padding:40px 0 64px;font-size:.85rem;col
 .disclosure{background:var(--navy);border:1px solid var(--line);border-left:3px solid var(--violet);border-radius:10px;padding:18px 20px;max-width:760px;margin:0 auto 24px}
 footer .fine{text-align:center;font-size:.78rem}
 </style>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/assets/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
 
@@ -93,7 +98,7 @@ footer .fine{text-align:center;font-size:.78rem}
     <span class="kicker">Show your working</span>
     <h1>Sources &amp; standards</h1>
     <p class="page-sub">The charter says sources before slogans. This page is that promise made checkable: what every mission-log entry rests on, what the badges mean, and the lines this project will not cross.</p>
-    <p class="updated">Fictional Castleborn character · AI-assisted &amp; human-reviewed · Educational only<br>Last reviewed: 9 August 2026</p>
+    <p class="updated">Fictional Castleborn character · AI-assisted &amp; human-reviewed · Educational only<br>Last reviewed: 18 September 2026</p>
   </div>
 </header>
 
@@ -128,6 +133,7 @@ footer .fine{text-align:center;font-size:.78rem}
       <tr><td class="m">08</td><td><span class="basis b-reg">Regulatory</span></td><td><a href="https://www.ftc.gov/business-guidance/resources/health-products-compliance-guidance" rel="noopener">FTC — Health Products Compliance Guidance</a> · <a href="https://www.fda.gov/food/nutrition-food-labeling-and-critical-foods/structurefunction-claims" rel="noopener">FDA — Structure/Function Claims</a> · evidence must match the exact advertised claim</td></tr>
       <tr><td class="m">09</td><td><span class="basis b-edit">Editorial</span></td><td>No scientific or product claim. An explicitly unbuilt concept; product, privacy, security, legal and health review are required before any capability claim</td></tr>
       <tr><td class="m">10</td><td><span class="basis b-intro">Charter</span></td><td>No external factual claim — <a href="/log#mission-10">the charter</a></td></tr>
+      <tr><td class="m">11</td><td><span class="basis b-agency">Agency</span></td><td><a href="https://www.nhlbi.nih.gov/health/sleep-deprivation/health-effects" rel="noopener">NHLBI — How Sleep Deprivation and Deficiency Affect Health</a> · sleep and fundamentals as Strong context for interpreting a stack claim; not a product rating, dose, or recommendation — <a href="/log#mission-11">Sleep before stack</a></td></tr>
     </tbody>
   </table>
 </section>
@@ -179,5 +185,12 @@ footer .fine{text-align:center;font-size:.78rem}
   </div>
 </footer>
 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>

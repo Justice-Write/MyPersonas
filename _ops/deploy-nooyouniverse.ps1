@@ -77,7 +77,12 @@ if (-not $resolvedPub.StartsWith($resolvedDeploy + '\', [System.StringComparison
 
 # Everything published lives in public\. Docs (SITE-ROADMAP.md) stay out.
 $pages = @("index.html","log.html","sources.html","corrections.html",
-           "404.html","robots.txt","sitemap.xml","CNAME")
+           "404.html","robots.txt","sitemap.xml","CNAME",
+           # PWA — added 2026-09-25. All five pages had referenced
+           # /manifest.webmanifest and registered /sw.js since the favicon
+           # release, but neither file existed and this fixed list would not
+           # have copied them even if it had. That was the root cause.
+           "manifest.webmanifest","sw.js","offline.html")
 foreach ($f in $pages) {
   $from = Join-Path $src $f
   $to = Join-Path $pub $f

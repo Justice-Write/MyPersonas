@@ -1,6 +1,7 @@
 # nooyouniverse.com — Site Roadmap
 
-Updated: 2026-08-26 (Phase 3 deployed and independently verified live) · Owner: Christian · Persona: Cillian O'Sullivan / Noo YouNiverse
+Updated: 2026-09-24 (reconciled against live site; September changes recorded) · Owner: Christian · Persona: Cillian O'Sullivan / Noo YouNiverse
+Previous update: 2026-08-26 (Phase 3 deployment record)
 
 Stack: static site → **Cloudflare Worker with static assets** + Supabase free-tier email waitlist. This is not Cloudflare Pages. GitHub Pages remains a fallback (CNAME file included). Recorded infrastructure cost: $0/month; billing was not re-audited in this session.
 
@@ -9,21 +10,30 @@ Stack: static site → **Cloudflare Worker with static assets** + Supabase free-
 | Item | State |
 |---|---|
 | Landing page | ✅ Live |
-| Mission Log — 10 concepts (`/log`) | ✅ Live |
+| Mission Log (`/log`) | ✅ Live — **11 entries** as of 2026-09-24 (the 10 CIL-LW01 launch concepts + "Sleep before stack") |
 | 404 page, robots, sitemap | ✅ Live |
 | Waitlist table + RLS (migration 027) | ✅ Run in Supabase |
 | Waitlist end-to-end | ✅ Previously verified: insert 201 · duplicate 409 · bad email 400 · anon read 401 (denied); not rerun for Phase 3 |
-| Deploy repo `castleism/nooyouniverse` | ✅ Phase 3 commit `e8971ad` pushed to `main` |
+| Deploy repo `castleism/nooyouniverse` | ✅ At `12ca11f` (favicon). Phase 3 was `e8971ad`. ⚠️ Pushes do **not** auto-build — see §September reconciliation ¶2 |
 | Cloudflare Worker + apex domain | ✅ HTTPS live; Phase 3 Worker version 4 serves 20 public files |
 | `www.nooyouniverse.com` | ✅ Resolves; pages declare apex canonicals; a host-level redirect is not configured |
 | **Phase 3** — source badges, `/sources`, `/corrections` | ✅ **Verified live — 2026-08-26** |
-| **Package A** — Missions 11–14 | 📝 Four internal copy drafts + four visual candidates — **zero approved; not in site source; not deployed** |
+| **Package A** — the four drafted Missions 11–14 (P-Value / Claim Constellation / Flight Plan / Tracker Build Diary) | 📝 Still **zero approved; not in site source; not deployed** — none of these four has shipped |
+| **Mission 11 "Sleep before stack"** | ⚠️ **LIVE since ~2026-09-18** — a *different* entry from the Package A drafts. See §September reconciliation |
+| Branded favicon, PWA icons | ✅ Live (`12ca11f`) |
 
 ### Outstanding — operations and owner-only follow-up
 
-1. **Repair or revalidate the Cloudflare Git build hook.** The 2026-08-26 push did not automatically create a build. The existing Cloudflare build trigger was therefore invoked manually for the exact pushed commit, and that build completed successfully. Do not assume a future push will deploy until the automatic path is tested again.
-2. **Verify, then delete, 2 recorded test rows** in Supabase → Table Editor → `noo_waitlist`: `deploy-test-2026-08-09@nooyouniverse.com` and one `verify-…@example.com`. Their current presence was not rechecked in this session; confirm exact rows before deletion.
-3. **Optional domain cleanup:** decide whether `www` should redirect to the apex at the host level. It currently serves successfully and declares the apex canonical, but does not redirect the browser.
+Ordered by consequence. Items 1–3 are the ones that actually block things.
+
+1. **Name a human health-claim approver** (pharmacist minimum; psychiatrist too if the app proceeds). This is the master blocker and has been open since August. It gates the evidence library, app Phase 2, every compendium monograph, and all ingredient-specific content. Nothing downstream moves without it.
+2. **Repair the Cloudflare Git build hook** — now confirmed failing twice (2026-08-26 manual invocation, 2026-09-18 `.deploy-poke` commit). Diagnosis and check order in §September reconciliation ¶2. Requires a signed-in Cloudflare session.
+3. **Rule on Mission 11** — expand it to standard and frame it against Mission 04, or retire it and use the documented Package A gate. See §September reconciliation ¶1.
+4. **Verify, then delete, 2 recorded test rows** in Supabase → Table Editor → `noo_waitlist`: `deploy-test-2026-08-09@nooyouniverse.com` and one `verify-…@example.com`. Presence not rechecked since August; confirm exact rows before deleting.
+5. **Resolve the under-21 tier conflict** — the tier engine permits private logging for an under-21 Red account while the questionnaire spec stops under-21 users before the health profile. Flagged by ChatGPT, unresolved. Blocks app implementation authorization.
+6. **Sync `MyPersonas`** — 13 commits behind, blocked by local uncommitted edits. Owner's call.
+7. **Optional domain cleanup:** decide whether `www` should redirect to the apex at the host level. It currently serves and declares the apex canonical, but does not redirect the browser.
+8. **Remove the stray `SITE-ROADMAP.md`** from the deploy-repo root, and the four pointer stubs in `outputs/` once nothing links to them.
 
 ## Phase 3 (built 2026-08-09; deployed and verified 2026-08-26)
 
@@ -43,6 +53,52 @@ Both pages are linked from the nav, the homepage evidence + charter sections, an
 - The live Mission Log contains exactly 10 missions, 10 source-basis badges, 10 Transparency lines, and 10 mission image references. Package A titles, IDs, and assets found: zero.
 - All nine checked source/property links returned successful responses: eight `200` responses and an accepted `202` from AHRQ.
 - The waitlist write path was deliberately not rerun during this content release, so no new test row was created or deleted. Its earlier end-to-end result remains a dated prior verification, not a fresh runtime claim.
+
+## September reconciliation — 2026-09-24
+
+The roadmap had drifted about four weeks behind the live site. Reconciled against `https://nooyouniverse.com` and both git remotes on 2026-09-24.
+
+### 1. Mission 11 shipped, and it is not a Package A draft
+
+`/log` now carries **eleven** entries. Mission 11 is **"Sleep before stack"** — badge `Health-agency source`, dated September 2026, sourced to NHLBI, listed in the `/sources` ledger (page last-reviewed 18 September 2026).
+
+**It is none of the four Package A drafts.** Those remain unshipped. Mission 11 was authored and deployed outside the drafted approval queue, so the gate that Package A documents describe was not the path this entry took. Three consequences worth owner attention:
+
+- **Provenance.** There is no record in this repo of who approved Mission 11 or on what review basis. The Package A approval machinery exists and was bypassed. Either the queue is the process or it isn't.
+- **It substantially duplicates Mission 04.** "Check the Ship's Basics" already makes the sleep-as-context argument and cites the same NHLBI page. The log now says the same thing twice without acknowledging it. That is a small editorial problem and a slightly larger credibility one for a project whose charter is about not overstating.
+- **Length and depth are well below the other ten.** Mission 11 is a single short paragraph against 400–700 words elsewhere. It reads as a placeholder next to entries 1–10.
+
+Recommendation: either expand Mission 11 to the standard of the rest and explicitly frame it as a follow-on to Mission 04, or retire it and ship the Package A drafts through the documented gate. Not both, and not as-is indefinitely.
+
+### 2. The Cloudflare auto-build hook is still broken — now confirmed twice
+
+The 2026-08-26 deploy required a manual build invocation. The September deploy required a **committed dummy file**: `public/.deploy-poke`, whose own contents read —
+
+> *"Redeploy poke from Castleborn Ops — 2026-09-18. Mission 11 (Sleep before stack) is on main; live host was still serving Missions 1–10. This file exists only to retrigger the Cloudflare Workers git deploy."*
+
+So this is not a one-off. **Pushing to `main` does not reliably create a build**, and each release has needed a human to force it. Deploys are landing only because someone notices they haven't.
+
+Leading hypotheses, in order, to check when someone is signed in to Cloudflare:
+
+1. **The Git integration never fully established an automatic trigger.** The very first connection failed against an empty repository ("error occurred while fetching repository") and the first successful build came from a manual *Retry*. A trigger created in that broken state is the most likely culprit and would explain every subsequent failure.
+2. **Build watch paths / path filters** configured such that ordinary content changes don't match.
+3. **GitHub App installation permissions** on `castleism/nooyouniverse` lapsed or were scoped too narrowly to deliver webhooks.
+4. Branch mismatch between the configured production branch and `main`.
+
+Check in this order: Worker → Settings → Build → Git repository (trigger status, branch, watch paths), then GitHub → Settings → Applications → Cloudflare Workers & Pages → repository access.
+
+**Until it is fixed, treat `.deploy-poke` as load-bearing** — it is currently the deploy mechanism, not a stray file. Do not delete it. Once the hook is repaired, remove it and record that the automatic path was re-tested with a real content change.
+
+### 3. Repo state
+
+- Deploy repo `castleism/nooyouniverse` — local synced to `12ca11f`.
+- `MyPersonas` — local is **13 commits behind** `origin/main` and has pre-existing uncommitted local edits (`.github/workflows/*`, `MyPersonas.Online_v0/*`). The merge was deliberately **not** forced; those edits are the owner's to resolve. Run `git status` and either commit or stash before pulling.
+- A stray copy of `SITE-ROADMAP.md` exists untracked in the deploy-repo root. Docs belong in the source repo only; it is not served (only `public/` is), but it should be removed to avoid two drifting copies.
+
+### 4. Verification and hygiene completed 2026-09-24
+
+- **All four outstanding factual claims from the ChatGPT package verified against primary sources — nothing fabricated.** Full record: `outputs/cillian-noo-youniverse/VERIFICATION-RECORD-2026-09-24.md`. One wording tighten applied to the Arizona Nutritional Supplements recall so it quotes FDA verbatim.
+- **Blank forms renamed** so they cannot be mistaken for signed records: `…-APPROVAL-FORM-UNSIGNED-…`, `…-OWNER-DECISION-FORM-UNSIGNED-…`. The evidence-library seed is now `…-DO-NOT-PUBLISH-…`. Old filenames retained as pointer stubs; delete once nothing links to them.
 
 ## Package A continuation (drafted 2026-08-13)
 
