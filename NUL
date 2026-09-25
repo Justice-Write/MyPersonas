@@ -1,0 +1,34 @@
+{
+  "validated_at": "2026-08-29T05:03:58.094Z",
+  "valid": true,
+  "manifest_file": "openart-generation-manifest.json",
+  "manifest_sha256": "2ddecc5cfb75eaaf9cd2d462605c708036d36170233a27c5b3ac134372c2346d",
+  "decisions_file": "mypersonas-openart-media-decisions.json",
+  "decisions_sha256": "dd8e15052c2e0e4a199efee13eddcde138a130ec31d95280f902ba3dabfcfc2a",
+  "approval_scope": "generated_media_only_not_upload_schedule_queue_or_publication",
+  "total_decisions": 63,
+  "counts": {
+    "changes_requested": 43,
+    "approve_media": 5,
+    "deny_media": 15
+  },
+  "checks": [
+    {
+      "name": "generation manifest remains valid",
+      "ok": true
+    },
+    {
+      "name": "decision export is bound to this exact private manifest",
+      "ok": true
+    },
+    {
+      "name": "every generated item has one explicit current decision",
+      "ok": true
+    },
+    {
+      "name": "media decisions do not grant publication authority",
+      "ok": true
+    }
+  ],
+  "failures": []
+}

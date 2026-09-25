@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $taskRepo = Split-Path -Parent $PSScriptRoot
-$taskContainer = "mypersonas-ai-provenance-060-test"
+$taskContainer = "mypersonas-ai-provenance-062-test"
 $taskCreated = $false
 
 $taskExisting = @(& docker ps -a --format "{{.Names}}")
@@ -27,14 +27,17 @@ try {
     "MyPersonas.Online_v0/sql-updates/059-ai-content-provenance-watermark.sql",
     "MyPersonas.Online_v0/sql-updates/060-ai-content-provenance-hardening.sql",
     "MyPersonas.Online_v0/sql-updates/060-ai-content-provenance-hardening.sql",
-    "tests/sql/059-ai-content-provenance-runtime.sql"
+    "MyPersonas.Online_v0/sql-updates/062-persona-media-unchanged-url-compatibility.sql",
+    "MyPersonas.Online_v0/sql-updates/062-persona-media-unchanged-url-compatibility.sql",
+    "tests/sql/059-ai-content-provenance-runtime.sql",
+    "tests/sql/062-persona-media-unchanged-url-compatibility-runtime.sql"
   )
   foreach ($taskRelative in $taskFiles) {
     $taskPath = Join-Path $taskRepo $taskRelative
     Get-Content -LiteralPath $taskPath -Raw | & docker exec -i $taskContainer psql -U postgres -d postgres
     if ($LASTEXITCODE -ne 0) { throw "SQL verification failed while applying $taskRelative" }
   }
-  Write-Output "Frozen AI provenance migration 059 upgraded through migration 060, 060 reapplied, and the role-switched runtime assertions passed."
+  Write-Output "Frozen AI provenance migration 059 upgraded through migration 062, migrations 060 and 062 reapplied, and the role-switched runtime assertions passed."
 }
 finally {
   if ($taskCreated) { & docker rm --force $taskContainer | Out-Null }

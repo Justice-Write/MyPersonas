@@ -98,6 +98,16 @@ insert into public.personas(id,owner,handle,avatar_url) values (
   '05900000-0000-4000-8000-000000000099','legacy-provenance-backfill',
   'https://legacy.example.test/preexisting-avatar.png'
 );
+insert into public.personas(
+  id,owner,handle,avatar_url,banner_url,bg_url,feed_img_url
+) values (
+  '05900000-0000-4000-8000-000000000198',
+  '05900000-0000-4000-8000-000000000099','legacy-first-party-profile',
+  'https://project.test/storage/v1/object/public/persona-media/05900000-0000-4000-8000-000000000099/legacy/profile/avatar.png',
+  'https://project.test/storage/v1/object/public/persona-media/05900000-0000-4000-8000-000000000099/legacy/profile/banner.png',
+  'https://project.test/storage/v1/object/public/persona-media/05900000-0000-4000-8000-000000000099/legacy/profile/background.png',
+  'https://project.test/storage/v1/object/public/persona-media/05900000-0000-4000-8000-000000000099/legacy/profile/feed.png'
+);
 insert into public.post_drafts(id,owner,persona_id,media_provenance_required) values (
   '05900000-0000-4000-8000-000000000299',
   '05900000-0000-4000-8000-000000000099',

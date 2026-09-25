@@ -112,7 +112,7 @@ Shipped:
       secret installation, destination review, and runtime proof before deployment.
 - AI Models: add hosted OpenAI-compatible/Anthropic/Azure connections (key write-only in
   Vault); edit an existing connection's label, base URL, and model id in-place without
-  re-entering the key (migration `042`; API key stays write-only — rotate by remove + re-add)
+  re-entering the key (migration `063`; API key stays write-only — rotate by remove + re-add)
 - Pages: banner/background/avatar/feed images (file picker + preview + SD generate),
   profile song, live embed (Twitch/YouTube/Kick), Top 8, 37-platform link chips,
   gallery & sponsored/affiliate albums (deep-link out), blog feed + reels,

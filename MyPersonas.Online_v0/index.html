@@ -115,6 +115,7 @@ input[type=checkbox]{width:auto}
 .pp-head{display:flex;gap:18px;align-items:flex-end;margin-top:-52px;padding:0 28px;flex-wrap:wrap}
 .pp-av{width:132px;height:132px;border-radius:50%;border:4px solid #fff;background:#e4e6eb center/cover;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .pp-name{font-size:28px;font-weight:800;text-shadow:0 1px 2px rgba(255,255,255,.8)}
+.pp-title{font-size:15px;font-weight:700;color:#26364a;background:rgba(255,255,255,.86);display:block;width:fit-content;max-width:100%;padding:2px 8px;border-radius:8px;margin:2px 0;overflow-wrap:anywhere}
 .cols{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:18px}
 @media(max-width:760px){.cols{grid-template-columns:1fr}}
 .top8grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
@@ -454,7 +455,7 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
   </aside>
 </div>
 <script src="./owner-app.js?v=20260822-6"></script>
-<script src="./persona-view.js?v=20260823-1"></script>
+<script src="./persona-view.js?v=20260828-1"></script>
 <script src="./platform-governance.js?v=20260823-1"></script>
 <script src="./agent-board.js?v=20260822-4"></script>
 <script src="./ai-content-provenance.js?v=20260823-2"></script>
@@ -1552,6 +1553,7 @@ async function renderPersonaPage(handle,skipGate,epoch=++renderEpoch){
     <div class="pp-av ai-asset-shell${avatarMark?" has-ai-provenance":""}${isOwner&&safeHttpUrl(p.avatar_url)?" persona-asset":""}" style="${safeBgStyle(p.avatar_url)}" ${personaAssetAttributes(p.avatar_url,"Profile image",isOwner,"image")}>${avatarMark}</div>
     <div style="flex:1;padding-bottom:6px">
       <div class="pp-name">${esc(p.name)} ${p.pet_project?`<span class="pill" style="background:#eafff1;color:#0a7d33" title="Current project">★ ${esc(p.pet_project)}</span>`:""} ${p.nsfw?'<span class="pill nsfw">18+</span>':""} ${p.visibility!=="public"?`<span class="pill priv">${p.visibility}</span>`:""} ${p.live_url?'<span class="pill live">LIVE</span>':""}</div>
+      ${p.title?`<div class="pp-title">${esc(p.title)}</div>`:""}
       <div class="muted" style="background:rgba(255,255,255,.8);display:inline-block;padding:2px 8px;border-radius:8px">@${esc(p.handle)} · ${friendSummary} — ${esc(p.tagline)}</div>
     </div>
     <div style="padding-bottom:6px;display:flex;gap:6px;flex-wrap:wrap">
@@ -1567,7 +1569,7 @@ async function renderPersonaPage(handle,skipGate,epoch=++renderEpoch){
   <div class="persona-layout-grid" style="--pc:${safeTheme(p.theme)}">
     ${M("live")&&p.live_url?`<section class="${personaLayoutItemClass(pageLayout,"live")}" style="${personaLayoutItemStyle(pageLayout,"live")}"><div class="card livebox"><h3>${ico("live")}Live now</h3>${liveHtml(p.live_url)}</div></section>`:""}
     ${M("music")&&p.music_url?`<section class="${personaLayoutItemClass(pageLayout,"music")}" style="${personaLayoutItemStyle(pageLayout,"music")}"><div class="card music"><h3>${ico("music")}Profile song</h3>${musicHtml(p.music_url)}</div></section>`:""}
-    ${M("about")?`<section class="${personaLayoutItemClass(pageLayout,"about")}" style="${personaLayoutItemStyle(pageLayout,"about")}"><div class="card"><h3>${ico("spark")}About</h3><p style="white-space:pre-wrap">${esc(p.bio)||'<span class="muted">nothing yet…</span>'}</p>
+    ${M("about")?`<section class="${personaLayoutItemClass(pageLayout,"about")}" style="${personaLayoutItemStyle(pageLayout,"about")}"><div class="card"><h3>${ico("spark")}About</h3>${p.focus?`<p><b>Focus</b><br>${esc(p.focus)}</p>`:""}<p style="white-space:pre-wrap">${esc(p.bio)||'<span class="muted">nothing yet…</span>'}</p>
       <div style="margin-top:10px;padding:10px;border:1px solid #cbd8e9;border-radius:10px;background:#f6f9fd"><b>AI transparency</b><div class="muted" style="margin-top:3px">${esc(p.ai_disclosure||"This is an AI-assisted persona. Public content may be drafted with AI and is owner-reviewed unless stated otherwise.")}</div></div>
       ${p.topics?`<div style="margin-top:8px">${p.topics.split(",").filter(t=>t.trim()).map(t=>`<span class="tag2" data-page-search="${esc(t.trim())}" onclick="pageSearch(this.dataset.pageSearch)">${esc(t.trim())}</span>`).join("")}</div>`:""}</div></section>`:""}
     ${fanAvailable?`<section class="${personaLayoutItemClass(pageLayout,"fan_chat")}" style="${personaLayoutItemStyle(pageLayout,"fan_chat")}"><div class="card"><h3>${ico("spark")}Chat with ${esc(p.name)}'s AI</h3><p class="muted">This is a disclosed AI assistant, not the human owner. The owner can see saved chats and open private-session chats. If the owner joins live, every human reply is labeled Owner.</p><button class="btn sm" onclick="openPublicFanChat('${p.id}')">Start fan chat</button></div></section>`:""}
@@ -3410,9 +3412,9 @@ async function saveBackendEdits(id){
   if(!model){toast("Enter the model id you want this connection to use");return}
   let res=await sb.rpc("update_ai_backend",{p_backend_id:id,p_name:name,p_model:model,p_extra:b.extra||{},p_base_url:base});
   if(res.error&&/schema cache|could not find the function|pgrst202/i.test(res.error.message||"")){
-    // Migration 042 not applied yet — save label + model, keep the stored base URL.
+    // Migration 063 not applied yet — save label + model, keep the stored base URL.
     res=await sb.rpc("update_ai_backend",{p_backend_id:id,p_name:name,p_model:model,p_extra:b.extra||{}});
-    if(!res.error){closeEditBackend();await loadMine();renderStudio();toast(base===(b.base_url||"")?"Model updated":"Saved label & model. Base-URL edits need migration 042 applied.");return}
+    if(!res.error){closeEditBackend();await loadMine();renderStudio();toast(base===(b.base_url||"")?"Model updated":"Saved label & model. Base-URL edits need migration 063 applied.");return}
   }
   if(res.error){toast(res.error.message);return}
   closeEditBackend();await loadMine();renderStudio();toast("Model updated");
