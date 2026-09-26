@@ -3,6 +3,15 @@
 Versioning per VERSIONING.md: majors are milestones, `.x` are roadmap items,
 trailing letters are hotfixes. Releases are git tags.
 
+## Repository hygiene and connector-core adoption (local only) (2026-09-26)
+
+Status: **Code only; nothing deployed.** No edge function, migration, or Pages release.
+
+- Untracked the root file named `NUL` (a Windows reserved device name that broke
+  checkouts and `git status` on Windows). It was a stray copy of an OpenArt media-decision
+  validation report (no secrets); the content was preserved outside the repo. `/NUL` is
+  now ignored.
+
 ## Required AI-use declaration and forward-only provenance hardening (production release) (2026-08-23)
 
 Status: **Migration 060, the four reviewed provenance functions, and the matching Pages
