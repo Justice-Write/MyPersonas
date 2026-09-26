@@ -1,6 +1,6 @@
 # nooyouniverse.com — Site Roadmap
 
-Updated: 2026-09-24 (reconciled against live site; September changes recorded) · Owner: Christian · Persona: Cillian O'Sullivan / Noo YouNiverse
+Updated: 2026-09-26 (PWA + headers live; APK 0.2.0; parity restored) · Previous: 2026-09-24 (reconciled against live site) · Owner: Christian · Persona: Cillian O'Sullivan / Noo YouNiverse
 Previous update: 2026-08-26 (Phase 3 deployment record)
 
 Stack: static site → **Cloudflare Worker with static assets** + Supabase free-tier email waitlist. This is not Cloudflare Pages. GitHub Pages remains a fallback (CNAME file included). Recorded infrastructure cost: $0/month; billing was not re-audited in this session.
@@ -34,6 +34,14 @@ Ordered by consequence. Items 1–3 are the ones that actually block things.
 6. **Sync `MyPersonas`** — 13 commits behind, blocked by local uncommitted edits. Owner's call.
 7. **Optional domain cleanup:** decide whether `www` should redirect to the apex at the host level. It currently serves and declares the apex canonical, but does not redirect the browser.
 8. **Remove the stray `SITE-ROADMAP.md`** from the deploy-repo root, and the four pointer stubs in `outputs/` once nothing links to them.
+
+## 2026-09-26 — shipped
+
+- Deploy repo `main` = `4bfc6d0`. Cloudflare Git build succeeded and is the active version (2917eaa8). Live readback passed: `/manifest.webmanifest` 200 (5 icons, 3 shortcuts), `/sw.js` active, `/offline.html` 200, `/.deploy-poke` 404, `_headers` CSP/nosniff/frame-deny on every response (CSP then widened for Cloudflare Web Analytics).
+- This folder is again byte-identical to `nooyouniverse/public/` (added `_headers`, Mission 11 image).
+- Private Android app: release-signed `noo-observation-log-0.2.0-release.apk` (`com.nooyouniverse.observationlog`, studio key in `_ops/keystores/`), built Gradle-free; install note + QR in the Drive folder. Owner tap still required.
+- New in deploy repo: `deploy/docker/` mirror, `docs/DESKTOP.md`, `docs/CLAUDE-DESIGN-BRIEF-missions-12-15.md` (Package A renumbered 12–15 behind live M11).
+- Still owner-only: name the health/science approver (master blocker); Package A approvals; delete the 2 `noo_waitlist` test rows (dashboard sign-in needed); verify social destinations.
 
 ## Phase 3 (built 2026-08-09; deployed and verified 2026-08-26)
 
