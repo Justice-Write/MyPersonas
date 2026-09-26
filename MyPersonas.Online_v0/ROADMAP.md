@@ -30,6 +30,35 @@ authority; `RELEASE-MANIFEST-2026-08-23-AI-PROVENANCE.md` records the forward 06
 
 ---
 
+## Roadmap sweep — 2026-09-26
+
+Done this pass (branch `roadmap-sweep-2026-09`, based on `origin/main` `acadc5d`):
+
+- P2 connector-core step 2 (`reddit-oauth` adopts `pure.ts`) brought over from the
+  local checkpoint branch; Node suite 499/499. Not deployed.
+- Android debug WebView (`apps/personas-android`) assembled with the Gradle wrapper
+  (debug-signed; no release keystore exists, by design), installed on a physical
+  phone as `online.mypersonas.owner.debug.local`, and launched to `OwnerActivity`.
+  On Windows, Gradle needs `-Djdk.net.unixdomain.tmpdir=<path without spaces>` in
+  `JAVA_TOOL_OPTIONS` or it fails with "Unable to establish loopback connection".
+- Production PWA installability verified (see the PWA item above).
+
+Blocked (owner input needed):
+
+| Item | What's needed |
+| --- | --- |
+| Deploy `reddit-oauth`; adopt `pure.ts` in the other connectors | CI `deno check`, owner function deploy, live connect/disconnect check |
+| Pages redeploy | Owner `MIGRATIONS-VERIFIED` confirmation in the manual workflow |
+| Migration 077 and other unapplied migrations | Ledger repair and owner apply/read-back (production DB) |
+| Two-account privacy and real-device sign-in proof | Two unrelated MFA staging accounts and owner sign-in on devices |
+| Outlook/Yahoo/iCloud/Proton concierge, Lightroom, Meta, Discord, provider writes | Provider app registrations, OAuth review, API keys |
+| SMTP, CAPTCHA, custom auth domain, JWT key migration | Supabase/DNS dashboard access and paid-plan decisions |
+| Stripe billing lifecycle | Stripe test Prices and owner billing/tax/refund decisions |
+| Persona publication, Sherlock Chomes update, second Castleborn doc | Owner-approved copy, media, and links |
+| Per-platform branded icons | Owner decision on platform-logo usage/brand guidelines |
+| SEO prerendering, inline-JS/CSP move, OpenRouter server-side exchange | Architecture decision; each changes the production release path |
+| Store submission, push notifications | Store accounts and a push backend decision |
+
 ## v0 — Foundation (current)
 
 Shipped:
@@ -475,7 +504,11 @@ larger product phase remains.
 - [ ] Discovery: trending personas/tags, better ranking than recency
 - [ ] Moderation pipeline: user reports on content/personas, review queue
 - [~] PWA: install/offline shell complete locally; real-device release verification and
-      a separate push-notification permission/subscription/delivery phase remain
+      a separate push-notification permission/subscription/delivery phase remain.
+      2026-09-26: production `https://mypersonas.online/` meets Chrome installability
+      (HTTPS, standalone manifest, 192/512/maskable icons all 200, active controlling
+      service worker, apple-touch-icon) and was opened in Chrome on a physical Android
+      phone; the owner's Install tap and offline check on that device remain.
 - [ ] Custom auth domain (auth.aliaspaces.com) for branded OAuth consent
 - [ ] Profile analytics for owners (views, clicks on links/albums)
 
