@@ -12,8 +12,11 @@ connector (meta-oauth, gmail-oauth, twitter-oauth, reddit-oauth).
 
 ## Status
 
-- **ADDITIVE / not yet adopted.** Nothing imports this module, so deployed function
-  behavior is unchanged. Safe to merge as-is.
+- **Adopted by reddit-oauth (code, 2026-09-26; not yet deployed):** `validLedgerId`,
+  `normalizeScopes`, `safeExpiry`. Behavior notes: ledger ids must now be RFC 4122
+  v1–5 UUIDs (the ledger uses `gen_random_uuid()`); stored scopes are deduped and
+  sorted; `expires_in` outside 60s..400d falls back to 1 hour. Other connectors still
+  inline their copies. Checked by `tests/reddit-oauth-connector-core.test.mjs`.
 - **Tested directly:** `tests/pure-core.test.mjs` imports this real `.ts` file (via
   Node's `--experimental-strip-types`) — no mirrored copy to drift. `npm test`.
 

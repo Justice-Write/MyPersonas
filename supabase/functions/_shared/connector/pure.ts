@@ -1,6 +1,7 @@
 // Shared connector core — pure helpers (no I/O, no Deno globals).
-// First slice of the CONNECTOR-CORE-DESIGN.md refactor. ADDITIVE: nothing imports
-// this yet, so deployed behavior is unchanged. Adopt incrementally per that doc.
+// First slice of the CONNECTOR-CORE-DESIGN.md refactor. Adopted so far by:
+// reddit-oauth (validLedgerId, normalizeScopes, safeExpiry). Adopt the remaining
+// connectors incrementally per that doc.
 //
 // These mirror the pure logic currently inlined in the connector functions
 // (esp. meta-oauth). The Node test suite in tests/lib/meta-helpers.mjs keeps a

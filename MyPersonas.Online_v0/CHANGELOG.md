@@ -11,6 +11,11 @@ Status: **Code only; nothing deployed.** No edge function, migration, or Pages r
   checkouts and `git status` on Windows). It was a stray copy of an OpenArt media-decision
   validation report (no secrets); the content was preserved outside the repo. `/NUL` is
   now ignored.
+- P2 connector-core step 2: `reddit-oauth` imports `validLedgerId`, `normalizeScopes`,
+  and `safeExpiry` from `supabase/functions/_shared/connector/pure.ts` and drops its
+  inline duplicates. Ledger ids are now strict UUIDs, stored scopes are deduped/sorted,
+  and out-of-window `expires_in` falls back to one hour. Not deployed; needs CI
+  `deno check`, an owner deploy of `reddit-oauth`, and a live connect/disconnect check.
 
 ## Required AI-use declaration and forward-only provenance hardening (production release) (2026-08-23)
 

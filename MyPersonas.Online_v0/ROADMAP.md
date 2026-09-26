@@ -345,9 +345,13 @@ larger product phase remains.
       supabase/functions/_shared/connector/pure.ts, tested directly via Node
       type-stripping (tests/pure-core.test.mjs). ADDITIVE — not yet imported by any
       function, so zero deployed-behavior change. Adoption guide in that dir's README.
-- [ ] P2 connector-core (next): adopt pure.ts per connector (reddit-oauth first),
-      then extract http.ts/respond.ts/leases.ts/revocation.ts — needs per-function
-      deploy + verify
+- [~] P2 connector-core (step 2): reddit-oauth now imports `validLedgerId`,
+      `normalizeScopes`, `safeExpiry` from `_shared/connector/pure.ts` (inline
+      duplicates removed; tests/reddit-oauth-connector-core.test.mjs) — CODE ONLY
+      2026-09-26, NOT deployed. Owner: `deno check` in CI, deploy reddit-oauth
+      (`--no-verify-jwt`) and run connect/disconnect before adopting in
+      gmail-oauth/twitter-oauth/meta-oauth, then extract
+      http.ts/respond.ts/leases.ts/revocation.ts
 - [x] APPLIED migration 028 (2026-08-09): run_data_retention() created + weekly
       pg_cron job 'data-retention-weekly' scheduled (Sun 04:15 UTC); dry run
       returned 0 deletions across all categories (DB already clean). 029
