@@ -19,6 +19,7 @@
 // Required secrets: REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { normalizeScopes, safeExpiry, validLedgerId } from "../_shared/connector/pure.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -131,7 +132,7 @@ async function requireUser(req: Request): Promise<string> {
 
 async function start(origin: string, uid: string, ledgerId: string): Promise<Response> {
   if (!configured()) return json(origin, 409, { error: "The Reddit connector's client credentials are not installed yet." });
-  if (!/^[0-9a-f-]{36}$/i.test(ledgerId)) return json(origin, 400, { error: "A ledger id is required" });
+  if (!validLedgerId(ledgerId)) return json(origin, 400, { error: "A ledger id is required" });
   const { data: ledger } = await service.from("account_ledger")
     .select("id,owner,provider,username").eq("id", ledgerId).eq("owner", uid).eq("provider", "reddit").maybeSingle();
   if (!ledger) return json(origin, 404, { error: "Owned Reddit ledger record not found" });
@@ -182,7 +183,7 @@ async function callback(req: Request): Promise<Response> {
   if (!tokenResponse) return redirectToApp({ reddit: "error", reason: "token_exchange_failed" });
   const token = await tokenResponse.json().catch(() => ({}));
   if (!tokenResponse.ok || !token.access_token) return redirectToApp({ reddit: "error", reason: "token_exchange_failed" });
-  const grantedScopes = String(token.scope || "").split(/[ ,]+/).filter(Boolean);
+  const grantedScopes = normalizeScopes(token.scope);
   if (!grantedScopes.includes("identity") || !grantedScopes.includes("submit")) {
     return await redirectAfterIssuedGrantFailure(token, "scope_missing");
   }
@@ -205,7 +206,9 @@ async function callback(req: Request): Promise<Response> {
     return await redirectAfterIssuedGrantFailure(token, "username_mismatch");
   }
 
-  const expiresAt = new Date(Date.now() + Math.max(60, Number(token.expires_in || 3600)) * 1000).toISOString();
+  // Reddit returns only a relative expires_in; out-of-window values fall back to 1h.
+  const expiresAt = safeExpiry(undefined, token.expires_in) ||
+    new Date(Date.now() + 3600 * 1000).toISOString();
   const { error: storeError } = await service.rpc("reddit_store_tokens_service", {
     p_ledger_id: ledger.id, p_owner: ledger.owner, p_username: redditUsername,
     p_access_token: String(token.access_token), p_refresh_token: String(token.refresh_token),
@@ -216,7 +219,7 @@ async function callback(req: Request): Promise<Response> {
 }
 
 async function disconnect(origin: string, uid: string, ledgerId: string): Promise<Response> {
-  if (!/^[0-9a-f-]{36}$/i.test(ledgerId)) return json(origin, 400, { error: "A ledger id is required" });
+  if (!validLedgerId(ledgerId)) return json(origin, 400, { error: "A ledger id is required" });
   const { data: ledger, error: ledgerError } = await service.from("account_ledger")
     .select("id").eq("id", ledgerId).eq("owner", uid).eq("provider", "reddit").maybeSingle();
   if (ledgerError) return json(origin, 503, { error: "The owned Reddit ledger record could not be verified. Nothing was disconnected." });

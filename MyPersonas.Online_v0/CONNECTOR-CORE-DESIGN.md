@@ -64,6 +64,8 @@ auth URLs, profile/asset discovery, and any provider-specific quirks.
    to drift. ADDITIVE: nothing imports it yet, so deployed behavior is unchanged.
 2. Adopt `pure.ts` in one connector at a time (start with reddit-oauth), deleting
    the inline duplicates; deploy + verify each. See `_shared/connector/README.md`.
+   **reddit-oauth: code adopted 2026-09-26** (`validLedgerId`, `normalizeScopes`,
+   `safeExpiry`); deploy + live verify still pending.
 3. Extract `http.ts` + `respond.ts` (no behavior change); adopt per connector.
 4. Extract `leases.ts` + `revocation.ts`; migrate meta-oauth (most complex) last.
 

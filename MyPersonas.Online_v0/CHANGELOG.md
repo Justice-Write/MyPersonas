@@ -3,6 +3,16 @@
 Versioning per VERSIONING.md: majors are milestones, `.x` are roadmap items,
 trailing letters are hotfixes. Releases are git tags.
 
+## Connector-core adoption: reddit-oauth (local only) (2026-09-26)
+
+Status: **Code only; nothing deployed.** No edge function, migration, or Pages release.
+
+- P2 connector-core step 2: `reddit-oauth` imports `validLedgerId`, `normalizeScopes`,
+  and `safeExpiry` from `supabase/functions/_shared/connector/pure.ts` and drops its
+  inline duplicates. Ledger ids are now strict UUIDs, stored scopes are deduped/sorted,
+  and out-of-window `expires_in` falls back to one hour. Not deployed; needs CI
+  `deno check`, an owner deploy of `reddit-oauth`, and a live connect/disconnect check.
+
 ## Owner mobile workflow completion pass (local source) (2026-09-20)
 
 Status: **Implemented and tested locally; not pushed to production, not applied to
