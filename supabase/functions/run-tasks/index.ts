@@ -12,6 +12,8 @@ import {
   runWithAutomationBudget,
 } from "./budget.ts";
 
+import { loadManagedAccount } from "./managed-account.ts";
+
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const CRON_SECRET = Deno.env.get("CRON_SECRET") || "";
@@ -1085,6 +1087,13 @@ function reservationBlock(reservation: GenerationReservation) {
   }
 }
 
+async function readManagedAccount(table: string, columns: string, filters: Record<string, string>) {
+  let query = admin.from(table).select(columns);
+  for (const [key, value] of Object.entries(filters)) query = query.eq(key, value);
+  const result = await query.maybeSingle();
+  return { data: result.data as unknown, error: result.error as unknown };
+}
+
 async function runTask(task: TaskRow, now: Date, leaseToken: string) {
   const [settingsResult, bindingResult] = await Promise.all([
     admin.from("agent_owner_settings").select(
@@ -1294,13 +1303,8 @@ async function runTask(task: TaskRow, now: Date, leaseToken: string) {
   let destination = normalizedDestination(task.destination);
   let account: Record<string, unknown> | null = null;
   if (task.account_id) {
-    const { data, error } = await admin.from("account_ledger")
-      .select("id,owner,persona_id,provider")
-      .eq("id", task.account_id)
-      .eq("owner", task.owner)
-      .eq("persona_id", task.persona_id)
-      .maybeSingle();
-    if (error || !data) {
+    const data = await loadManagedAccount(readManagedAccount, task.owner, task.persona_id!, task.account_id);
+    if (!data) {
       return await finishBlocked(
         task,
         binding,
@@ -1613,6 +1617,12 @@ async function runTask(task: TaskRow, now: Date, leaseToken: string) {
       // an idempotent claim retry; a different task/run cannot share the key.
       requestKey: generationAuditId,
       providerCall: async (markFetchIssued) => {
+        if (account) {
+          const current = await loadManagedAccount(readManagedAccount, task.owner, task.persona_id!, String(account.id));
+          if (!current || normalizedDestination(current.provider) !== destination) {
+            throw new ProviderCallError("Destination assignment changed before generation; no provider request was sent.", false);
+          }
+        }
         const result = await callProvider(
           endpoint,
           providerRequest,
@@ -1763,6 +1773,13 @@ async function runTask(task: TaskRow, now: Date, leaseToken: string) {
       message,
       300,
     );
+  }
+
+  if (account) {
+    const current = await loadManagedAccount(readManagedAccount, task.owner, task.persona_id!, String(account.id));
+    if (!current || normalizedDestination(current.provider) !== destination) {
+      return await finishBlocked(task, binding, leaseToken, "blocked", "Destination assignment changed during generation. The result was withheld.");
+    }
   }
 
   // Generation never grants its own publication approval. Approval is a
