@@ -159,3 +159,51 @@ verify_jwt = true
 
 [functions.agent-board-run]
 verify_jwt = true
+
+# Recovered deployed source research-brief-run v4; not deployed by this recovery.
+[functions.research-brief-run]
+verify_jwt = false
+
+# Recovered deployed source import-research-brief v2; not deployed by this recovery.
+[functions.import-research-brief]
+verify_jwt = false
+
+# Recovered deployed source research-feed v4; not deployed by this recovery.
+[functions.research-feed]
+verify_jwt = true
+
+# Recovered deployed source developer-api v2; not deployed by this recovery.
+[functions.developer-api]
+verify_jwt = false
+
+# Recovered deployed source developer-keys v3; not deployed by this recovery.
+[functions.developer-keys]
+verify_jwt = true
+
+# Recovered deployed source openart-connect v3; not deployed by this recovery.
+[functions.openart-connect]
+verify_jwt = false
+
+# Recovered deployed source openart-library v2; not deployed by this recovery.
+[functions.openart-library]
+verify_jwt = true
+
+# Recovered deployed source openart-jobs v2; not deployed by this recovery.
+[functions.openart-jobs]
+verify_jwt = true
+
+# Recovered deployed source elevenlabs-library v2; not deployed by this recovery.
+[functions.elevenlabs-library]
+verify_jwt = true
+
+# Recovered deployed source developer-mcp v1; not deployed by this recovery.
+[functions.developer-mcp]
+verify_jwt = false
+
+# Recovered deployed source elevenlabs-speech v1; not deployed by this recovery.
+[functions.elevenlabs-speech]
+verify_jwt = true
+
+# Recovered deployed source research-watch-run v1; not deployed by this recovery.
+[functions.research-watch-run]
+verify_jwt = false

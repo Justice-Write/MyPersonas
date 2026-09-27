@@ -2,6 +2,7 @@
 // The caller must send their JWT and confirm=true. keepAccount=true removes
 // owned content, encrypted credentials, and media while retaining auth access.
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { revokeOpenArtTokens } from "../_shared/openart-revoke.ts";
 import {
   createClient,
   type SupabaseClient,
@@ -343,6 +344,7 @@ async function eraseOwnedStorage(admin: SupabaseClient, uid: string) {
     { bucket: "media", prefix: normalizedOwner },
     { bucket: "persona-media", prefix: normalizedOwner },
     { bucket: "persona-docs", prefix: normalizedOwner },
+    { bucket: "speech-private", prefix: normalizedOwner },
     {
       bucket: "post-approved-media",
       prefix: `owners/${normalizedOwner}`,
@@ -1695,6 +1697,13 @@ async function eraseOwnedRows(
   uid: string,
   personaIds: string[],
 ) {
+  await checked("developer keys", admin.from("developer_keys").delete().eq("owner", uid));
+  await checked("private music notebooks", admin.from("music_notebooks").delete().eq("owner", uid));
+    await checked("Speech generation history", admin.from("elevenlabs_jobs").delete().eq("owner", uid));
+  await checked("OpenArt generation history", admin.from("openart_jobs").delete().eq("owner", uid));
+  await checked("research watches", admin.from("research_watches").delete().eq("owner", uid));
+  await checked("research articles", admin.from("research_articles").delete().eq("owner", uid));
+  await checked("research collection limits", admin.from("research_collection_limits").delete().eq("owner", uid));
   // Delete owner-authored organization and governance content before its
   // account/persona parents. In particular, project_resources deliberately
   // restricts account-ledger deletion while a resource still references it.
@@ -2035,6 +2044,19 @@ export function createErasureHandler(
 
       const eraseClaimedOwner = async () => {
         const personaIds = await listOwnedPersonaIds(admin, uid);
+        await renewMetaOwnerErasure(admin, uid, metaOwnerErasureLeaseId, "ElevenLabs credential cleanup");
+        await checked("ElevenLabs saved key", admin.rpc("elevenlabs_connection_service", {
+          p_action: "forget", p_owner: uid,
+        }));
+        await renewMetaOwnerErasure(admin, uid, metaOwnerErasureLeaseId, "OpenArt revocation");
+        const openart = await admin.rpc("openart_connection_service", {
+          p_action: "erasure_credentials", p_owner: uid,
+        });
+        if (openart.error) throw new Error("OpenArt cleanup is busy or unavailable. Retry account cleanup shortly.");
+        if (openart.data?.tokens) await revokeOpenArtTokens(openart.data.tokens);
+        await checked("OpenArt credentials", admin.rpc("openart_connection_service", {
+          p_action: "forget", p_owner: uid,
+        }));
         await renewMetaOwnerErasure(
           admin,
           uid,

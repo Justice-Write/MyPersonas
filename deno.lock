@@ -2,7 +2,8 @@
   "version": "5",
   "specifiers": {
     "npm:@imagemagick/magick-wasm@0.0.42": "0.0.42",
-    "npm:@types/node@*": "24.2.0"
+    "npm:@types/node@*": "24.2.0",
+    "npm:ajv@8.20.0": "8.20.0"
   },
   "npm": {
     "@imagemagick/magick-wasm@0.0.42": {
@@ -14,6 +15,27 @@
         "undici-types"
       ]
     },
+    "ajv@8.20.0": {
+      "integrity": "sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==",
+      "dependencies": [
+        "fast-deep-equal",
+        "fast-uri",
+        "json-schema-traverse",
+        "require-from-string"
+      ]
+    },
+    "fast-deep-equal@3.1.3": {
+      "integrity": "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q=="
+    },
+    "fast-uri@3.1.8": {
+      "integrity": "sha512-GZMtZUTNRpOVIECoXwLNZS5xUGE+mVNbTB8h/7Rwh2TFWcBQiPzTgyZi05BF9UMZKkLJv8XBRJTlU7zg8+ZfMg=="
+    },
+    "json-schema-traverse@1.0.0": {
+      "integrity": "sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug=="
+    },
+    "require-from-string@2.0.2": {
+      "integrity": "sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw=="
+    },
     "undici-types@7.10.0": {
       "integrity": "sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag=="
     }
@@ -24,6 +46,12 @@
   "remote": {
     "https://deno.land/std@0.224.0/async/delay.ts": "f90dd685b97c2f142b8069082993e437b1602b8e2561134827eeb7c12b95c499",
     "https://deno.land/std@0.224.0/http/server.ts": "f9313804bf6467a1704f45f76cb6cd0a3396a3b31c316035e6a4c2035d1ea514",
-    "https://esm.sh/@supabase/supabase-js@2.112.3": "f6b9130984301066587e8917dfab3b3d60be47dc966bd3d04c733bc9423c1cf9"
+    "https://esm.sh/@modelcontextprotocol/sdk@1.30.0/client/index.js?target=deno": "2ed6dfa81d773580502cd922949dc0f04f10f9badb3fcec2e36e45cca1af502a",
+    "https://esm.sh/@modelcontextprotocol/sdk@1.30.0/client/streamableHttp.js?target=deno": "61d0b08b132cd9423a88a5146530ba042cd15caf89c00172b67475d269c094f2",
+    "https://esm.sh/@modelcontextprotocol/sdk@1.30.0/server/mcp.js?target=deno": "9d757a66b2d2686b1fbd6a4a35396b68012509c51da73422011a6c2943c29064",
+    "https://esm.sh/@modelcontextprotocol/sdk@1.30.0/server/webStandardStreamableHttp.js?target=deno": "954b4f756cdcac9fca1bbb60f03a91a3260b18fc41553210180efed7ded8b397",
+    "https://esm.sh/@supabase/supabase-js@2.112.3": "f6b9130984301066587e8917dfab3b3d60be47dc966bd3d04c733bc9423c1cf9",
+    "https://esm.sh/@supabase/supabase-js@2.115.0": "f4e488ef8059a64be766b58feb4d6a18aa812038fdcf9c7c916efbdf26ab9585",
+    "https://esm.sh/zod@4.5.4": "b05a568776213443d725f847f2ae6e2773330777938de8f75b44191257bc6df2"
   }
 }
