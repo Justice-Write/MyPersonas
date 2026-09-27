@@ -246,5 +246,5 @@ test("the provenance release deploys only its reviewed function set by default",
   assert.match(workflow, /release_scope:[\s\S]*default: "ai-provenance"/);
   assert.match(workflow, /if: \$\{\{ inputs\.release_scope == 'ai-provenance' \}\}/);
   assert.match(workflow, /for function_name in media-ingest gemini-image compose-post ai-proxy/);
-  assert.match(workflow, /inputs\.release_scope == 'all-reviewed'/);
+  assert.doesNotMatch(workflow, /all-reviewed|supabase functions deploy --project-ref/);
 });

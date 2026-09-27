@@ -8,4 +8,4 @@ Some bundles embed older dependency variants. The developer-api variant of devel
 
 Evidence in evidence/deployed-source-parity-2026-09-27.json records the PRE-recovery comparison, including missing paths at that time. Full bundle originals and sanitized profile packets stay in ignored outputs/. Inventory metadata and hashes are committed for reproducibility. A basic credential-pattern scan found no matches in recovered source; this is not a comprehensive secret or security audit.
 
-Deployment workflow now requires main, production environment selection, tests, and individual function selection. The broad all-reviewed release option is removed. Repository environment protection configuration itself is not verified or changed.
+Deployment workflow now requires main, production environment selection, tests, and bounded named-function release scope. The broad all-reviewed release option is removed. Repository environment protection configuration itself is not verified or changed.

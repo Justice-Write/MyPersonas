@@ -11,6 +11,10 @@ on:
         description: "Type PROVIDER-MIGRATIONS-VERIFIED after provider migrations 065-076 are applied, read back, and smoke-tested"
         required: true
         type: string
+      mobile_release_confirmation:
+        description: "Type MOBILE-077-VERIFIED after migration 077 and its owner draft RPCs are applied and read back"
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -27,6 +31,7 @@ env:
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -37,6 +42,7 @@ jobs:
         env:
           RELEASE_CONFIRMATION: ${{ inputs.release_confirmation }}
           PROVIDER_RELEASE_CONFIRMATION: ${{ inputs.provider_release_confirmation }}
+          MOBILE_RELEASE_CONFIRMATION: ${{ inputs.mobile_release_confirmation }}
         run: |
           test "${RELEASE_CONFIRMATION}" = "MIGRATIONS-VERIFIED" || {
             echo "Release blocked: verify migration 060 in the linked ledger and review its smoke tests first."
@@ -46,6 +52,17 @@ jobs:
             echo "Release blocked: apply and read back provider migrations 065 through 076, then review their smoke tests first."
             exit 1
           }
+          test "${MOBILE_RELEASE_CONFIRMATION}" = "MOBILE-077-VERIFIED" || {
+            echo "Release blocked: apply and verify the owner mobile private-draft contract before releasing its frontend."
+            exit 1
+          }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+      - name: Validate the exact frontend revision before packaging
+        run: |
+          npm test
+          node scripts/check-frontend-syntax.mjs
       - name: Prepare public site artifact
         run: |
           mkdir -p .pages-artifact

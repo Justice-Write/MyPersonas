@@ -18,9 +18,9 @@ test("provider deployment remains owner-triggered and migration-readback gated",
 
 test("provider deployment uses an exact reviewed function allowlist", () => {
   const start = workflow.indexOf("- name: Deploy reviewed provider functions");
-  const end = workflow.indexOf("- name: Deploy all reviewed edge functions", start);
+  const nextStep = workflow.indexOf("\n      - name:", start + 1);
+  const end = nextStep < 0 ? workflow.length : nextStep;
   assert.notEqual(start, -1);
-  assert.notEqual(end, -1);
   const step = workflow.slice(start, end);
   for (const functionName of [
     "approve-post-draft",
