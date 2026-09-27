@@ -3739,9 +3739,9 @@ async function saveBackendEdits(id){
   if(!model){toast("Enter the model id you want this connection to use");return}
   let res=await sb.rpc("update_ai_backend",{p_backend_id:id,p_name:name,p_model:model,p_extra:b.extra||{},p_base_url:base});
   if(res.error&&/schema cache|could not find the function|pgrst202/i.test(res.error.message||"")){
-    // Migration 063 not applied yet — save label + model, keep the stored base URL.
+    // Migration 078 not applied yet — save label + model, keep the stored base URL.
     res=await sb.rpc("update_ai_backend",{p_backend_id:id,p_name:name,p_model:model,p_extra:b.extra||{}});
-    if(!res.error){closeEditBackend();await loadMine();renderStudio();toast(base===(b.base_url||"")?"Model updated":"Saved label & model. Base-URL edits need migration 063 applied.");return}
+    if(!res.error){closeEditBackend();await loadMine();renderStudio();toast(base===(b.base_url||"")?"Model updated":"Saved label & model. Base-URL edits need migration 078 applied.");return}
   }
   if(res.error){toast(res.error.message);return}
   closeEditBackend();await loadMine();renderStudio();toast("Model updated");

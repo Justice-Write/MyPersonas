@@ -4,6 +4,16 @@
 migration from this document without an authenticated linked-ledger readback and
 reviewed forward-only release.
 
+## September 27 reconciliation checkpoint
+
+Authenticated read-only inventory now records 68 applied versions, highest 20260905190142. Source and ledger hashes are recorded in docs/evidence/. There are 33 applied versions without matching local filenames; their full statement history and production-equivalent replay remain engineering work, not an authentication blocker. No remote migration or ledger repair was performed.
+
+The two preserved local candidates were renumbered to logical 078 (backend URL edit) and 079 (unchanged media URL compatibility), with new forward timestamp mirrors after the observed remote head. The obsolete, unapplied compatibility timestamp was removed locally; its contents remain in Git history. Historical applied duplicates remain untouched. This resolves these two source numbering collisions; it does not resolve the whole migration ledger.
+
+Disposable PostgreSQL 16 fixtures passed 078 apply/reapply, provenance 059→060→079 and reapply, persona-view 058 apply/reapply, and security-advisor 061 apply/reapply. These fixtures do not constitute production-equivalent schema replay. Live readback found the five-argument backend-edit RPC present and the mobile 077 private-draft RPC absent. Four local versions remain absent from the ledger (including 078/079 and mobile 077); do not blindly replay an already-equivalent YouTube migration.
+
+The historical observations below describe September 24 and are superseded by this checkpoint where indicated.
+
 ## Why feature branches cannot be merged mechanically
 
 Current `origin/main` uses logical migrations 063–077 for restore/AAL2,

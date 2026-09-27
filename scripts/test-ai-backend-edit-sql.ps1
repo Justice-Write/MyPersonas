@@ -1,11 +1,11 @@
 $ErrorActionPreference = "Stop"
 
 $taskRepo = Split-Path -Parent $PSScriptRoot
-$taskContainer = "mypersonas-ai-provenance-079-test"
+$taskContainer = "mypersonas-backend-edit-078-test"
 $taskCreated = $false
 
 $taskExisting = @(& docker ps -a --format "{{.Names}}")
-if ($LASTEXITCODE -ne 0) { throw "Docker is required for the AI provenance SQL runtime test." }
+if ($LASTEXITCODE -ne 0) { throw "Docker is required for the backend URL edit SQL runtime test." }
 if ($taskExisting -contains $taskContainer) {
   throw "Container '$taskContainer' already exists. Remove or rename it before running this disposable test."
 }
@@ -23,21 +23,17 @@ try {
   if (-not $taskReady) { throw "Disposable PostgreSQL did not become ready." }
 
   $taskFiles = @(
-    "tests/sql/059-ai-content-provenance-seed.sql",
-    "MyPersonas.Online_v0/sql-updates/059-ai-content-provenance-watermark.sql",
-    "MyPersonas.Online_v0/sql-updates/060-ai-content-provenance-hardening.sql",
-    "MyPersonas.Online_v0/sql-updates/060-ai-content-provenance-hardening.sql",
-    "MyPersonas.Online_v0/sql-updates/079-persona-media-unchanged-url-compatibility.sql",
-    "MyPersonas.Online_v0/sql-updates/079-persona-media-unchanged-url-compatibility.sql",
-    "tests/sql/059-ai-content-provenance-runtime.sql",
-    "tests/sql/079-persona-media-unchanged-url-compatibility-runtime.sql"
+    "tests/sql/078-ai-backend-edit-seed.sql",
+    "MyPersonas.Online_v0/sql-updates/078-edit-ai-backend-base-url.sql",
+    "MyPersonas.Online_v0/sql-updates/078-edit-ai-backend-base-url.sql",
+    "tests/sql/078-ai-backend-edit-runtime.sql"
   )
   foreach ($taskRelative in $taskFiles) {
     $taskPath = Join-Path $taskRepo $taskRelative
-    Get-Content -LiteralPath $taskPath -Raw | & docker exec -i $taskContainer psql -U postgres -d postgres
+    Get-Content -LiteralPath $taskPath -Raw | & docker exec -i $taskContainer psql --set=ON_ERROR_STOP=1 -U postgres -d postgres
     if ($LASTEXITCODE -ne 0) { throw "SQL verification failed while applying $taskRelative" }
   }
-  Write-Output "Frozen AI provenance migration 059 upgraded through migration 079, migrations 060 and 079 reapplied, and the role-switched runtime assertions passed."
+  Write-Output "Migration 078 applied and reapplied; owner, foreign-owner, AAL2 and key-preservation assertions passed in the disposable fixture."
 }
 finally {
   if ($taskCreated) { & docker rm --force $taskContainer | Out-Null }

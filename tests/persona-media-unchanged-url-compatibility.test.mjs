@@ -7,11 +7,11 @@ import { fileURLToPath } from "node:url";
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const updatePath = path.join(
   repoRoot,
-  "MyPersonas.Online_v0/sql-updates/062-persona-media-unchanged-url-compatibility.sql",
+  "MyPersonas.Online_v0/sql-updates/079-persona-media-unchanged-url-compatibility.sql",
 );
 const migrationPath = path.join(
   repoRoot,
-  "supabase/migrations/20260828073414_persona_media_unchanged_url_compatibility.sql",
+  "supabase/migrations/20260927134223_persona_media_unchanged_url_forward_reconciliation.sql",
 );
 const [sql, migration] = await Promise.all([
   readFile(updatePath, "utf8"),
@@ -25,7 +25,7 @@ const slots = [
   ["feed_img_url", "feed_media_asset_id"],
 ];
 
-test("SQL update 062 and its Supabase migration mirror are identical and transactional", () => {
+test("SQL update 079 and its Supabase migration mirror are identical and transactional", () => {
   assert.equal(sql, migration);
   assert.match(sql, /^begin;/m);
   assert.match(sql, /commit;\s*$/);

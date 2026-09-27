@@ -1,3 +1,4 @@
+-- 079: forward-only local reconciliation; not applied to the linked database.
 -- Compatibility bridge for profiles whose first-party media predates the
 -- provenance registry. A non-media profile update must not reinterpret an
 -- unchanged URL under today's intake rules. New references still fail closed.

@@ -1,4 +1,6 @@
--- 063-edit-ai-backend-base-url.sql
+-- Forward-only local reconciliation after the 2026-09-27 linked-ledger inventory.
+-- Existing deployed 5-argument RPC was read back; staging remains required.
+-- 078-edit-ai-backend-base-url.sql
 -- Lets an owner edit an existing AI model connection's BASE URL (in addition to
 -- label + model id) without re-entering the API key. The key stays write-only in
 -- the Vault; it is never read back or changed by this path.
@@ -9,7 +11,7 @@
 --
 -- APPLY THIS IN THE SUPABASE SQL EDITOR **BEFORE** DEPLOYING THE MATCHING FRONTEND.
 -- The frontend degrades gracefully if this is missing (saves label + model, warns
--- that base-URL edits need 063), but base-URL editing only works once this is live.
+-- that base-URL edits need 078), but base-URL editing only works once this is live.
 
 begin;
 
