@@ -824,7 +824,7 @@ test("persona content and lifecycle UI mutations use the locked owner RPCs", asy
   assert.match(index, /async function deleteAlbum\(id\)[\s\S]*?rpc\("delete_persona_album",\{p_album_id:id\}\)/);
   assert.match(index, /async function addAlbumItem\(aid\)[\s\S]*?rpc\("save_persona_album_item",\{p_item_id:null,p_album_id:aid,p_thumb_url:thumb,[\s\S]*?p_sort:\(a\.items\|\|\[\]\)\.length\}\)/);
   assert.match(index, /async function deleteAlbumItem\(id\)[\s\S]*?rpc\("delete_persona_album_item",\{p_item_id:id\}\)/);
-  assert.match(index, /async function savePersona\(\)[\s\S]*?rpc\("set_persona_pet_project",\{p_persona_id:_pid,p_pet_project:_pet\}\)/);
+  assert.match(index, /async function savePersona\(destination="default"\)[\s\S]*?rpc\("set_persona_pet_project",\{p_persona_id:_pid,p_pet_project:_pet\}\)/);
   assert.match(index, /async function deletePersona\(\)[\s\S]*?rpc\("delete_owned_persona",\{p_persona_id:targetId\}\)/);
   assert.match(index, /async function createPrivatePersona\(name,handle\)[\s\S]*?rpc\("save_persona_bundle",\{p_persona_id:null[\s\S]*?visibility:"private"/);
   assert.match(index, /async function createAndAssignLedgerPersona\(id\)[\s\S]*?if\(assigned\.error\)[\s\S]*?rpc\("delete_owned_persona",\{p_persona_id:data\.id\}\)/);
@@ -938,15 +938,18 @@ test("legacy persona groups are bounded and mutate only through owner RPCs", asy
 
 test("page publish reconciles staged native drafts only after the publish RPC commits", async () => {
   const source = await read("MyPersonas.Online_v0/platform-governance.js");
-  const publish = source.match(/async function governancePublish\(\)[\s\S]*?\n}/)?.[0] || "";
+  const publish = source.match(/async function governancePublishPreviewed\([\s\S]*?\n}/)?.[0] || "";
 
-  assert.match(publish, /await sb\.rpc\("publish_persona_page",\{p_persona_id:persona\.id\}\);if\(error\)\{toast\(error\.message\);return\}/);
-  assert.match(publish, /const publishMessage=data\?\.activation_state==="waiting_for_reviewed_dependencies"\?"Reviewed revision saved; public activation is waiting for its reviewed related personas":"Page published"/);
+  assert.match(publish, /const exactProof=\{p_persona_id:personaId/);
+  assert.match(publish, /await sb\.rpc\("acknowledge_native_persona_page_publish_preview",exactProof\)/);
+  assert.match(publish, /await sb\.rpc\("approve_and_publish_previewed_persona_page",exactProof\)/);
+  assert.ok(publish.indexOf("acknowledge_native_persona_page_publish_preview") < publish.indexOf("approve_and_publish_previewed_persona_page"));
+  assert.match(publish, /const publishMessage=data\?\.activation_state==="waiting_for_reviewed_dependencies"\?"Reviewed revision saved; public activation is waiting for its reviewed related personas":"Exact previewed page published"/);
   assert.match(publish, /await sb\.rpc\("reconcile_staged_native_page_publications",\{p_persona_id:null\}\)/);
   assert.match(publish, /await loadMine\(\);toast\(publishMessage\)/);
   assert.match(publish, /if\(reconciliation\.error\)[\s\S]*Page publication succeeded, but staged native draft reconciliation needs review/);
   assert.ok(
-    publish.indexOf('rpc("publish_persona_page"') <
+    publish.indexOf('rpc("approve_and_publish_previewed_persona_page"') <
       publish.indexOf('rpc("reconcile_staged_native_page_publications"'),
     "staged native reconciliation must be a second RPC after page publication",
   );

@@ -225,16 +225,20 @@ test("migration 060 and its release mirror bind immutable provenance into every 
 
 test("Pages deployment ships both provenance assets only after migration 060 release evidence", async () => {
   const workflow = await readFile(path.join(repoRoot, ".github/workflows/pages.yml"), "utf8");
+  const uploadStep = workflow.search(/- uses: actions\/upload-pages-artifact@[0-9a-f]{40}\b/);
+  assert.ok(uploadStep !== -1, "Pages upload action must be pinned to an immutable commit");
   const artifactStep = workflow.slice(
     workflow.indexOf("- name: Prepare public site artifact"),
-    workflow.indexOf("- uses: actions/upload-pages-artifact@v3"),
+    uploadStep,
   );
   assert.match(workflow, /release_confirmation:[\s\S]{0,240}migration 060/i);
   assert.match(workflow, /verify migration 060 in the linked ledger/i);
   assert.match(artifactStep, /--include '\/ai-content-provenance\.css'/);
   assert.match(artifactStep, /--include '\/ai-content-provenance\.js'/);
-  assert.ok(artifactStep.indexOf("/ai-content-provenance.css") < artifactStep.indexOf("--exclude '*'"));
-  assert.ok(artifactStep.indexOf("/ai-content-provenance.js") < artifactStep.indexOf("--exclude '*'"));
+  const excludeAll = artifactStep.lastIndexOf("--exclude '*'");
+  assert.ok(excludeAll !== -1, "Pages artifact rsync must end with an exclude-all filter");
+  assert.ok(artifactStep.indexOf("--include '/ai-content-provenance.css'") < excludeAll);
+  assert.ok(artifactStep.indexOf("--include '/ai-content-provenance.js'") < excludeAll);
 });
 
 test("the provenance release deploys only its reviewed function set by default", async () => {

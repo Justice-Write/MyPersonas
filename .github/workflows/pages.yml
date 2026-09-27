@@ -7,6 +7,10 @@ on:
         description: "Type MIGRATIONS-VERIFIED after migration 060 is recorded in the linked ledger and its smoke tests are reviewed"
         required: true
         type: string
+      provider_release_confirmation:
+        description: "Type PROVIDER-MIGRATIONS-VERIFIED after provider migrations 065-076 are applied, read back, and smoke-tested"
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -28,23 +32,32 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Require reviewed database release evidence
         env:
           RELEASE_CONFIRMATION: ${{ inputs.release_confirmation }}
+          PROVIDER_RELEASE_CONFIRMATION: ${{ inputs.provider_release_confirmation }}
         run: |
           test "${RELEASE_CONFIRMATION}" = "MIGRATIONS-VERIFIED" || {
             echo "Release blocked: verify migration 060 in the linked ledger and review its smoke tests first."
             exit 1
           }
+          test "${PROVIDER_RELEASE_CONFIRMATION}" = "PROVIDER-MIGRATIONS-VERIFIED" || {
+            echo "Release blocked: apply and read back provider migrations 065 through 076, then review their smoke tests first."
+            exit 1
+          }
       - name: Prepare public site artifact
         run: |
           mkdir -p .pages-artifact
+          # Trailing exclude-all never enters a dir unless that dir itself is included;
+          # '/foo/bar/***' does not include '/foo/', so parent includes are required.
           rsync -a --delete \
             --prune-empty-dirs \
             --include '/index.html' \
             --include '/owner-app.css' \
             --include '/owner-app.js' \
+            --include '/mobile-owner-workflow.js' \
+            --include '/cms-connector-ui.js' \
             --include '/persona-view.css' \
             --include '/persona-view.js' \
             --include '/platform-governance.css' \
@@ -55,8 +68,14 @@ jobs:
             --include '/profile-image-crop.js' \
             --include '/agent-board.css' \
             --include '/agent-board.js' \
+            --include '/assets/' \
             --include '/assets/***' \
-            --include '/brand/app-icon/***' \
+            --include '/favicon.ico' \
+            --include '/icon.svg' \
+            --include '/icon-180.png' \
+            --include '/icon-192.png' \
+            --include '/icon-512.png' \
+            --include '/icon-maskable-512.png' \
             --include '/manifest.webmanifest' \
             --include '/service-worker.js' \
             --include '/pwa.js' \
@@ -72,8 +91,8 @@ jobs:
             --include '/PROVIDER-SETUP-GUIDE.md' \
             --exclude '*' \
             "${SITE_DIR}/" .pages-artifact/
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
           path: .pages-artifact
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
