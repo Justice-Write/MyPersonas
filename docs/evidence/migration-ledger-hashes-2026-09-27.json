@@ -1,0 +1,415 @@
+{
+  "capture_date": "2026-09-27",
+  "read_only": true,
+  "hash_basis": "UTF8 LF-normalized statements joined with newline; not directly comparable to raw migration file bytes",
+  "migrations": [
+    {
+      "version": "20260815190825",
+      "name": "affiliate_request_review_rails",
+      "statement_count": 1,
+      "normalized_statements_sha256": "c5f0f982ecf5e0a3ac07a6ffbc5f72d52f58978d00a001f1805056b5e0cfa469"
+    },
+    {
+      "version": "20260815225311",
+      "name": "human_gated_agent_board",
+      "statement_count": 1,
+      "normalized_statements_sha256": "9a78bbf8c88cda067df65a8cd1e759938cd073395c26e47f824a13c1854759c0"
+    },
+    {
+      "version": "20260815225505",
+      "name": "repost_media_schedule_v3",
+      "statement_count": 1,
+      "normalized_statements_sha256": "56d0606d0a6856baf9ad687b3a419ebb151079d266bd7026dfc6c2095e132243"
+    },
+    {
+      "version": "20260818200450",
+      "name": "044-persona-research-briefs",
+      "statement_count": 1,
+      "normalized_statements_sha256": "c9a3a7de187cbf2ff9c0fb4fee22eb7425fcdb1daaf478a79b3632c65c8b9c0f"
+    },
+    {
+      "version": "20260822111946",
+      "name": "owner_mobile_command_center",
+      "statement_count": 66,
+      "normalized_statements_sha256": "24512b683f91396416d8cab2899014eb31a468d45cb2f7b00b37292bcb7f7b71"
+    },
+    {
+      "version": "20260822111947",
+      "name": "fan_inbox_live_chat_privacy",
+      "statement_count": 57,
+      "normalized_statements_sha256": "22ec3df74d7345cd856f1aed8b6860b7d2159212f1b32b7da63baf9246ba00f5"
+    },
+    {
+      "version": "20260822113925",
+      "name": "persona_full_name_canon",
+      "statement_count": 1,
+      "normalized_statements_sha256": "04075e011e5849bc298be7c5fab87d413d2ed38edf71a359542160d04df8c24a"
+    },
+    {
+      "version": "20260822130000",
+      "name": "persona_backup_relationships",
+      "statement_count": 19,
+      "normalized_statements_sha256": "44082c4b935f24d754964631b2aff409b916d5ccae84d67f28004bea6fe77c67"
+    },
+    {
+      "version": "20260822140000",
+      "name": "persona_relationships_projects_businesses",
+      "statement_count": 90,
+      "normalized_statements_sha256": "e8bf60a6131f11ae5dbd01dcf568848d2fb26e6fd6af509a17c7f1c4f1563b63"
+    },
+    {
+      "version": "20260822150000",
+      "name": "persona_page_layout_builder",
+      "statement_count": 42,
+      "normalized_statements_sha256": "d94f7066b44485ed5df1b88dc73c6a9ff751652dfbea633cbec90d105ebcefa5"
+    },
+    {
+      "version": "20260822160000",
+      "name": "request_review_phase1",
+      "statement_count": 67,
+      "normalized_statements_sha256": "40f62929b393b5fde9d5ec644b7f53af65b1846ce9333331519eb0722addac1f"
+    },
+    {
+      "version": "20260822170000",
+      "name": "publication_social_security_governance",
+      "statement_count": 584,
+      "normalized_statements_sha256": "ef0e06fbe2fa75756a8236578e87962c5d96eeae5250490d3f4a3d63d9840bcc"
+    },
+    {
+      "version": "20260822180000",
+      "name": "reviewed_business_publication",
+      "statement_count": 58,
+      "normalized_statements_sha256": "5dbf1c058a20ac6ef9eee31ca8ef3f8c76288120d039163a7e298c764a692f6a"
+    },
+    {
+      "version": "20260822190000",
+      "name": "agent_board_hardening",
+      "statement_count": 71,
+      "normalized_statements_sha256": "d67ce3d1c686a8a611c2ed7d69c2b92a64a8b4caea3591c7ec4c03e95fcc5676"
+    },
+    {
+      "version": "20260822200000",
+      "name": "owner_research_content_hardening",
+      "statement_count": 69,
+      "normalized_statements_sha256": "59067870c36f6a6a23573b29d5dc55f3682567f70dd63b690d850200fec229e2"
+    },
+    {
+      "version": "20260822210000",
+      "name": "agent_action_retention_hardening",
+      "statement_count": 46,
+      "normalized_statements_sha256": "5b4f5f8a26d97560388ffcbf4eb48967a7c06b31e3e2232a8786cbae6d775739"
+    },
+    {
+      "version": "20260822220000",
+      "name": "auth_email_attestation_hardening",
+      "statement_count": 6,
+      "normalized_statements_sha256": "c80cd3bcddac720bb5ac19d4a7493baa2a7b24f7123bfda0b7f417afb2b60aef"
+    },
+    {
+      "version": "20260822230000",
+      "name": "ai_backend_budget_guard",
+      "statement_count": 35,
+      "normalized_statements_sha256": "1fd7662eee7c1b8ceb8bafd15cbb86822420a1080f4a8cbbbbcb4174c3e83b53"
+    },
+    {
+      "version": "20260823000000",
+      "name": "persona_view_mode",
+      "statement_count": 31,
+      "normalized_statements_sha256": "b0ecbf45dfa828536cb0544f4ab5007c280c594a6687b2f6618ee4c593870eba"
+    },
+    {
+      "version": "20260823010000",
+      "name": "ai_content_provenance_watermark",
+      "statement_count": 84,
+      "normalized_statements_sha256": "524189fb3843095cda8d03c4176cb93b1de6f5a799f234eb6a7a18e655c0d2a8"
+    },
+    {
+      "version": "20260823020000",
+      "name": "ai_content_provenance_hardening",
+      "statement_count": 1,
+      "normalized_statements_sha256": "9f9347feffe57fdc5ad04156588ef92ad8cdc5be479d05d01629c3b53847c970"
+    },
+    {
+      "version": "20260823030000",
+      "name": "security_advisor_safe_hardening",
+      "statement_count": 30,
+      "normalized_statements_sha256": "dd813300586331ef7bcf45dd5743c317e9ce542169181bc5ad964c525a9c1f7c"
+    },
+    {
+      "version": "20260830051925",
+      "name": "restore_require_aal2_helper",
+      "statement_count": 1,
+      "normalized_statements_sha256": "186e9b3ad7093de67c3860331f594386cecd72eec24a64f8de12e692556b094e"
+    },
+    {
+      "version": "20260830053941",
+      "name": "prevent_mailbox_social_targets",
+      "statement_count": 1,
+      "normalized_statements_sha256": "a11165f04ebefe703c78f6c382d21ae7de5dc4ec5bb555027fb47bd641c46075"
+    },
+    {
+      "version": "20260830080000",
+      "name": "post_preview_approval_gate",
+      "statement_count": 33,
+      "normalized_statements_sha256": "2b77786b4846d0d07c1c6af7c7c62617df8727eca78f5fa0adf8746b7817b4a4"
+    },
+    {
+      "version": "20260830090000",
+      "name": "discord_oauth_publishing",
+      "statement_count": 107,
+      "normalized_statements_sha256": "e60a3cc11808b9dd870ba2f50c7de02e36150f63b8a517ddc73154442b43d167"
+    },
+    {
+      "version": "20260830100000",
+      "name": "youtube_oauth_publisher",
+      "statement_count": 77,
+      "normalized_statements_sha256": "48d228ddde7150d0250737cfdb1264f1ebcea9b09f491228bdfaf6ad314dbfe9"
+    },
+    {
+      "version": "20260830110000",
+      "name": "tiktok_connector_foundation",
+      "statement_count": 71,
+      "normalized_statements_sha256": "740811d23fa92acdf44b8590a5e2129d5cf971d256ee4161f5054a1a52d551be"
+    },
+    {
+      "version": "20260830120000",
+      "name": "agent_draft_platform_preview_gate",
+      "statement_count": 39,
+      "normalized_statements_sha256": "9f018b0a505c25b1f7469cd2dc8a712dbf5c6d89b43ac29a3fdcde0a7399b379"
+    },
+    {
+      "version": "20260830130000",
+      "name": "cms_draft_connectors",
+      "statement_count": 72,
+      "normalized_statements_sha256": "24659bdfb120cb8a218115b218a6bd0809c1e04075430533be80e47814e51493"
+    },
+    {
+      "version": "20260830131550",
+      "name": "provider_065_post_preview_approval_gate",
+      "statement_count": 1,
+      "normalized_statements_sha256": "2032df3596a134d0eb94ed072103c22192e9f530ade7c3b5c48ff3b8272a1667"
+    },
+    {
+      "version": "20260830131552",
+      "name": "provider_066_discord_oauth_publishing",
+      "statement_count": 1,
+      "normalized_statements_sha256": "0cb551a099112277a46e1451f2adc053a4d6478d4d51c83d658d7c9960c11933"
+    },
+    {
+      "version": "20260830131554",
+      "name": "provider_067_youtube_oauth_publisher",
+      "statement_count": 1,
+      "normalized_statements_sha256": "d186e19c50da3f8b5cda054fd8e59a2067600f1649a9a5fb803dfd8fc498eb84"
+    },
+    {
+      "version": "20260830131555",
+      "name": "provider_068_tiktok_connector_foundation",
+      "statement_count": 1,
+      "normalized_statements_sha256": "7a8dc344497492b7c6b56b6ef5bc530b999950c66efef533276880b2b45df4b2"
+    },
+    {
+      "version": "20260830131608",
+      "name": "provider_069_agent_draft_platform_preview_gate",
+      "statement_count": 1,
+      "normalized_statements_sha256": "019353935e3a5b89469ee9d646ccafb214c1608824bc0c0c2f3c47a700388b0d"
+    },
+    {
+      "version": "20260830131609",
+      "name": "provider_070_cms_draft_connectors",
+      "statement_count": 1,
+      "normalized_statements_sha256": "3665a24e0379d1463085cce4382babe75b242692e81d57599772d42dcdb451f8"
+    },
+    {
+      "version": "20260830131611",
+      "name": "provider_071_twitch_patreon_capability_foundation",
+      "statement_count": 1,
+      "normalized_statements_sha256": "f5fd2e0eced671d1949e78b471df49790eedf1c6918781998df7eac349ee9da8"
+    },
+    {
+      "version": "20260830131612",
+      "name": "provider_072_immediate_provider_preview_receipts",
+      "statement_count": 1,
+      "normalized_statements_sha256": "ce7fc32a92c09f7cc1d103cb433fde520b3001e9d4c8c1dee13a742c832c1123"
+    },
+    {
+      "version": "20260830131621",
+      "name": "provider_073_content_package_preview_gate",
+      "statement_count": 1,
+      "normalized_statements_sha256": "647c40a3760370a5db2d09b9f39e23e778a5a58835b3d1c0e59237363422e197"
+    },
+    {
+      "version": "20260830131622",
+      "name": "provider_074_native_page_publish_preview_gate",
+      "statement_count": 1,
+      "normalized_statements_sha256": "d4e9f6cbf9d9e37c22ec4a1979d7d750c9fa49b153018e87994eb6def364067b"
+    },
+    {
+      "version": "20260830131624",
+      "name": "provider_075_native_business_page_publish_preview_gate",
+      "statement_count": 1,
+      "normalized_statements_sha256": "051d1e45a67a68e4577ffd1b7400a57899d8cd80cdc66511336c727615ffc8d2"
+    },
+    {
+      "version": "20260830133935",
+      "name": "provider_076_youtube_trigger_privilege_hardening",
+      "statement_count": 1,
+      "normalized_statements_sha256": "234ec43a56022e58d6d7dc9895439ee2b9acb444125510320e02c55d39bda667"
+    },
+    {
+      "version": "20260830140000",
+      "name": "twitch_patreon_capability_foundation",
+      "statement_count": 82,
+      "normalized_statements_sha256": "1c827ee8972b27f5ff2fc245484eca700dc47c0fc2b032311414800bc9cfc4d2"
+    },
+    {
+      "version": "20260830150000",
+      "name": "immediate_provider_preview_receipts",
+      "statement_count": 42,
+      "normalized_statements_sha256": "bd41b0208b4a068ec57c37c62029e09d421c408b48b6d9205819430787c58d88"
+    },
+    {
+      "version": "20260830160000",
+      "name": "content_package_preview_gate",
+      "statement_count": 58,
+      "normalized_statements_sha256": "ae0d928651ecc722e9b6b51651d896efa49d5f4deff7fd844f557136e2785aa8"
+    },
+    {
+      "version": "20260830170000",
+      "name": "native_page_publish_preview_gate",
+      "statement_count": 28,
+      "normalized_statements_sha256": "dba2801e0858dbcfd7069cf9fa634948c58a2fcf215071c68b5de3da2cc1aaae"
+    },
+    {
+      "version": "20260830180000",
+      "name": "native_business_page_publish_preview_gate",
+      "statement_count": 25,
+      "normalized_statements_sha256": "0b18ceba4fbe055c954e4f5060701ec983f466ad57615416f910d3c26b19a968"
+    },
+    {
+      "version": "20260905123200",
+      "name": "persona_research_feed",
+      "statement_count": 1,
+      "normalized_statements_sha256": "86376ac2a8cb4e77a6a709e81d89b68e9c1704f19052ba0623a3257c467c9e67"
+    },
+    {
+      "version": "20260905123912",
+      "name": "developer_access",
+      "statement_count": 1,
+      "normalized_statements_sha256": "0793cf21d6eea122a9330122879e5d86da1d89c7aa4709dcc82cbb4e8eed91bd"
+    },
+    {
+      "version": "20260905124915",
+      "name": "openart_connection",
+      "statement_count": 1,
+      "normalized_statements_sha256": "9970acffcc25a29d7bc410ac1c27847d1acf61a155fe060fa3902e4e7d58d0c6"
+    },
+    {
+      "version": "20260905130418",
+      "name": "creative_erasure_guard",
+      "statement_count": 1,
+      "normalized_statements_sha256": "3bb09faa65d591585756b3ce3367a06c338d86289417e5c3ff5b31982d145534"
+    },
+    {
+      "version": "20260905131021",
+      "name": "openart_generation_jobs",
+      "statement_count": 1,
+      "normalized_statements_sha256": "d4cd4b3c62d489e9bf6855f6bfd9b72db8bc43a9e42ea67fd6eab749e068c705"
+    },
+    {
+      "version": "20260905131553",
+      "name": "mobile_persona_editor",
+      "statement_count": 1,
+      "normalized_statements_sha256": "1b32bb20726c606490456fe393d7490ee42ab9c7b073767adfad4283aa0d5d78"
+    },
+    {
+      "version": "20260905132630",
+      "name": "persona_openart_project_bindings",
+      "statement_count": 1,
+      "normalized_statements_sha256": "efccf3cf94e45e325b3de72205c99bd25527582c7a74727323bf2e677ba5b1aa"
+    },
+    {
+      "version": "20260905133326",
+      "name": "elevenlabs_connection",
+      "statement_count": 1,
+      "normalized_statements_sha256": "c87ba37cd01bafb07f9d1c877e9929cf809bdfe273e258ea87424accfafc8a8f"
+    },
+    {
+      "version": "20260905134840",
+      "name": "local_fleet_owner_chat",
+      "statement_count": 1,
+      "normalized_statements_sha256": "7288c4de882629bc248c1b874448b83e7a8cd91a8a90a980dca3058e5a5c9e80"
+    },
+    {
+      "version": "20260905135417",
+      "name": "developer_draft_proposals",
+      "statement_count": 1,
+      "normalized_statements_sha256": "27a98f178e78bbff83a7754b8128a842b22b8b50f56450925477d4b71b51bf3e"
+    },
+    {
+      "version": "20260905142033",
+      "name": "elevenlabs_speech_jobs",
+      "statement_count": 1,
+      "normalized_statements_sha256": "8b068d10ef1074bc20d0b02edee543d8fa62b863c69928bacd2f0636a0ef9dbe"
+    },
+    {
+      "version": "20260905143001",
+      "name": "research_watches",
+      "statement_count": 1,
+      "normalized_statements_sha256": "44d3f7f74abae356338270690f020845a1bab35fc8fbe0f2af364262379faaa4"
+    },
+    {
+      "version": "20260905143022",
+      "name": "research_watch_worker",
+      "statement_count": 1,
+      "normalized_statements_sha256": "235232f837b8dd2c75f683a38be0eff3f472a83b78c59955b70af589a0e819dd"
+    },
+    {
+      "version": "20260905143958",
+      "name": "mobile_persona_images",
+      "statement_count": 1,
+      "normalized_statements_sha256": "67449cb30069e9faa031b7cd7aa68fd8808160d5f950c0858f49f8722e913839"
+    },
+    {
+      "version": "20260905150534",
+      "name": "private_music_notebooks",
+      "statement_count": 1,
+      "normalized_statements_sha256": "bcf3d6a76e751902bc6eb600ff5f39c5b99b19034de1524cec45c40a0d24cbd0"
+    },
+    {
+      "version": "20260905173349",
+      "name": "research_breakdowns",
+      "statement_count": 1,
+      "normalized_statements_sha256": "7fbcbb6b2e5d7abdf67e76b2a62ee89819db9803b2710113b4c8fc8de42e46a1"
+    },
+    {
+      "version": "20260905174031",
+      "name": "persona_media_notes",
+      "statement_count": 1,
+      "normalized_statements_sha256": "438b7b88b4d987067f8679579977c11f4070839b5aabed818b8313c106fb055f"
+    },
+    {
+      "version": "20260905181103",
+      "name": "content_kit_revision_guard",
+      "statement_count": 1,
+      "normalized_statements_sha256": "1d79886c878f47bd5259ccce9282c8f0745a06648b6f67ad0bff5fa97fa9bd26"
+    },
+    {
+      "version": "20260905182349",
+      "name": "content_kit_targets",
+      "statement_count": 1,
+      "normalized_statements_sha256": "35aa1e05071954a96fc1c42df6d50c9c4a6d4472ede52942bb62f5389c2ce6f0"
+    },
+    {
+      "version": "20260905184451",
+      "name": "content_kit_source_decisions",
+      "statement_count": 1,
+      "normalized_statements_sha256": "a017b7715fe410c3a6bea0d112014ab9a79b8ab68cb516892318fbd2bc8af107"
+    },
+    {
+      "version": "20260905190142",
+      "name": "business_revision_guard",
+      "statement_count": 1,
+      "normalized_statements_sha256": "70170d782a33ed5e386d9b4fca10e554c230a94c63b084c6e4718fa8705b41f6"
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # MyPersonas roadmap progress — 2026-09-24
 
+> September 27 update: see docs/IDENTITY-EXECUTION-2026-09-27.md for current local implementation, tests, source recovery, and remaining engineering/owner dependencies. Earlier dated live-state counts below are historical.
+
 This is an evidence ledger, not a completion or release claim. Local, tested,
 committed, pushed, deployed, configured, and verified live remain separate.
 

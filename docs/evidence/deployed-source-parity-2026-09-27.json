@@ -1,0 +1,1297 @@
+{
+  "capture_date": "2026-09-27",
+  "coverage": "61 of 61 deployed functions recovered read-only; binary resources not compared",
+  "functions": [
+    {
+      "slug": "ai-proxy",
+      "version": 43,
+      "files": [
+        {
+          "path": "ai-proxy/index.ts",
+          "remote_sha256": "f727ce69dfcadbce50bdb9f03b7cfaf62e6a125c3a5f1e777a663a640d024757",
+          "local_sha256": "551f9f6ffc38649b81fe571c6c6e4bcda956ef15ee9b5b7704bb1a0ab9f18988",
+          "status": "different_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/local-fleet.ts",
+          "remote_sha256": "197237cae13dc83caa51dc9514995b44b7d8fbbb0fbff2b0c9eebb8c14838999",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/fleet-protocol.ts",
+          "remote_sha256": "099d93b02a61daa0ff972e8c33138bf667e6be353d65e90f39d1b72205eb3ef3",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "delete-account",
+      "version": 52,
+      "files": [
+        {
+          "path": "delete-account/index.ts",
+          "remote_sha256": "521ae874feaaedbe09380789d88ca36b09540524f30a3888baaafe1cddfdfaac",
+          "local_sha256": "85b3bd48f3133eab9054a7ecd575daef72bb7833fbeedc577c30ede62f94a0dd",
+          "status": "different_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/openart-revoke.ts",
+          "remote_sha256": "f2b436adbc90aae872ee99e9e7dea2c4af9ca6dd5da4358bb2eaf9859ac9d12c",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/openart-auth.ts",
+          "remote_sha256": "8602a6d5af1c31fb6124745afcb95d097408b5d6966ddf938b8dccf7ab9a18a4",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "run-tasks",
+      "version": 37,
+      "files": [
+        {
+          "path": "run-tasks/index.ts",
+          "remote_sha256": "8a95a140acd0d8cf5036b6dc745d98260c127d4f1340a469e32f4098a5f4d08f",
+          "local_sha256": "2ef8a490be8ed8704cac239cb004e3f442002016b9abc7fd5aa6d4b8dc875040",
+          "status": "different_source",
+          "redactions": 0
+        },
+        {
+          "path": "run-tasks/budget.ts",
+          "remote_sha256": "cc1e4598eef5c5238bb509c5b9a618882e781fb74428fed6db205d6f4fcbd371",
+          "local_sha256": "cc1e4598eef5c5238bb509c5b9a618882e781fb74428fed6db205d6f4fcbd371",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "sitemap",
+      "version": 31,
+      "files": [
+        {
+          "path": "sitemap/index.ts",
+          "remote_sha256": "0e946098e60a70dcb1bf89b902d8e2ffee76a83db81f1ab95d46237fef5e3714",
+          "local_sha256": "0e946098e60a70dcb1bf89b902d8e2ffee76a83db81f1ab95d46237fef5e3714",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "gmail-oauth",
+      "version": 31,
+      "files": [
+        {
+          "path": "gmail-oauth/index.ts",
+          "remote_sha256": "fe18a3a95a61841995f6d1f35736d4e0f461f6b949db967debe333ca322dea24",
+          "local_sha256": "fe18a3a95a61841995f6d1f35736d4e0f461f6b949db967debe333ca322dea24",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "run-publish-queue",
+      "version": 30,
+      "files": [
+        {
+          "path": "run-publish-queue/index.ts",
+          "remote_sha256": "8167c08685a0eadcf7aa23ebefa992f25de109f1d7139f3e2c0a15baf68f5f16",
+          "local_sha256": "8167c08685a0eadcf7aa23ebefa992f25de109f1d7139f3e2c0a15baf68f5f16",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "fan-chat",
+      "version": 33,
+      "files": [
+        {
+          "path": "fan-chat/index.ts",
+          "remote_sha256": "9f741f5a91b1a39f765f0db07aff2871f7d18d9007a64363d0faf2d179e33887",
+          "local_sha256": "9f741f5a91b1a39f765f0db07aff2871f7d18d9007a64363d0faf2d179e33887",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "post-bridge",
+      "version": 30,
+      "files": [
+        {
+          "path": "post-bridge/index.ts",
+          "remote_sha256": "688dbf4cdf1c719ae6d389c7199b8a23b09e6b94de3a710b698529595bd28e63",
+          "local_sha256": "688dbf4cdf1c719ae6d389c7199b8a23b09e6b94de3a710b698529595bd28e63",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "erase-content",
+      "version": 36,
+      "files": [
+        {
+          "path": "erase-content/index.ts",
+          "remote_sha256": "6f1b71e2f39e8fcd16abfa075504b5efc1da7da0653cd6e4f90b3480d0189110",
+          "local_sha256": "6f1b71e2f39e8fcd16abfa075504b5efc1da7da0653cd6e4f90b3480d0189110",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "delete-account/index.ts",
+          "remote_sha256": "85b3bd48f3133eab9054a7ecd575daef72bb7833fbeedc577c30ede62f94a0dd",
+          "local_sha256": "85b3bd48f3133eab9054a7ecd575daef72bb7833fbeedc577c30ede62f94a0dd",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "twitter-oauth",
+      "version": 30,
+      "files": [
+        {
+          "path": "twitter-oauth/index.ts",
+          "remote_sha256": "42f21ce07f966bdf1c32629df60ac1db77d133f616974496a3f1ece4f469f128",
+          "local_sha256": "42f21ce07f966bdf1c32629df60ac1db77d133f616974496a3f1ece4f469f128",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "mailbox-manager",
+      "version": 27,
+      "files": [
+        {
+          "path": "mailbox-manager/index.ts",
+          "remote_sha256": "d7085cf06c017d02d8bfff4fc832afff7b1620a2f69b3ae2b163f02622af14b2",
+          "local_sha256": "d7085cf06c017d02d8bfff4fc832afff7b1620a2f69b3ae2b163f02622af14b2",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/mailbox.ts",
+          "remote_sha256": "993de4e01df475b646a42767c4953de383097c101a5d72eca64d4c4ca4a36040",
+          "local_sha256": "993de4e01df475b646a42767c4953de383097c101a5d72eca64d4c4ca4a36040",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "run-mailbox-jobs",
+      "version": 27,
+      "files": [
+        {
+          "path": "run-mailbox-jobs/index.ts",
+          "remote_sha256": "f9a55e571405dc188dc0f8772b77ed6bd6fb38db859c599eb5297fca5e3a6f67",
+          "local_sha256": "f9a55e571405dc188dc0f8772b77ed6bd6fb38db859c599eb5297fca5e3a6f67",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/mailbox.ts",
+          "remote_sha256": "993de4e01df475b646a42767c4953de383097c101a5d72eca64d4c4ca4a36040",
+          "local_sha256": "993de4e01df475b646a42767c4953de383097c101a5d72eca64d4c4ca4a36040",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "meta-oauth",
+      "version": 34,
+      "files": [
+        {
+          "path": "meta-oauth/index.ts",
+          "remote_sha256": "85ae5ce7b8459202abc513062914efa5e8764eb173c608244a59d00eb310d39e",
+          "local_sha256": "85ae5ce7b8459202abc513062914efa5e8764eb173c608244a59d00eb310d39e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "discord-post",
+      "version": 10,
+      "files": [
+        {
+          "path": "discord-post/index.ts",
+          "remote_sha256": "87173aac005ee061b58604c991893adce73fdb3d01d3ef08ab0e29c064129dcc",
+          "local_sha256": "87173aac005ee061b58604c991893adce73fdb3d01d3ef08ab0e29c064129dcc",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "reddit-post",
+      "version": 14,
+      "files": [
+        {
+          "path": "reddit-post/index.ts",
+          "remote_sha256": "883c4813e19f24d501dbbb56a649a5f88d0cf35ff7c8c7a6582ec63fb9bf0138",
+          "local_sha256": "883c4813e19f24d501dbbb56a649a5f88d0cf35ff7c8c7a6582ec63fb9bf0138",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "reddit-oauth",
+      "version": 9,
+      "files": [
+        {
+          "path": "reddit-oauth/index.ts",
+          "remote_sha256": "4028288916b7a38d749f123a7ecc16c6a65d3ae2cda4f9e29b7d7d2b68a97981",
+          "local_sha256": "8ae8fa4394e5c47001e65cd15ce7a605bc979734e6af38de7a9d33d3ba25b70a",
+          "status": "different_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "twitter-post",
+      "version": 7,
+      "files": [
+        {
+          "path": "twitter-post/index.ts",
+          "remote_sha256": "74470f8795dd3cffbe3762ef431d394bb4ec751ff2a1c668c9169fba733e0565",
+          "local_sha256": "74470f8795dd3cffbe3762ef431d394bb4ec751ff2a1c668c9169fba733e0565",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "meta-post",
+      "version": 15,
+      "files": [
+        {
+          "path": "meta-post/index.ts",
+          "remote_sha256": "9c11fdc729181220002bfd1753e63880723ec3196eed7a5bd389a5d7a7899ab8",
+          "local_sha256": "9c11fdc729181220002bfd1753e63880723ec3196eed7a5bd389a5d7a7899ab8",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/meta-publish.ts",
+          "remote_sha256": "7120f1b43cdab02b3a2c7bf79e281324daaa1dc425e944c737d31e291c4d3506",
+          "local_sha256": "7120f1b43cdab02b3a2c7bf79e281324daaa1dc425e944c737d31e291c4d3506",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/approved-media.ts",
+          "remote_sha256": "5cd2c3623a6f0416e57e5cffe47232041da8309ffcfe2fea5136757aa04f3b8e",
+          "local_sha256": "5cd2c3623a6f0416e57e5cffe47232041da8309ffcfe2fea5136757aa04f3b8e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "meta-ig-discover",
+      "version": 5,
+      "files": [
+        {
+          "path": "meta-ig-discover/index.ts",
+          "remote_sha256": "8736826c84a0bd6e0f068ade1c614a45d37e25e369d0025bbfb04b1eb4c6cc8d",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "meta-ig-attach",
+      "version": 5,
+      "files": [
+        {
+          "path": "meta-ig-attach/index.ts",
+          "remote_sha256": "0a5a3e06dba0c64fd895065e72cb7bb59a26f5564659ac5b73e5fdc8772aa626",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "gemini-probe",
+      "version": 5,
+      "files": [
+        {
+          "path": "gemini-probe/index.ts",
+          "remote_sha256": "c79026be54008d2d3bfa6c5f8cc8bf333312e118ea10ef33d776646653563e02",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "gemini-models",
+      "version": 5,
+      "files": [
+        {
+          "path": "gemini-models/index.ts",
+          "remote_sha256": "b3c0962358a1ef7c9e73ee4fe71d4f277aa10a9be2a32be5dc667b63f9b90e1b",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "daily-discovery",
+      "version": 5,
+      "files": [
+        {
+          "path": "daily-discovery/index.ts",
+          "remote_sha256": "0c019db53bb9e560aa196b43385d0cba27c2cd471dc4fad08e02bef08f7020c6",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "image-probe",
+      "version": 5,
+      "files": [
+        {
+          "path": "image-probe/index.ts",
+          "remote_sha256": "507aedf189a46a6e9acca88d793aa47ddaa6a46ed7898dca83a1cf0621642014",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "split-post",
+      "version": 5,
+      "files": [
+        {
+          "path": "split-post/index.ts",
+          "remote_sha256": "e1086218583155c3aea82355ae62b975dcd7ce4d9bb899186aeb56db0baa4573",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "gemini-image",
+      "version": 10,
+      "files": [
+        {
+          "path": "gemini-image/index.ts",
+          "remote_sha256": "62c845aaf5dbc85813043f71b8bf901cc50942c2cf8f68b8cd5625de8191c1e5",
+          "local_sha256": "62c845aaf5dbc85813043f71b8bf901cc50942c2cf8f68b8cd5625de8191c1e5",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/gemini-image.ts",
+          "remote_sha256": "e21762d2131de7bbba7833f7392d764b6d81698a655b8e49d5301012daddef27",
+          "local_sha256": "e21762d2131de7bbba7833f7392d764b6d81698a655b8e49d5301012daddef27",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "run-post-queue",
+      "version": 9,
+      "files": [
+        {
+          "path": "run-post-queue/index.ts",
+          "remote_sha256": "09f0b29e8a2f5593835270edfd2afa3fd3e32a42f3d385f4fd94ffabd53bbb3f",
+          "local_sha256": "09f0b29e8a2f5593835270edfd2afa3fd3e32a42f3d385f4fd94ffabd53bbb3f",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/meta-publish.ts",
+          "remote_sha256": "7120f1b43cdab02b3a2c7bf79e281324daaa1dc425e944c737d31e291c4d3506",
+          "local_sha256": "7120f1b43cdab02b3a2c7bf79e281324daaa1dc425e944c737d31e291c4d3506",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/approved-media.ts",
+          "remote_sha256": "5cd2c3623a6f0416e57e5cffe47232041da8309ffcfe2fea5136757aa04f3b8e",
+          "local_sha256": "5cd2c3623a6f0416e57e5cffe47232041da8309ffcfe2fea5136757aa04f3b8e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "compose-post",
+      "version": 5,
+      "files": [
+        {
+          "path": "compose-post/index.ts",
+          "remote_sha256": "23bb32d33d7a4c352cc87164cbe4f732ca7061ca74c7c9d6aed9b9c7d738d009",
+          "local_sha256": "23bb32d33d7a4c352cc87164cbe4f732ca7061ca74c7c9d6aed9b9c7d738d009",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "approve-post-draft",
+      "version": 8,
+      "files": [
+        {
+          "path": "approve-post-draft/index.ts",
+          "remote_sha256": "53a1672a1bc41790dc91e844f3dbd1e4ef439560e335a92487d9c53da6935a14",
+          "local_sha256": "53a1672a1bc41790dc91e844f3dbd1e4ef439560e335a92487d9c53da6935a14",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/approved-media.ts",
+          "remote_sha256": "5cd2c3623a6f0416e57e5cffe47232041da8309ffcfe2fea5136757aa04f3b8e",
+          "local_sha256": "5cd2c3623a6f0416e57e5cffe47232041da8309ffcfe2fea5136757aa04f3b8e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "openrouter-connect",
+      "version": 2,
+      "files": [
+        {
+          "path": "openrouter-connect/index.ts",
+          "remote_sha256": "35df40e6ec18af21248db689579dc804bf85a771099ee6be930a0f8f441d4404",
+          "local_sha256": "35df40e6ec18af21248db689579dc804bf85a771099ee6be930a0f8f441d4404",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "affiliate-redirect",
+      "version": 4,
+      "files": [
+        {
+          "path": "affiliate-redirect/index.ts",
+          "remote_sha256": "03c3cd80ff76a2e4682c67dfce6d8db1e802ff0c199db3ab48fa6905a85db1aa",
+          "local_sha256": "03c3cd80ff76a2e4682c67dfce6d8db1e802ff0c199db3ab48fa6905a85db1aa",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "request-review",
+      "version": 3,
+      "files": [
+        {
+          "path": "request-review/index.ts",
+          "remote_sha256": "d91293bebfd58abb681dbbe8bb421faaea94a2f88be794efca24651bd4083f33",
+          "local_sha256": "d91293bebfd58abb681dbbe8bb421faaea94a2f88be794efca24651bd4083f33",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "agent-board-propose",
+      "version": 3,
+      "files": [
+        {
+          "path": "agent-board-propose/index.ts",
+          "remote_sha256": "1b1938562a7345d83d0c8ad7d5d6cf29dbdc3b1ef2f1e9e9ae2952cd379ca17c",
+          "local_sha256": "1b1938562a7345d83d0c8ad7d5d6cf29dbdc3b1ef2f1e9e9ae2952cd379ca17c",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "agent-board-run",
+      "version": 4,
+      "files": [
+        {
+          "path": "agent-board-run/index.ts",
+          "remote_sha256": "747dc32bd3bf3b1e424f30c2865bef494f8b966c1f32e2838e30be94f01f8246",
+          "local_sha256": "747dc32bd3bf3b1e424f30c2865bef494f8b966c1f32e2838e30be94f01f8246",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "research-brief-run",
+      "version": 4,
+      "files": [
+        {
+          "path": "research-brief-run/index.ts",
+          "remote_sha256": "f15d22188bab2cbd01b7af3612f75f89d2d68bab6afc11aa529579179c4ee397",
+          "local_sha256": "f15d22188bab2cbd01b7af3612f75f89d2d68bab6afc11aa529579179c4ee397",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/ai-provider-endpoint.ts",
+          "remote_sha256": "651ce04a032c6df14a93885796411b0d23eee0778828c0c7809b7d206a118eeb",
+          "local_sha256": "651ce04a032c6df14a93885796411b0d23eee0778828c0c7809b7d206a118eeb",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "import-research-brief",
+      "version": 2,
+      "files": [
+        {
+          "path": "import-research-brief/index.ts",
+          "remote_sha256": "996514e87df1847010c4b77f6eaa70d0c2c4fa95c6147a93544756e216f6ba4b",
+          "local_sha256": "996514e87df1847010c4b77f6eaa70d0c2c4fa95c6147a93544756e216f6ba4b",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "media-ingest",
+      "version": 17,
+      "files": [
+        {
+          "path": "media-ingest/index.ts",
+          "remote_sha256": "ff5f8ac460aa621c1ec0b90408203aacc8cf801d7fb1a47586f7134f66c2f5b0",
+          "local_sha256": "ff5f8ac460aa621c1ec0b90408203aacc8cf801d7fb1a47586f7134f66c2f5b0",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "media-ingest/MyPersonas-AI-Watermark.png",
+          "remote_sha256": null,
+          "local_sha256": null,
+          "status": "binary_not_compared",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "profile-visual-release-20260829",
+      "version": 3,
+      "files": [
+        {
+          "path": "profile-visual-release-20260829/index.ts",
+          "remote_sha256": "1bb27162a18c20c63196469862faca4bffbdf46081cb8719242d4281f60a6b2f",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "discord-oauth",
+      "version": 2,
+      "files": [
+        {
+          "path": "discord-oauth/index.ts",
+          "remote_sha256": "4f63e316606ce5f33c61b957058b5bf469fecb06412745a9eec4b5e92665b6a3",
+          "local_sha256": "4f63e316606ce5f33c61b957058b5bf469fecb06412745a9eec4b5e92665b6a3",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "wordpress-draft",
+      "version": 2,
+      "files": [
+        {
+          "path": "wordpress-draft/index.ts",
+          "remote_sha256": "6240af5f377f245c1b59e3ed98edf22fbd52bf56803276933105b8326e9e2a60",
+          "local_sha256": "6240af5f377f245c1b59e3ed98edf22fbd52bf56803276933105b8326e9e2a60",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/cms-drafts.ts",
+          "remote_sha256": "2253a8e38e5e0ca21c94d23ade39227c230d887be81a458bcdd3a3a31a4bbb1a",
+          "local_sha256": "2253a8e38e5e0ca21c94d23ade39227c230d887be81a458bcdd3a3a31a4bbb1a",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/wordpress-safe-url.ts",
+          "remote_sha256": "0d12889873e11217d2560585a569a1b318dc393a7c16fbca87eac6c330bb4e6e",
+          "local_sha256": "0d12889873e11217d2560585a569a1b318dc393a7c16fbca87eac6c330bb4e6e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "patreon-oauth",
+      "version": 2,
+      "files": [
+        {
+          "path": "patreon-oauth/index.ts",
+          "remote_sha256": "d8aa2a85d5702e395ca16b8e570772a643e5134106d138edbaf1f8e47da0d534",
+          "local_sha256": "d8aa2a85d5702e395ca16b8e570772a643e5134106d138edbaf1f8e47da0d534",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "wix-oauth",
+      "version": 2,
+      "files": [
+        {
+          "path": "wix-oauth/index.ts",
+          "remote_sha256": "9065873a3d51c271d7f4a98b5cb282a939200803be9dc52862c4622360103ef5",
+          "local_sha256": "9065873a3d51c271d7f4a98b5cb282a939200803be9dc52862c4622360103ef5",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/cms-drafts.ts",
+          "remote_sha256": "2253a8e38e5e0ca21c94d23ade39227c230d887be81a458bcdd3a3a31a4bbb1a",
+          "local_sha256": "2253a8e38e5e0ca21c94d23ade39227c230d887be81a458bcdd3a3a31a4bbb1a",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "wix-draft",
+      "version": 2,
+      "files": [
+        {
+          "path": "wix-draft/index.ts",
+          "remote_sha256": "019ebe8d45f886d7a6b3c03b206bd0dd38c02c31736df99b7cb1aa6c7c43393b",
+          "local_sha256": "019ebe8d45f886d7a6b3c03b206bd0dd38c02c31736df99b7cb1aa6c7c43393b",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/cms-drafts.ts",
+          "remote_sha256": "2253a8e38e5e0ca21c94d23ade39227c230d887be81a458bcdd3a3a31a4bbb1a",
+          "local_sha256": "2253a8e38e5e0ca21c94d23ade39227c230d887be81a458bcdd3a3a31a4bbb1a",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "wordpress-oauth",
+      "version": 2,
+      "files": [
+        {
+          "path": "wordpress-oauth/index.ts",
+          "remote_sha256": "058667ed8425b66e5ae9d7181c96e3f0afe611ed12bafd3fd745e3a1a71aca21",
+          "local_sha256": "058667ed8425b66e5ae9d7181c96e3f0afe611ed12bafd3fd745e3a1a71aca21",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/cms-drafts.ts",
+          "remote_sha256": "2253a8e38e5e0ca21c94d23ade39227c230d887be81a458bcdd3a3a31a4bbb1a",
+          "local_sha256": "2253a8e38e5e0ca21c94d23ade39227c230d887be81a458bcdd3a3a31a4bbb1a",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/wordpress-safe-url.ts",
+          "remote_sha256": "0d12889873e11217d2560585a569a1b318dc393a7c16fbca87eac6c330bb4e6e",
+          "local_sha256": "0d12889873e11217d2560585a569a1b318dc393a7c16fbca87eac6c330bb4e6e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "tiktok-post",
+      "version": 2,
+      "files": [
+        {
+          "path": "tiktok-post/index.ts",
+          "remote_sha256": "ae47614844d1ea1feb3619d47a79e5f47fdfcdb27e2e49236b062a342070d91b",
+          "local_sha256": "ae47614844d1ea1feb3619d47a79e5f47fdfcdb27e2e49236b062a342070d91b",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "tiktok-oauth",
+      "version": 2,
+      "files": [
+        {
+          "path": "tiktok-oauth/index.ts",
+          "remote_sha256": "dc6c443701df660395de74132db96c0fd514bad71221c619b7441f681cb78cee",
+          "local_sha256": "dc6c443701df660395de74132db96c0fd514bad71221c619b7441f681cb78cee",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "youtube-post",
+      "version": 2,
+      "files": [
+        {
+          "path": "youtube-post/index.ts",
+          "remote_sha256": "232cdd8f9186e4323568fc95ab205b8a63e2ea8a5379e0225ac0f21185577992",
+          "local_sha256": "232cdd8f9186e4323568fc95ab205b8a63e2ea8a5379e0225ac0f21185577992",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/approved-media.ts",
+          "remote_sha256": "5cd2c3623a6f0416e57e5cffe47232041da8309ffcfe2fea5136757aa04f3b8e",
+          "local_sha256": "5cd2c3623a6f0416e57e5cffe47232041da8309ffcfe2fea5136757aa04f3b8e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "twitch-oauth",
+      "version": 2,
+      "files": [
+        {
+          "path": "twitch-oauth/index.ts",
+          "remote_sha256": "374d4fb6b609e8420fad986571096ccfe0ea5475eeb1700d3cd6265414513bd8",
+          "local_sha256": "374d4fb6b609e8420fad986571096ccfe0ea5475eeb1700d3cd6265414513bd8",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "youtube-oauth",
+      "version": 2,
+      "files": [
+        {
+          "path": "youtube-oauth/index.ts",
+          "remote_sha256": "51e063ec1b7c6044138fa4c5b2ac051a164c22a7c720ce8284535faa60af62fc",
+          "local_sha256": "51e063ec1b7c6044138fa4c5b2ac051a164c22a7c720ce8284535faa60af62fc",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "patreon-handoff",
+      "version": 2,
+      "files": [
+        {
+          "path": "patreon-handoff/index.ts",
+          "remote_sha256": "5a9a8479cfbaba541adcdfaa9a68759c6ed810dabb4a13604edd6ac2856da5e2",
+          "local_sha256": "5a9a8479cfbaba541adcdfaa9a68759c6ed810dabb4a13604edd6ac2856da5e2",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "twitch-action",
+      "version": 2,
+      "files": [
+        {
+          "path": "twitch-action/index.ts",
+          "remote_sha256": "fc3b89e43032e8c80115ebd2b16040862d2e2752da331c506dfe26ed3a924bb2",
+          "local_sha256": "fc3b89e43032e8c80115ebd2b16040862d2e2752da331c506dfe26ed3a924bb2",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "research-feed",
+      "version": 4,
+      "files": [
+        {
+          "path": "research-feed/index.ts",
+          "remote_sha256": "88652011f88d50725c7606d808ecef6c9c4aa2f6654c4b5472a3bcf35614b2b7",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/research.ts",
+          "remote_sha256": "9ba3b39765677410382d9508e4755af77ac3f56b2a6dc963bee88ffd22f2352a",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/developer.ts",
+          "remote_sha256": "5300ac44b2082dab9c5c3999f9eede3fb3e2a913d91cf72502e7dade2bfcfe6a",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "developer-api",
+      "version": 2,
+      "files": [
+        {
+          "path": "developer-api/index.ts",
+          "remote_sha256": "07f17a8d3c7ecea649b0406f10918ac03d5fe1edc8d145557b96ea5ce57d37bb",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/developer.ts",
+          "remote_sha256": "8ec6370dd559936b0ff9bc1f234c4898ea3e3cafad1a24a65c61b82a85b9e80c",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "developer-keys",
+      "version": 3,
+      "files": [
+        {
+          "path": "developer-keys/index.ts",
+          "remote_sha256": "12b996fe039374e18a446da8e3d540caeb9522f58346f8540b39f31a2401378e",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "5f41aefc99a7187f3a1b2aa040012fa322e064b3b55576ff70f118cf6f7e9298",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "different_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/developer.ts",
+          "remote_sha256": "8ec6370dd559936b0ff9bc1f234c4898ea3e3cafad1a24a65c61b82a85b9e80c",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "openart-connect",
+      "version": 3,
+      "files": [
+        {
+          "path": "openart-connect/index.ts",
+          "remote_sha256": "0bfdde5615c852992f7aca2d17efb7a80d012c6e47c634314ee486c9c1c30d03",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "5f41aefc99a7187f3a1b2aa040012fa322e064b3b55576ff70f118cf6f7e9298",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "different_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/developer.ts",
+          "remote_sha256": "01ba9b041a05d5c6b7cee18d7781ffc3056dc1b8bbc29c88ed200b86491ad1af",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/openart-auth.ts",
+          "remote_sha256": "3c4848a282c95d4889f56657a2603e0b3845c1c00b8a272d4a928c2b6937e75f",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/openart-revoke.ts",
+          "remote_sha256": "534b8379535e565fdf5c4b580ee5571d60aa3c066c4b4954767bc944af34ad3f",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "openart-library",
+      "version": 2,
+      "files": [
+        {
+          "path": "openart-library/index.ts",
+          "remote_sha256": "aadd2708e1948182cb803f50757706275855fe2aa7943c2425fb1770aeecae97",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "5f41aefc99a7187f3a1b2aa040012fa322e064b3b55576ff70f118cf6f7e9298",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "different_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/developer.ts",
+          "remote_sha256": "01ba9b041a05d5c6b7cee18d7781ffc3056dc1b8bbc29c88ed200b86491ad1af",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/openart-client.ts",
+          "remote_sha256": "86763cb3df5c606400fbe9346ac1c4d230240e96e67d3b0a87636c04ced9f11c",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/openart-auth.ts",
+          "remote_sha256": "3c4848a282c95d4889f56657a2603e0b3845c1c00b8a272d4a928c2b6937e75f",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "openart-jobs",
+      "version": 2,
+      "files": [
+        {
+          "path": "openart-jobs/index.ts",
+          "remote_sha256": "4d08ce32391703d49837abf92f60c9fa9a1c3e263dd02a8108629e09078428a4",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "5f41aefc99a7187f3a1b2aa040012fa322e064b3b55576ff70f118cf6f7e9298",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "different_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/developer.ts",
+          "remote_sha256": "01ba9b041a05d5c6b7cee18d7781ffc3056dc1b8bbc29c88ed200b86491ad1af",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/openart-client.ts",
+          "remote_sha256": "86763cb3df5c606400fbe9346ac1c4d230240e96e67d3b0a87636c04ced9f11c",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/openart-auth.ts",
+          "remote_sha256": "3c4848a282c95d4889f56657a2603e0b3845c1c00b8a272d4a928c2b6937e75f",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/openart-jobs.ts",
+          "remote_sha256": "b7cc6430a2972972823d8ea07931c26d4d2a92bd9ea910ee6913dc976edc063a",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "elevenlabs-library",
+      "version": 2,
+      "files": [
+        {
+          "path": "elevenlabs-library/index.ts",
+          "remote_sha256": "89bc71fafa2bbafa57996e4169f6a7c4cd4c2376f7d4e79bfa10d008c3143cd6",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "5f41aefc99a7187f3a1b2aa040012fa322e064b3b55576ff70f118cf6f7e9298",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "different_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/developer.ts",
+          "remote_sha256": "01ba9b041a05d5c6b7cee18d7781ffc3056dc1b8bbc29c88ed200b86491ad1af",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/elevenlabs.ts",
+          "remote_sha256": "3fd0c6f8831c83bc660933346b5b1173c1000ff213589bb0353030edca57f44a",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "developer-mcp",
+      "version": 1,
+      "files": [
+        {
+          "path": "developer-mcp/index.ts",
+          "remote_sha256": "5ff8652f6abbe691a9b3d5e27dbd1afe7f8ffac17e6976f6e9c8d16cfcdba25d",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/mcp-tools.js",
+          "remote_sha256": "156454ce71062dbe5b26ae8698fce6c762b4cbf99d5c826984186729efe3ced4",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/developer.ts",
+          "remote_sha256": "8ec6370dd559936b0ff9bc1f234c4898ea3e3cafad1a24a65c61b82a85b9e80c",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "elevenlabs-speech",
+      "version": 1,
+      "files": [
+        {
+          "path": "elevenlabs-speech/index.ts",
+          "remote_sha256": "c37e027661c6def1d7a69050bdf69846f3a9f1387f7147ec9ba96fd197e0cf78",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/aal2.ts",
+          "remote_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "local_sha256": "8eb19a11e8b7dc6db18a15b0d51669e2ed58226cd3cfec65901826022cd0cf0e",
+          "status": "matches_normalized_source",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/developer.ts",
+          "remote_sha256": "5300ac44b2082dab9c5c3999f9eede3fb3e2a913d91cf72502e7dade2bfcfe6a",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/elevenlabs.ts",
+          "remote_sha256": "36a86f43489a90ae2af1551a3bff4c6d874cb7a8aecd8651ebc6a776bea4f971",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/elevenlabs-speech.ts",
+          "remote_sha256": "3283c8501bb0a366bc8d7b79b4e06a50afbcb5a7bad46a8952665e3f6c0262a8",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    },
+    {
+      "slug": "research-watch-run",
+      "version": 1,
+      "files": [
+        {
+          "path": "research-watch-run/index.ts",
+          "remote_sha256": "283762bb0be2621bdf52aeeb08193fa55281f00f5b1fbbf6d8e3ab94400333be",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        },
+        {
+          "path": "_shared/research.ts",
+          "remote_sha256": "9ba3b39765677410382d9508e4755af77ac3f56b2a6dc963bee88ffd22f2352a",
+          "local_sha256": null,
+          "status": "missing_locally",
+          "redactions": 0
+        }
+      ]
+    }
+  ],
+  "comparison_phase": "Baseline before local source recovery; not final parity. Embedded older dependency variants are preserved in private recovery output."
+}

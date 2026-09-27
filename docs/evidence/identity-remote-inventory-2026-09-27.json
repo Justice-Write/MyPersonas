@@ -1,0 +1,769 @@
+{
+  "captured_at": "2026-09-27",
+  "project": "nwsqyuucwzihruszocge",
+  "read_only": true,
+  "migrations": [
+    {
+      "version": "20260815190825",
+      "name": "affiliate_request_review_rails"
+    },
+    {
+      "version": "20260815225311",
+      "name": "human_gated_agent_board"
+    },
+    {
+      "version": "20260815225505",
+      "name": "repost_media_schedule_v3"
+    },
+    {
+      "version": "20260818200450",
+      "name": "044-persona-research-briefs"
+    },
+    {
+      "version": "20260822111946",
+      "name": "owner_mobile_command_center"
+    },
+    {
+      "version": "20260822111947",
+      "name": "fan_inbox_live_chat_privacy"
+    },
+    {
+      "version": "20260822113925",
+      "name": "persona_full_name_canon"
+    },
+    {
+      "version": "20260822130000",
+      "name": "persona_backup_relationships"
+    },
+    {
+      "version": "20260822140000",
+      "name": "persona_relationships_projects_businesses"
+    },
+    {
+      "version": "20260822150000",
+      "name": "persona_page_layout_builder"
+    },
+    {
+      "version": "20260822160000",
+      "name": "request_review_phase1"
+    },
+    {
+      "version": "20260822170000",
+      "name": "publication_social_security_governance"
+    },
+    {
+      "version": "20260822180000",
+      "name": "reviewed_business_publication"
+    },
+    {
+      "version": "20260822190000",
+      "name": "agent_board_hardening"
+    },
+    {
+      "version": "20260822200000",
+      "name": "owner_research_content_hardening"
+    },
+    {
+      "version": "20260822210000",
+      "name": "agent_action_retention_hardening"
+    },
+    {
+      "version": "20260822220000",
+      "name": "auth_email_attestation_hardening"
+    },
+    {
+      "version": "20260822230000",
+      "name": "ai_backend_budget_guard"
+    },
+    {
+      "version": "20260823000000",
+      "name": "persona_view_mode"
+    },
+    {
+      "version": "20260823010000",
+      "name": "ai_content_provenance_watermark"
+    },
+    {
+      "version": "20260823020000",
+      "name": "ai_content_provenance_hardening"
+    },
+    {
+      "version": "20260823030000",
+      "name": "security_advisor_safe_hardening"
+    },
+    {
+      "version": "20260830051925",
+      "name": "restore_require_aal2_helper"
+    },
+    {
+      "version": "20260830053941",
+      "name": "prevent_mailbox_social_targets"
+    },
+    {
+      "version": "20260830080000",
+      "name": "post_preview_approval_gate"
+    },
+    {
+      "version": "20260830090000",
+      "name": "discord_oauth_publishing"
+    },
+    {
+      "version": "20260830100000",
+      "name": "youtube_oauth_publisher"
+    },
+    {
+      "version": "20260830110000",
+      "name": "tiktok_connector_foundation"
+    },
+    {
+      "version": "20260830120000",
+      "name": "agent_draft_platform_preview_gate"
+    },
+    {
+      "version": "20260830130000",
+      "name": "cms_draft_connectors"
+    },
+    {
+      "version": "20260830131550",
+      "name": "provider_065_post_preview_approval_gate"
+    },
+    {
+      "version": "20260830131552",
+      "name": "provider_066_discord_oauth_publishing"
+    },
+    {
+      "version": "20260830131554",
+      "name": "provider_067_youtube_oauth_publisher"
+    },
+    {
+      "version": "20260830131555",
+      "name": "provider_068_tiktok_connector_foundation"
+    },
+    {
+      "version": "20260830131608",
+      "name": "provider_069_agent_draft_platform_preview_gate"
+    },
+    {
+      "version": "20260830131609",
+      "name": "provider_070_cms_draft_connectors"
+    },
+    {
+      "version": "20260830131611",
+      "name": "provider_071_twitch_patreon_capability_foundation"
+    },
+    {
+      "version": "20260830131612",
+      "name": "provider_072_immediate_provider_preview_receipts"
+    },
+    {
+      "version": "20260830131621",
+      "name": "provider_073_content_package_preview_gate"
+    },
+    {
+      "version": "20260830131622",
+      "name": "provider_074_native_page_publish_preview_gate"
+    },
+    {
+      "version": "20260830131624",
+      "name": "provider_075_native_business_page_publish_preview_gate"
+    },
+    {
+      "version": "20260830133935",
+      "name": "provider_076_youtube_trigger_privilege_hardening"
+    },
+    {
+      "version": "20260830140000",
+      "name": "twitch_patreon_capability_foundation"
+    },
+    {
+      "version": "20260830150000",
+      "name": "immediate_provider_preview_receipts"
+    },
+    {
+      "version": "20260830160000",
+      "name": "content_package_preview_gate"
+    },
+    {
+      "version": "20260830170000",
+      "name": "native_page_publish_preview_gate"
+    },
+    {
+      "version": "20260830180000",
+      "name": "native_business_page_publish_preview_gate"
+    },
+    {
+      "version": "20260905123200",
+      "name": "persona_research_feed"
+    },
+    {
+      "version": "20260905123912",
+      "name": "developer_access"
+    },
+    {
+      "version": "20260905124915",
+      "name": "openart_connection"
+    },
+    {
+      "version": "20260905130418",
+      "name": "creative_erasure_guard"
+    },
+    {
+      "version": "20260905131021",
+      "name": "openart_generation_jobs"
+    },
+    {
+      "version": "20260905131553",
+      "name": "mobile_persona_editor"
+    },
+    {
+      "version": "20260905132630",
+      "name": "persona_openart_project_bindings"
+    },
+    {
+      "version": "20260905133326",
+      "name": "elevenlabs_connection"
+    },
+    {
+      "version": "20260905134840",
+      "name": "local_fleet_owner_chat"
+    },
+    {
+      "version": "20260905135417",
+      "name": "developer_draft_proposals"
+    },
+    {
+      "version": "20260905142033",
+      "name": "elevenlabs_speech_jobs"
+    },
+    {
+      "version": "20260905143001",
+      "name": "research_watches"
+    },
+    {
+      "version": "20260905143022",
+      "name": "research_watch_worker"
+    },
+    {
+      "version": "20260905143958",
+      "name": "mobile_persona_images"
+    },
+    {
+      "version": "20260905150534",
+      "name": "private_music_notebooks"
+    },
+    {
+      "version": "20260905173349",
+      "name": "research_breakdowns"
+    },
+    {
+      "version": "20260905174031",
+      "name": "persona_media_notes"
+    },
+    {
+      "version": "20260905181103",
+      "name": "content_kit_revision_guard"
+    },
+    {
+      "version": "20260905182349",
+      "name": "content_kit_targets"
+    },
+    {
+      "version": "20260905184451",
+      "name": "content_kit_source_decisions"
+    },
+    {
+      "version": "20260905190142",
+      "name": "business_revision_guard"
+    }
+  ],
+  "functions": [
+    {
+      "slug": "ai-proxy",
+      "version": 43,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788616129611,
+      "ezbr_sha256": "354f54e66586da00723fd6f7267ad31de76a95b2fa132792ca9352ba897ff80c"
+    },
+    {
+      "slug": "delete-account",
+      "version": 52,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788620741545,
+      "ezbr_sha256": "85787257bdc902d62cd9cd0fe19d45f43af0cefdf8601e0c11871122de8a010e"
+    },
+    {
+      "slug": "run-tasks",
+      "version": 37,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "479cc167446bd6bd454b9f82389ebee16f354188012f650dcebd6c522d501def"
+    },
+    {
+      "slug": "sitemap",
+      "version": 31,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "e918c7fe30147e2a0916c6942e6cc7577ffbbbd5ce62f22c0dcb340a08e2176c"
+    },
+    {
+      "slug": "gmail-oauth",
+      "version": 31,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "b276413a2e02358441d5b01b47bc268049bd365c8d0d5ba9deeecd5e3fe00db2"
+    },
+    {
+      "slug": "run-publish-queue",
+      "version": 30,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "e1e2c49a70f7ee92b24d9c79864745b8cdad2fb483f95fb01679d36fae48e778"
+    },
+    {
+      "slug": "fan-chat",
+      "version": 33,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "24afd546b24cfb534f87d16ae6ea7f049255aca9a03f392fa199e05c0a4f9362"
+    },
+    {
+      "slug": "post-bridge",
+      "version": 30,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "e6f91ebd4ecce0d5169c3d01df74a72123c06d7d01cf8b4f611600340a72f93f"
+    },
+    {
+      "slug": "erase-content",
+      "version": 36,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095751825,
+      "ezbr_sha256": "6913a1616c86c352a161a5962b699fbe35f6d1bfa7648ed1a262132155981c1d"
+    },
+    {
+      "slug": "twitter-oauth",
+      "version": 30,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788095915463,
+      "ezbr_sha256": "764f0629a1d9d57cfc2afa5c82344ed7579236ad50e635a1095bf0e79ccd5b20"
+    },
+    {
+      "slug": "mailbox-manager",
+      "version": 27,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "b5024972402d2be037f68f3cb6fb7139c7f234c5cbced1fd0ed8db4ac888ebb6"
+    },
+    {
+      "slug": "run-mailbox-jobs",
+      "version": 27,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "a9cc90bf432e6ca7491cbd7eeeeeed464adfb239666ced82aa0322d2db2a2312"
+    },
+    {
+      "slug": "meta-oauth",
+      "version": 34,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788095905626,
+      "ezbr_sha256": "7552bf811547bafab56bd67c9012fb7fb26d8731f49d35104445caaf09435098"
+    },
+    {
+      "slug": "discord-post",
+      "version": 10,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095924038,
+      "ezbr_sha256": "c8d9cec59243dbf6180f53ecab0073b323c879c64b709980fa4d222eb501a8b6"
+    },
+    {
+      "slug": "reddit-post",
+      "version": 14,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095960028,
+      "ezbr_sha256": "810b863424ae0514684b61f4cba4dd22585c63554c6ac7330e4cfbd1490b3c3a"
+    },
+    {
+      "slug": "reddit-oauth",
+      "version": 9,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788095957640,
+      "ezbr_sha256": "adc412e0a6fe7412b3f3af20e6a44fdc4362efa17befee26ec44c8e3c7e1ddaf"
+    },
+    {
+      "slug": "twitter-post",
+      "version": 7,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095918531,
+      "ezbr_sha256": "96a3327d43907b2527a6f9b1a9c73db8d1c7042708bc7c0646a8f26f7b15477f"
+    },
+    {
+      "slug": "meta-post",
+      "version": 15,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095908471,
+      "ezbr_sha256": "f22e51378617199c4f252c9591f4c7acd61915801f6c46adcb15b2a2f87124ec"
+    },
+    {
+      "slug": "meta-ig-discover",
+      "version": 5,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1785744154627,
+      "ezbr_sha256": "742147dbc5c5f16b646c1cf16993f55a81bc084d2bb6c0a7f906bb854f070a22"
+    },
+    {
+      "slug": "meta-ig-attach",
+      "version": 5,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1785745024302,
+      "ezbr_sha256": "3a320b19a99cea3bb76b664344bf8dbc34c7ef5b41e4eca4e7580684289a6a82"
+    },
+    {
+      "slug": "gemini-probe",
+      "version": 5,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1785820764734,
+      "ezbr_sha256": "1ddb61922c5fc13671a85bfc7f3f8f6286b6503d537d6af5f730414ff6179f77"
+    },
+    {
+      "slug": "gemini-models",
+      "version": 5,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1785821448013,
+      "ezbr_sha256": "fe54abd0e217ae753aa7e56195a5c8a90615fc87c9515c2fef81bb259a1c92e8"
+    },
+    {
+      "slug": "daily-discovery",
+      "version": 5,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1785825906402,
+      "ezbr_sha256": "4deaf276eceab6d15b84e9120b2df7a5c79dd6412dcf6a0d76b4fa157c323521"
+    },
+    {
+      "slug": "image-probe",
+      "version": 5,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1785913008359,
+      "ezbr_sha256": "ee9f9eb7999561704763654f4006d0aa2b649f4ada6cdb46c5ed41075a43b835"
+    },
+    {
+      "slug": "split-post",
+      "version": 5,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1785914015344,
+      "ezbr_sha256": "26223eabeff5b03991ec0066b9ca3f00e0c16334ba4c84e530da5a2b28e60b5d"
+    },
+    {
+      "slug": "gemini-image",
+      "version": 10,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1787482656638,
+      "ezbr_sha256": "e3bf8d486fddea7843135d1afb1f4a34d0c44db8fe1af06b9db46c2da44ba9a4"
+    },
+    {
+      "slug": "run-post-queue",
+      "version": 9,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788095911190,
+      "ezbr_sha256": "9fc1ce2dc221261a9c557b1202d711a67132f5abf88c7248dc4023f9b18b3f16"
+    },
+    {
+      "slug": "compose-post",
+      "version": 5,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1787482656638,
+      "ezbr_sha256": "adbdb394153871b11519b36c79c9e44b29910001f814d834d522ace95e8a4f8f"
+    },
+    {
+      "slug": "approve-post-draft",
+      "version": 8,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095902857,
+      "ezbr_sha256": "cf4307f6a241fc880442e6ab410339c6e11824c358c52a7338572cb6b7f5817a"
+    },
+    {
+      "slug": "openrouter-connect",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "97b56e963c53a120fcd387f6ba5afbe919987e52d479d14a39211a39f85793b0"
+    },
+    {
+      "slug": "affiliate-redirect",
+      "version": 4,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "7037e903036f15312d83414e4e6acffe7fe27598e83fa20001e1ec7d707430ff"
+    },
+    {
+      "slug": "request-review",
+      "version": 3,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "e356f9740f53446f23b94a508130a8888811ace010969618729a55a0fce77f5c"
+    },
+    {
+      "slug": "agent-board-propose",
+      "version": 3,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "899737de44efb4efae9624f5a4cf9a0d1c3d1e674d362be6811007ef137e29ac"
+    },
+    {
+      "slug": "agent-board-run",
+      "version": 4,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1787481723062,
+      "ezbr_sha256": "6c33414d816801c10fc58415781e2f1394874033a4c0a8638ef34ce4d4eb22ef"
+    },
+    {
+      "slug": "research-brief-run",
+      "version": 4,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1787397901064,
+      "ezbr_sha256": "85e50d2e156f55809af60d29125fddd2eea954c5a8c686a44bafa6080d7b3eb7"
+    },
+    {
+      "slug": "import-research-brief",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1787397905200,
+      "ezbr_sha256": "7193b49edbef713d4470c5243552f8fca1de3047992f0dcb9566287073e7ad74"
+    },
+    {
+      "slug": "media-ingest",
+      "version": 17,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095751825,
+      "ezbr_sha256": "de605d55291390aaf7e2167de7f68a64ab714addd2a7f6469c046e4d8fa49b5d"
+    },
+    {
+      "slug": "profile-visual-release-20260829",
+      "version": 3,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788065981049,
+      "ezbr_sha256": "cf5d3d17faa2225ad3479eb0a044d1fa962f5d0c3a4b66e212241268a62a4321"
+    },
+    {
+      "slug": "discord-oauth",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788095921085,
+      "ezbr_sha256": "f0de17770181490b093246c57f5b4af594613f37f1448c5c3d3fa8cab467d5ca"
+    },
+    {
+      "slug": "wordpress-draft",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095954830,
+      "ezbr_sha256": "41dca11cc831d64a4d9f85516d4c4d59ccbf5800aee5d0a023eff46b87e7c06e"
+    },
+    {
+      "slug": "patreon-oauth",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788095941937,
+      "ezbr_sha256": "a7f16660b34f6fdadb9919e8a7a7e1fddf9bbc3f00420f1500b297a8384bf7ca"
+    },
+    {
+      "slug": "wix-oauth",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788095946876,
+      "ezbr_sha256": "81025cb0cd2d8470f3c2eacfd22d677d573059f004cae49fbeb51e364633255f"
+    },
+    {
+      "slug": "wix-draft",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095949724,
+      "ezbr_sha256": "67c211894d8a2391605841f6154a2145a76b39a6abb5ed43fead6350d5ed3236"
+    },
+    {
+      "slug": "wordpress-oauth",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788095952291,
+      "ezbr_sha256": "97399c516f4487bc420250df35c7e06fa5a793fec276d5a7eee7498befea56cd"
+    },
+    {
+      "slug": "tiktok-post",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095934431,
+      "ezbr_sha256": "499bfe8e4eafd159f4a50fd5f76edf7dc0ccedff636c41732a818f28249fec55"
+    },
+    {
+      "slug": "tiktok-oauth",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788095931715,
+      "ezbr_sha256": "766d207c014ab3158d7dfd079c7dd143617fe2faeb4fdceda387f94338dcfefa"
+    },
+    {
+      "slug": "youtube-post",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095929081,
+      "ezbr_sha256": "ba6fd95c4c7d22e74dc51f8804f587da2a29c3b9f44e70c99be0cd68ef687ee4"
+    },
+    {
+      "slug": "twitch-oauth",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788095937028,
+      "ezbr_sha256": "438bdc7f6a8e83a4bd226b13f61522b61acb046c7600b06ea665270f3e1e3069"
+    },
+    {
+      "slug": "youtube-oauth",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788095926303,
+      "ezbr_sha256": "e8b9b75c3e4faac027ceca0706e4740eb4ce7621ee99e3671dc007e916d88b3d"
+    },
+    {
+      "slug": "patreon-handoff",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095944243,
+      "ezbr_sha256": "6a87f7a1822662a0c8b6dc544f7c12550e3c4d8359939267aa1e491718ee137d"
+    },
+    {
+      "slug": "twitch-action",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788095939478,
+      "ezbr_sha256": "97e86b008d5983f57e38f6870306f4a964cd0a58ebc092a07bb1353e56fc8de1"
+    },
+    {
+      "slug": "research-feed",
+      "version": 4,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788618612201,
+      "ezbr_sha256": "f02eeb85e81e3e00b17689eaabc262a6d3837bb021b0b1e5f9434365db069975"
+    },
+    {
+      "slug": "developer-api",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788616465436,
+      "ezbr_sha256": "fcacdec3cc05a599906530e936bd3cfef539189ad187292e93e4ebc4c0ac620f"
+    },
+    {
+      "slug": "developer-keys",
+      "version": 3,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788616466615,
+      "ezbr_sha256": "3ad666734524379d95b5dadabaf23ea31380cf87a730d3fc521f1ae1382c0d3e"
+    },
+    {
+      "slug": "openart-connect",
+      "version": 3,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788614604711,
+      "ezbr_sha256": "563640247d6b76708c5fda4940c80beab28772b0348d9284fceb86c46ba01f19"
+    },
+    {
+      "slug": "openart-library",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788614606381,
+      "ezbr_sha256": "e6b2a27b7b888b49916639b5a127b4ec00dc432cd1074783ca0a2779d66cbfc7"
+    },
+    {
+      "slug": "openart-jobs",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788614609481,
+      "ezbr_sha256": "75ef5edeef61cef9ad9c76f658a953090fd05b7ced64d628136c8ee4a178bfdb"
+    },
+    {
+      "slug": "elevenlabs-library",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788615910846,
+      "ezbr_sha256": "43960c2aa94e8f4286446f54acfefacd1d0cfa8d838513efe9c4c719884a5380"
+    },
+    {
+      "slug": "developer-mcp",
+      "version": 1,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788616694990,
+      "ezbr_sha256": "a90493a5465f1a547e6ea19709b489f0c92533bdf00ff70a6f7676b4fa605da9"
+    },
+    {
+      "slug": "elevenlabs-speech",
+      "version": 1,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "updated_at": 1788618062499,
+      "ezbr_sha256": "df6a3464c661b4e5d0ca85b8d1cdbbe84d968233c406cd107029f57da8608f93"
+    },
+    {
+      "slug": "research-watch-run",
+      "version": 1,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "updated_at": 1788618614105,
+      "ezbr_sha256": "2d464585ed4db463a86ec807d0a07c86d7f9da1e09e8760e4c912b657e69605e"
+    }
+  ]
+}

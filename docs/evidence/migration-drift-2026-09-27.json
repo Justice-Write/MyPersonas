@@ -1,0 +1,146 @@
+{
+  "capture_date": "2026-09-27",
+  "remote_count": 68,
+  "highest_remote_version": "20260905190142",
+  "remote_without_local_file": [
+    {
+      "version": "20260830131550",
+      "name": "provider_065_post_preview_approval_gate"
+    },
+    {
+      "version": "20260830131552",
+      "name": "provider_066_discord_oauth_publishing"
+    },
+    {
+      "version": "20260830131554",
+      "name": "provider_067_youtube_oauth_publisher"
+    },
+    {
+      "version": "20260830131555",
+      "name": "provider_068_tiktok_connector_foundation"
+    },
+    {
+      "version": "20260830131608",
+      "name": "provider_069_agent_draft_platform_preview_gate"
+    },
+    {
+      "version": "20260830131609",
+      "name": "provider_070_cms_draft_connectors"
+    },
+    {
+      "version": "20260830131611",
+      "name": "provider_071_twitch_patreon_capability_foundation"
+    },
+    {
+      "version": "20260830131612",
+      "name": "provider_072_immediate_provider_preview_receipts"
+    },
+    {
+      "version": "20260830131621",
+      "name": "provider_073_content_package_preview_gate"
+    },
+    {
+      "version": "20260830131622",
+      "name": "provider_074_native_page_publish_preview_gate"
+    },
+    {
+      "version": "20260830131624",
+      "name": "provider_075_native_business_page_publish_preview_gate"
+    },
+    {
+      "version": "20260830133935",
+      "name": "provider_076_youtube_trigger_privilege_hardening"
+    },
+    {
+      "version": "20260905123200",
+      "name": "persona_research_feed"
+    },
+    {
+      "version": "20260905123912",
+      "name": "developer_access"
+    },
+    {
+      "version": "20260905124915",
+      "name": "openart_connection"
+    },
+    {
+      "version": "20260905130418",
+      "name": "creative_erasure_guard"
+    },
+    {
+      "version": "20260905131021",
+      "name": "openart_generation_jobs"
+    },
+    {
+      "version": "20260905131553",
+      "name": "mobile_persona_editor"
+    },
+    {
+      "version": "20260905132630",
+      "name": "persona_openart_project_bindings"
+    },
+    {
+      "version": "20260905133326",
+      "name": "elevenlabs_connection"
+    },
+    {
+      "version": "20260905134840",
+      "name": "local_fleet_owner_chat"
+    },
+    {
+      "version": "20260905135417",
+      "name": "developer_draft_proposals"
+    },
+    {
+      "version": "20260905142033",
+      "name": "elevenlabs_speech_jobs"
+    },
+    {
+      "version": "20260905143001",
+      "name": "research_watches"
+    },
+    {
+      "version": "20260905143022",
+      "name": "research_watch_worker"
+    },
+    {
+      "version": "20260905143958",
+      "name": "mobile_persona_images"
+    },
+    {
+      "version": "20260905150534",
+      "name": "private_music_notebooks"
+    },
+    {
+      "version": "20260905173349",
+      "name": "research_breakdowns"
+    },
+    {
+      "version": "20260905174031",
+      "name": "persona_media_notes"
+    },
+    {
+      "version": "20260905181103",
+      "name": "content_kit_revision_guard"
+    },
+    {
+      "version": "20260905182349",
+      "name": "content_kit_targets"
+    },
+    {
+      "version": "20260905184451",
+      "name": "content_kit_source_decisions"
+    },
+    {
+      "version": "20260905190142",
+      "name": "business_revision_guard"
+    }
+  ],
+  "local_not_in_remote_ledger": [
+    "20260830190000_youtube_trigger_privilege_hardening.sql",
+    "20260920120000_mobile_private_draft_workflow.sql",
+    "20260927134221_edit_ai_backend_base_url_reconciliation.sql",
+    "20260927134223_persona_media_unchanged_url_forward_reconciliation.sql"
+  ],
+  "note": "Presence or absence in the migration ledger does not prove manual SQL apply status. Do not repair remote history automatically."
+}

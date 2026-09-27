@@ -1,0 +1,20 @@
+import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { buildReviewBatch, reviewHtml } from './lib/persona-review-packet.mjs';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const [input, output = 'outputs/identity-readiness-2026-09-27/review'] = process.argv.slice(2);
+if (!input) throw new Error('Usage: node scripts/build-persona-review-packets.mjs INPUT.json [outputs/DIRECTORY]');
+const target = path.resolve(root, output);
+const privateRoot = path.join(root, 'outputs') + path.sep;
+if (!target.startsWith(privateRoot)) throw new Error('Review packets must stay in ignored outputs/');
+const csv = (await readFile(path.join(root, 'PERSONA-REPUBLICATION-REVIEW-INDEX-2026-09-24.csv'), 'utf8')).trim().split(/\r?\n/).map(x=>x.split(','));
+const column = csv[0].indexOf('canonical_handle');
+const snapshot = JSON.parse(await readFile(path.resolve(input), 'utf8'));
+const batch = buildReviewBatch(snapshot, csv.slice(1).map(r=>r[column]));
+await mkdir(target, {recursive:true});
+for (const packet of batch.packets) await writeFile(path.join(target, `${packet.handle}.json`), JSON.stringify(packet,null,2)+'\n', {flag:'wx'});
+await writeFile(path.join(target, 'batch.json'), JSON.stringify(batch,null,2)+'\n', {flag:'wx'});
+await writeFile(path.join(target, 'index.html'), reviewHtml(batch), {flag:'wx'});
+console.log(JSON.stringify({coverage:batch.coverage,findings:batch.packets.reduce((a,p)=>{for(const f of p.findings)a[f]=(a[f]||0)+1;return a;},{}),publish_authorized:false,output:target},null,2));
