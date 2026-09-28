@@ -62,7 +62,18 @@ Both pages are linked from the nav, the homepage evidence + charter sections, an
 - All nine checked source/property links returned successful responses: eight `200` responses and an accepted `202` from AHRQ.
 - The waitlist write path was deliberately not rerun during this content release, so no new test row was created or deleted. Its earlier end-to-end result remains a dated prior verification, not a fresh runtime claim.
 
-## PWA — added 2026-09-25 (committed, awaiting push)
+## Live verification — 2026-09-27 ✅
+
+Independent browser readback: all routes 200, 404 route correctly 404s, **PWA fully live** (manifest + `sw.js` + `offline.html` all serving, 1 active service-worker registration), security headers live and correct, **waitlist verified working end-to-end (201)**. Full record with numbers: `LIVE-VERIFICATION-2026-09-27.md`.
+
+Three things worth carrying forward:
+
+- **The 2026-09-25 PWA defect is closed.** The manifest and service worker now exist and deploy.
+- **The waitlist insert contract is now strict.** Migration `061-security-advisor-safe-hardening.sql` requires `source = 'nooyouniverse.com'` and a lowercase/trimmed email, enforced in both RLS and a table constraint. Any future client or test harness must honour it exactly. (I tripped over this myself and briefly mis-reported the waitlist as broken — corrected in the verification record.)
+- **`docs/live-readback-20260927.json` in the deploy repo records 403s.** That file is honest about what its environment saw, but that environment has blocked egress — do not read those 403s as a site outage, and do not cite that file as live verification.
+- **Cleanup list is now 3 test rows** in `noo_waitlist` (see verification record).
+
+## PWA — added 2026-09-25 (deployed and verified live 2026-09-27)
 
 The site is now a real installable Progressive Web App. **This closed a live defect**, not just a feature request.
 
