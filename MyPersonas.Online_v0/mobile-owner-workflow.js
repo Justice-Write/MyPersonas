@@ -131,6 +131,17 @@
     return CHANNELS.map((channel) => bindingState(accounts, ownerId, personaId, channel.key, requested[channel.key] || ""));
   }
 
+  // UI preparation gate only. The server exact-preview receipt remains authoritative.
+  function completeBindings(bindings) {
+    return Array.isArray(bindings) && bindings.length === CHANNELS.length
+      && CHANNELS.every(({ key }) => {
+        const rows = bindings.filter((row) => row?.channel === key);
+        const row = rows[0];
+        return rows.length === 1 && row.determinable === true
+          && !!asText(row.account?.id) && providerMatches(key, row.account?.provider);
+      });
+  }
+
   function variantLimit(channel) {
     return VARIANT_LIMITS[channel] || 0;
   }
@@ -227,7 +238,7 @@
       scheduled: status === "scheduled",
       publishingEnabled: PUBLISHING_ENABLED,
       canApprove: status === "owner_review" && (variants || []).length === 4 && (variants || []).every((row) => asText(row.body)),
-      canSchedule: status === "approved" && bindings.every((row) => row.determinable),
+      canSchedule: status === "approved" && completeBindings(bindings),
       cannotPublish: true,
       bindings,
     };
@@ -252,7 +263,7 @@
     if (action === "manual_schedule") {
       const bindings = input.bindings || [];
       if (pack.status !== "approved") return { ok: false, action: "", error: "Schedule requires a current approval" };
-      if (bindings.some((row) => !row.determinable)) {
+      if (!completeBindings(bindings)) {
         return { ok: false, action: "", error: "Exact provider/account binding is required before a manual schedule preview" };
       }
       return { ok: true, action: "manual_schedule", error: "", rpc: "content_package_preview_snapshot", publishes: false };
@@ -368,6 +379,7 @@
     accountLabel,
     bindingState,
     channelBindings,
+    completeBindings,
     variantLimit,
     normalizeVariant,
     assertVariants,
