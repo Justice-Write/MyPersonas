@@ -15,7 +15,7 @@
  * Bump CACHE_VERSION whenever the shell changes. Old caches are deleted on activate.
  */
 
-const CACHE_VERSION = 'noo-v1-2026-09-25';
+const CACHE_VERSION = 'noo-v2-education-2026-10-01';
 const CACHE_NAME = `noo-youniverse-${CACHE_VERSION}`;
 
 // The shell: enough to render something honest while offline.
@@ -25,6 +25,8 @@ const PRECACHE_URLS = [
   '/',
   '/log',
   '/sources',
+  '/education',
+  '/assets/education.css',
   '/corrections',
   '/404.html',
   '/offline.html',

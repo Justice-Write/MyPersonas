@@ -72,6 +72,8 @@ li{margin-bottom:8px}
 footer{border-top:1px solid var(--line);padding:40px 0 64px;font-size:.85rem;color:var(--muted);margin-top:56px}
 .disclosure{background:var(--navy);border:1px solid var(--line);border-left:3px solid var(--violet);border-radius:10px;padding:18px 20px;max-width:760px;margin:0 auto 24px}
 footer .fine{text-align:center;font-size:.78rem}
+@media(max-width:900px){.nav-inner{height:auto;min-height:58px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}.nav-links{margin-left:0;flex-wrap:wrap;gap:8px 16px}.nav-links a{display:inline-flex;align-items:center;min-height:44px}}
+.source-table-scroll{overflow-x:auto} .source-table-scroll table{min-width:620px}
 </style>
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/assets/icon-192.png">
@@ -87,6 +89,7 @@ footer .fine{text-align:center;font-size:.78rem}
       <a href="/#mission">Mission</a>
       <a href="/#evidence">Evidence</a>
       <a href="/log">Mission Log</a>
+      <a href="/education">Learn</a>
       <a href="/sources" aria-current="page" style="color:var(--text)">Sources</a>
       <a class="btn btn-amber" href="/#waitlist">Join the waitlist</a>
     </div>
@@ -120,6 +123,7 @@ footer .fine{text-align:center;font-size:.78rem}
 <section id="ledger">
   <span class="kicker">The ledger</span>
   <h2>Source for every mission</h2>
+  <div class="source-table-scroll" tabindex="0" role="region" aria-label="Mission sources; scroll horizontally if needed">
   <table>
     <thead><tr><th>Mission</th><th>Basis</th><th>Source</th></tr></thead>
     <tbody>
@@ -136,6 +140,7 @@ footer .fine{text-align:center;font-size:.78rem}
       <tr><td class="m">11</td><td><span class="basis b-agency">Agency</span></td><td><a href="https://www.nhlbi.nih.gov/health/sleep-deprivation/health-effects" rel="noopener">NHLBI — How Sleep Deprivation and Deficiency Affect Health</a> · sleep and fundamentals as Strong context for interpreting a stack claim; not a product rating, dose, or recommendation — <a href="/log#mission-11">Sleep before stack</a></td></tr>
     </tbody>
   </table>
+  </div>
 </section>
 
 <section id="standard">

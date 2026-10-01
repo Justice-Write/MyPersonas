@@ -1,0 +1,37 @@
+.education-page{margin:0;background:#0b0e24;color:#e9ebf7;font:1rem/1.65 system-ui,sans-serif}
+.education-page *,.education-guide *{box-sizing:border-box}
+.education-page a,.education-guide a{color:#f2b25c;overflow-wrap:anywhere}
+.education-page :focus-visible,.education-guide :focus-visible{outline:3px solid #8f7dff;outline-offset:4px}
+.education-header,.education-footer{max-width:1080px;margin:auto;padding:24px 20px}
+.education-header{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-bottom:1px solid #2b3163}
+.education-header nav{display:flex;gap:20px;flex-wrap:wrap}
+.education-header a{min-height:44px;display:inline-flex;align-items:center}
+.skip-link{position:absolute;left:16px;top:-100px;background:#121736;padding:12px;z-index:100}
+.skip-link:focus{top:12px}
+.education-guide{max-width:900px;margin:auto;padding:36px 20px 64px;overflow-wrap:anywhere}
+.education-guide h1{font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.15;margin:12px 0 20px}
+.education-guide h2{font-size:1.4rem;line-height:1.3;margin:0 0 16px}
+.education-guide p{margin:0 0 18px}
+.education-guide section{padding:32px 0 0;scroll-margin-top:24px}
+.guide-kicker{color:#a7add0;font-size:.82rem;letter-spacing:.08em}
+.guide-intro{font-size:1.12rem;color:#e9ebf7}
+.guide-note{border:1px solid #2b3163;border-left:3px solid #8f7dff;background:#121736;padding:16px;border-radius:10px}
+.guide-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 20px}
+.guide-cards>div{background:#121736;border:1px solid #2b3163;border-radius:14px;padding:18px}
+.guide-cards dt{font-weight:700;color:#f2b25c;margin-bottom:10px}
+.guide-cards dd{margin:0}
+.guide-source{font-size:.88rem;color:#a7add0}
+.guide-table-wrap{overflow-x:auto;margin-bottom:20px;border:1px solid #2b3163;border-radius:10px}
+.education-guide table{width:100%;border-collapse:collapse;font-size:.93rem}
+.education-guide caption{text-align:left;padding:16px;background:#121736;font-weight:700}
+.education-guide th,.education-guide td{text-align:left;vertical-align:top;padding:14px;border-top:1px solid #2b3163;min-width:140px}
+.education-guide thead th{color:#f2b25c;background:#121736}
+.education-guide ul{padding-left:24px;margin:0 0 20px}
+.education-guide li{margin-bottom:10px}
+.education-footer{font-size:.85rem;color:#a7add0;border-top:1px solid #2b3163}
+#panel-learn.education-guide{padding:24px 16px}
+#panel-learn .guide-cards{grid-template-columns:1fr}
+#panel-learn h2{font-size:1.2rem}
+@media(max-width:640px){.guide-cards{grid-template-columns:1fr}.education-guide{padding-top:24px}.education-guide table{min-width:580px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+#panel-learn h3{font-size:1.2rem;line-height:1.3;margin:0 0 16px}
