@@ -1809,6 +1809,10 @@ async function eraseOwnedRows(
     }),
   );
   await checked(
+    "SMS approval channel, codes, and message log",
+    admin.rpc("delete_sms_channel_data_for_account_service", { p_owner: uid }),
+  );
+  await checked(
     "model credentials",
     admin.from("ai_backends").delete().eq("owner", uid),
   );

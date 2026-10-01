@@ -210,7 +210,7 @@ function agentBoardQueueHtml(){
 }
 function agentBoardPaint(focusId=""){
   app.innerHTML=`<div class="agent-board"><section class="agent-board-head"><div><span class="muted">Owner-controlled persona collaboration</span><h2>Agent board</h2></div><div class="agent-board-actions"><button class="btn sec" type="button" onclick="go('studio')">Models &amp; accounts</button></div></section>
-    <div class="agent-board-callout stop"><b>No recursive autopilot is active.</b> This board stages one bounded proposal at a time. Every run requires a fresh owner review, MFA, execution permission, and a hard request/token budget.</div>${agentBoardStatsHtml()}<div class="agent-board-grid">${agentBoardSettingsHtml()}${agentBoardProposalHtml()}${agentBoardBudgetHtml()}${agentBoardQueueHtml()}</div></div>`;
+    <div class="agent-board-callout stop"><b>No recursive autopilot is active.</b> This board stages one bounded proposal at a time. Every run requires a fresh owner review, MFA, execution permission, and a hard request/token budget.</div>${agentBoardStatsHtml()}<div class="agent-board-grid">${agentBoardSettingsHtml()}${agentBoardProposalHtml()}${agentBoardBudgetHtml()}${typeof smsApprovalsCardHtml==="function"?smsApprovalsCardHtml():""}${agentBoardQueueHtml()}</div></div>`;
   if(focusId)requestAnimationFrame(()=>{const target=document.getElementById(focusId);(target?.matches("button,select,input,textarea,a")?target:target?.querySelector("button,select,input,textarea,a"))?.focus({preventScroll:true})});
 }
 function agentBoardSelectPersona(personaId){agentBoardState.selectedPersonaId=personaId;agentBoardPaint()}

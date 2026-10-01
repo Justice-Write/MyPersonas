@@ -3,6 +3,25 @@
 Versioning per VERSIONING.md: majors are milestones, `.x` are roadmap items,
 trailing letters are hotfixes. Releases are git tags.
 
+## SMS approval channel (local only) (2026-09-30)
+
+Status: **Code only; nothing deployed.** Needs a Twilio number with A2P 10DLC, five
+function secrets, migration 080, one cron entry. See `SMS-APPROVAL-CHANNEL.md`.
+
+- Migration 080 / `20260930120000_sms_approval_channel.sql`: `owner_sms_channels`,
+  `sms_approval_tokens`, `sms_messages`, `sms_edit_requests` (service-role only); AAL2
+  enrollment RPCs with hashed one-time phone verification; triggers issue single-use
+  decision codes when agent board requests or content packages enter `owner_review`;
+  `sms_decide_service` applies APPROVE/REJECT/EDIT with the same review-hash and
+  four-channel completeness checks as the app, and can never schedule or publish.
+- Edge Function `sms-approvals`: Twilio-signed inbound webhook, status callback, cron
+  dispatch, and owner enroll/verify/settings/revoke. Free-form texts go to the owner's
+  assigned model with three tools (pending list, read-only persona + automation snapshot,
+  decide) through the existing `ai-provider-endpoint` policy; local models are refused.
+- Agent board gains an "SMS approvals" card (`sms-approvals-ui.js`); `delete-account`
+  erases SMS data; `tests/sms-approval-channel.test.mjs` covers grammar, the Twilio
+  signature reference vector, and the no-publish invariant.
+
 ## Repository hygiene and connector-core adoption (local only) (2026-09-26)
 
 Status: **Code only; nothing deployed.** No edge function, migration, or Pages release.

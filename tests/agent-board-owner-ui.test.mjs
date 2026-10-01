@@ -15,7 +15,8 @@ const[html,source,css,pagesWorkflow,functionsWorkflow]=await Promise.all([
 
 test("agent board is reachable from desktop, mobile, sidebar, and router",()=>{
   assert.match(html,/agent-board\.css\?v=20260822-2/);
-  assert.match(html,/agent-board\.js\?v=20260822-4/);
+  assert.match(html,/agent-board\.js\?v=20260930-1/);
+  assert.ok(html.indexOf("sms-approvals-ui.js")<html.indexOf("agent-board.js?v="),"SMS approvals card script loads before the agent board");
   assert.match(html,/siteGo\('agent-board'\)/);
   assert.match(html,/ownerAppMobileGo\('agent-board'\)/);
   assert.match(html,/nav\(view==="agent-board","agent-board","chip","Agent board"\)/);
