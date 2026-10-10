@@ -5,6 +5,9 @@
   "description": "Local account-isolated browser workrooms for the MyPersonas owner app.",
   "main": "main.cjs",
   "packageManager": "npm@11.17.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "start": "electron .",
     "check": "node --check main.cjs && node --check provider-policy.cjs"

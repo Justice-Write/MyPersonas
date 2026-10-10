@@ -21,12 +21,12 @@ in the protocol URL.
 
 ## Local development
 
-1. Run `npm ci` in this folder. Electron is pinned exactly and the committed
+1. Install Node.js 22.12.0 or newer, then run `npm ci` in this folder. Electron is pinned exactly and the committed
    lockfile is the installation authority; review both in every dependency PR.
 2. Run `npm run check`.
 3. Run `npm start` for a local development window.
 
-Before release, add a lockfile, code signing, installer packaging, update signing,
+Before release, retain the reviewed lockfile and add code signing, installer packaging, update signing,
 crash/privacy policy, profile deletion UI, logout/revocation tests, custom-protocol
 installation tests, and Windows/macOS security review. The owner PWA keeps its
 Siloed window button disabled until that separately approved release exists.
