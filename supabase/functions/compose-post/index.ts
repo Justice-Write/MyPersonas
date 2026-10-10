@@ -20,6 +20,13 @@
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import {
+  cleanImageTextDraft,
+  ImageDraftActionError,
+  imageTextDraftResponse,
+  runImageTextDraft,
+  type ImageTextSource,
+} from "../_shared/image-caption-drafting.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -29,7 +36,6 @@ const X_CAPTION_MAX = 280;
 const IG_CAPTION_MAX = 2200;
 const FB_CAPTION_MAX = 5000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
 // Platform image crops (width x height, cover). FB 1.91:1, IG 1:1, X 4:5.
 const CROPS = {
   fb: { w: 1200, h: 628 },
@@ -111,6 +117,39 @@ function composePrompt(brief: string) {
   ].join("\n");
 }
 
+function imageTextPrompt(field: string, platform: string, context: string) {
+  const tasks: Record<string, string> = {
+    fb_caption: "Write an engaging Facebook caption with useful detail.",
+    ig_caption:
+      "Write a concise Instagram caption with no more than three relevant hashtags.",
+    x_caption: `Write one X post of at most ${X_CAPTION_MAX} characters.`,
+    title: "Write a short, accurate title.",
+    body: platform === "website"
+      ? "Write a useful website draft in clean Markdown."
+      : ["x", "twitter"].includes(platform)
+      ? `Write one X post of at most ${X_CAPTION_MAX} characters.`
+      : `Write the ${platform} post body.`,
+    description: platform === "website"
+      ? "Write a concise SEO description."
+      : `Write a concise ${platform} description.`,
+    alt_text:
+      "Write concise accessibility alt text describing only useful visible details. Do not start with 'image of' or 'picture of'.",
+    brief:
+      "Write a concise creative brief for three social captions grounded in the visible image.",
+    tags:
+      "Write a concise set of relevant tags or hashtags grounded in the visible image.",
+  };
+  return [
+    tasks[field] || "Write concise copy grounded in this image.",
+    "Use the attached registered image as primary evidence and the owner context below only as supporting direction.",
+    "Do not identify a person, infer sensitive traits, invent unseen facts, or claim an event/product detail that is not visible or supplied.",
+    "Return only the requested draft text with no label, quotes, JSON, or code fence.",
+    context
+      ? `Owner context: ${context.slice(0, 4000)}`
+      : "Owner context: none supplied.",
+  ].join("\n");
+}
+
 function extractCaptions(content: string) {
   let obj: Record<string, unknown> | null = null;
   const start = content.indexOf("{");
@@ -157,7 +196,10 @@ async function generateCaptions(
         personaId,
         mode: "owner_chat",
         max_tokens: 900,
-        messages: [{ role: "user", content: composePrompt(brief) }],
+        messages: [{
+          role: "user",
+          content: composePrompt(brief),
+        }],
       }),
       signal: AbortSignal.timeout(60_000),
     },
@@ -176,6 +218,69 @@ async function generateCaptions(
   return String((j as { content?: string }).content || "");
 }
 
+async function generateImageText(
+  authHeader: string,
+  backendId: string,
+  source: ImageTextSource,
+) {
+  const r = await fetch(
+    `${SUPABASE_URL.replace(/\/$/, "")}/functions/v1/ai-proxy`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": authHeader,
+      },
+      body: JSON.stringify({
+        backendId,
+        personaId: source.personaId,
+        mode: "owner_chat",
+        purpose: "image_caption_draft",
+        imageAssetId: source.imageAssetId,
+        ...(source.imageCrop ? { imageCrop: source.imageCrop } : {}),
+        sourceBinding: {
+          sourceType: source.sourceType,
+          sourceId: source.sourceId,
+          field: source.field,
+          expectedImageAssetId: source.imageAssetId,
+          expectedRevision: source.sourceRevision,
+          expectedBindingHash: source.bindingHash,
+        },
+        max_tokens: source.field === "body" && source.platform === "website" ? 1600 : 700,
+        messages: [{
+          role: "user",
+          content: imageTextPrompt(source.field, source.platform, source.context),
+        }],
+      }),
+      // ai-proxy bounds its provider call at 45 seconds. This outer deadline
+      // leaves room for owner checks, budget/audit claims, verified media load,
+      // metadata stripping, and the final active-asset recheck.
+      signal: AbortSignal.timeout(90_000),
+    },
+  );
+  const result = await r.json().catch(() => ({})) as {
+    content?: string;
+    error?: string | { message?: string };
+  };
+  if (!r.ok) {
+    const message = typeof result.error === "string"
+      ? result.error
+      : result.error?.message;
+    throw new Error(
+      message || `The linked vision model failed (HTTP ${r.status}).`,
+    );
+  }
+  const text = cleanImageTextDraft(
+    String(result.content || ""),
+    source.field,
+    source.platform,
+  );
+  if (!text) {
+    throw new Error("The linked vision model returned an empty draft.");
+  }
+  return text;
+}
+
 serve(async (req) => {
   const origin = req.headers.get("Origin") || "";
   if (req.method === "OPTIONS") return json(null, 204, origin);
@@ -186,7 +291,53 @@ serve(async (req) => {
   if (!user) return json({ error: "Sign in first" }, 401, origin);
 
   const body = await req.json().catch(() => ({})) as Record<string, unknown>;
-  if (body.action !== "compose") {
+  const action = String(body.action || "");
+  if (action === "generate-image-text") {
+    const allowedKeys = new Set([
+      "action",
+      "sourceType",
+      "sourceId",
+      "field",
+      "expectedImageAssetId",
+      "expectedRevision",
+      "expectedBindingHash",
+    ]);
+    if (Object.keys(body).some((key) => !allowedKeys.has(key))) {
+      return json(
+        { error: "Image drafting accepts only record ids and an immutable binding precondition." },
+        400,
+        origin,
+      );
+    }
+    try {
+      const result = await runImageTextDraft({
+        admin,
+        owner: user.id,
+        body,
+        generate: (source: ImageTextSource, backendId: string) =>
+          generateImageText(
+            req.headers.get("Authorization") || "",
+            backendId,
+            source,
+          ),
+      });
+      const source = result.source;
+      return json(
+        imageTextDraftResponse(source, result.text),
+        200,
+        origin,
+      );
+    } catch (error) {
+      const status = error instanceof ImageDraftActionError ? error.status : 502;
+      return json({
+        error: (error as Error).message,
+        ...(status === 422 && (error as Error).message.includes("vision-capable")
+          ? { needsModel: true }
+          : {}),
+      }, status, origin);
+    }
+  }
+  if (action !== "compose") {
     return json({ error: "Unknown action" }, 400, origin);
   }
 

@@ -97,7 +97,7 @@ test("assistant context exposes no credentials, and the assistant tool surface i
   assert.match(fn, /name: "get_pending_approvals"/);
   assert.match(fn, /name: "get_personas_and_automation"/);
   assert.match(fn, /name: "decide_approval"/);
-  assert.equal((fn.match(/^\s+name: "[a-z_]+",\n\s+description:/gm) || []).length, 3, "exactly three assistant tools");
+  assert.equal((fn.match(/^\s+name: "[a-z_]+",\r?\n\s+description:/gm) || []).length, 3, "exactly three assistant tools");
   assert.match(assistant, /const MAX_ROUNDS = 4/);
   assert.match(assistant, /TEMPERATURE = 0\.3/);
   assert.match(assistant, /\["localfleet", "ollama", "lmstudio", "elevenlabs"\]\.includes\(provider\)/);

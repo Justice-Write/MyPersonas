@@ -73,6 +73,7 @@ jobs:
             --include '/index.html' \
             --include '/owner-app.css' \
             --include '/owner-app.js' \
+            --include '/image-caption-drafting.js' \
             --include '/mobile-owner-workflow.js' \
             --include '/cms-connector-ui.js' \
             --include '/persona-view.css' \
