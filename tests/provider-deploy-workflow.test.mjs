@@ -56,6 +56,12 @@ test("image caption deployment is main-only, protected, tested, and exactly two 
   assert.match(workflow, /sha=%s\\nscope=image-caption-drafting\\nfunctions=ai-proxy compose-post/);
 });
 
+test("backend and Pages production releases share one non-cancelling lock", () => {
+  for (const releaseWorkflow of [workflow, pagesWorkflow]) {
+    assert.match(releaseWorkflow, /concurrency:\s*\n(?:\s*#[^\n]*\n)*\s*group: production-release\s*\n\s*cancel-in-progress: false/);
+  }
+});
+
 test("provider-capable site deployment requires both migration ledgers", () => {
   assert.match(pagesWorkflow, /MIGRATIONS-VERIFIED/);
   assert.match(pagesWorkflow, /PROVIDER-MIGRATIONS-VERIFIED/);
