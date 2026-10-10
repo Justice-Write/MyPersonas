@@ -18,9 +18,9 @@ test("provider deployment remains owner-triggered and migration-readback gated",
 
 test("provider deployment uses an exact reviewed function allowlist", () => {
   const start = workflow.indexOf("- name: Deploy reviewed provider functions");
-  const end = workflow.indexOf("- name: Deploy all reviewed edge functions", start);
+  const nextStep = workflow.indexOf("\n      - name:", start + 1);
+  const end = nextStep < 0 ? workflow.length : nextStep;
   assert.notEqual(start, -1);
-  assert.notEqual(end, -1);
   const step = workflow.slice(start, end);
   for (const functionName of [
     "approve-post-draft",
@@ -39,9 +39,26 @@ test("provider deployment uses an exact reviewed function allowlist", () => {
   assert.doesNotMatch(step, /supabase functions deploy\s+--project-ref/);
 });
 
+test("image caption deployment is main-only, protected, tested, and exactly two functions", () => {
+  assert.match(workflow, /if: github\.ref == 'refs\/heads\/main'/);
+  assert.match(workflow, /environment: production/);
+  assert.match(workflow, /Validate the exact source revision before deployment[\s\S]*?npm test/);
+  const start = workflow.indexOf("- name: Deploy image caption drafting functions");
+  const nextStep = workflow.indexOf("\n      - name:", start + 1);
+  const end = nextStep < 0 ? workflow.length : nextStep;
+  assert.notEqual(start, -1);
+  const step = workflow.slice(start, end);
+  assert.match(step, /for function_name in ai-proxy compose-post/);
+  assert.doesNotMatch(step, /media-ingest|gemini-image|functions deploy\s+--project-ref/);
+  assert.doesNotMatch(workflow, /all-reviewed/);
+  assert.match(workflow, /IMAGE-CAPTION-VERIFIED/);
+});
+
 test("provider-capable site deployment requires both migration ledgers", () => {
   assert.match(pagesWorkflow, /MIGRATIONS-VERIFIED/);
   assert.match(pagesWorkflow, /PROVIDER-MIGRATIONS-VERIFIED/);
   assert.match(pagesWorkflow, /provider migrations 065 through 076/i);
   assert.match(pagesWorkflow, /--include '\/cms-connector-ui\.js'/);
+  assert.match(pagesWorkflow, /if: github\.ref == 'refs\/heads\/main'/);
+  assert.match(pagesWorkflow, /Validate the exact source revision before packaging[\s\S]*npm test[\s\S]*check-frontend-syntax\.mjs/);
 });

@@ -27,6 +27,7 @@ env:
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -46,6 +47,13 @@ jobs:
             echo "Release blocked: apply and read back provider migrations 065 through 076, then review their smoke tests first."
             exit 1
           }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+      - name: Validate the exact source revision before packaging
+        run: |
+          npm test
+          node scripts/check-frontend-syntax.mjs
       - name: Prepare public site artifact
         run: |
           mkdir -p .pages-artifact
