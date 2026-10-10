@@ -53,3 +53,27 @@ jobs:
           node-version: "22"
       - name: Extract inline scripts and syntax-check them
         run: node scripts/check-frontend-syntax.mjs
+
+  workroom-dependency-audit:
+    name: Workroom dependency audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/workroom-bridge
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22.12.0"
+          cache: npm
+          cache-dependency-path: apps/workroom-bridge/package-lock.json
+      - name: Activate the declared npm release
+        run: |
+          npm install --global npm@11.17.0 --ignore-scripts
+          test "$(npm --version)" = "11.17.0"
+      - name: Install the exact reviewed dependency graph
+        run: npm ci --ignore-scripts
+      - name: Check source and dependency advisories
+        run: |
+          npm run check
+          npm audit --audit-level=low
