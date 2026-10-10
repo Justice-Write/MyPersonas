@@ -11,8 +11,17 @@ on:
         description: "Type PROVIDER-MIGRATIONS-VERIFIED after provider migrations 065-076 are applied, read back, and smoke-tested"
         required: true
         type: string
+      image_caption_confirmation:
+        description: "Type IMAGE-CAPTION-CANARY-VERIFIED after the exact backend run is read back and a signed-in private canary passes"
+        required: true
+        type: string
+      image_caption_backend_run_id:
+        description: "Successful image-caption-drafting workflow run id for this exact main commit"
+        required: true
+        type: string
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -38,6 +47,8 @@ jobs:
         env:
           RELEASE_CONFIRMATION: ${{ inputs.release_confirmation }}
           PROVIDER_RELEASE_CONFIRMATION: ${{ inputs.provider_release_confirmation }}
+          IMAGE_CAPTION_CONFIRMATION: ${{ inputs.image_caption_confirmation }}
+          IMAGE_CAPTION_BACKEND_RUN_ID: ${{ inputs.image_caption_backend_run_id }}
         run: |
           test "${RELEASE_CONFIRMATION}" = "MIGRATIONS-VERIFIED" || {
             echo "Release blocked: verify migration 060 in the linked ledger and review its smoke tests first."
@@ -47,6 +58,26 @@ jobs:
             echo "Release blocked: apply and read back provider migrations 065 through 076, then review their smoke tests first."
             exit 1
           }
+          test "${IMAGE_CAPTION_CONFIRMATION}" = "IMAGE-CAPTION-CANARY-VERIFIED" || {
+            echo "Release blocked: read back the exact backend deployment and complete the signed-in private image-caption canary first."
+            exit 1
+          }
+          printf '%s' "${IMAGE_CAPTION_BACKEND_RUN_ID}" | grep -Eq '^[1-9][0-9]*$' || {
+            echo "Release blocked: provide the exact successful backend workflow run id."
+            exit 1
+          }
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: image-caption-backend-${{ github.sha }}
+          path: .release-evidence
+          run-id: ${{ inputs.image_caption_backend_run_id }}
+          github-token: ${{ github.token }}
+      - name: Bind Pages to the exact deployed backend revision
+        run: |
+          test -f .release-evidence/image-caption-backend.txt
+          grep -Fx "sha=${GITHUB_SHA}" .release-evidence/image-caption-backend.txt
+          grep -Fx "scope=image-caption-drafting" .release-evidence/image-caption-backend.txt
+          grep -Fx "functions=ai-proxy compose-post" .release-evidence/image-caption-backend.txt
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "22"

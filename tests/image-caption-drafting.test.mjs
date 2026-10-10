@@ -156,7 +156,7 @@ test("owner draft happy path executes one provider mock and performs no database
   let providerCalls = 0;
   const result = await runImageTextDraft({
     admin, owner: OWNER, body: await boundBody(),
-    generate: async (source, backendId) => { providerCalls += 1; assert.equal(source.imageCrop, ""); assert.equal(backendId, BACKEND); return "Generated body"; },
+    generate: async (source) => { providerCalls += 1; assert.equal(source.imageCrop, ""); return "Generated body"; },
   });
   assert.equal(result.text, "Generated body");
   assert.equal(result.source.imageAssetId, ASSET_A);
@@ -311,17 +311,36 @@ test("secure proxy revalidates the source binding and exact active asset after d
   assert.match(proxy, /imageDraftSource\?\.imageReferenceUrl \|\| ""/);
   assert.match(proxy, /image_asset_inactive_before_provider/);
   assert.match(proxy, /image_source_changed_before_provider/);
+  assert.match(proxy, /async function imageBackendBindingStillCurrent/);
+  assert.match(proxy, /personaResult\.data\.ai_backend !== options\.backend\.id/);
+  assert.match(proxy, /image_backend_changed_before_provider/);
   assert.match(proxy, /provider_fetch_issued: false/);
   const sourceFinalCheck = proxy.lastIndexOf("await revalidateImageTextSource(");
+  const backendFinalCheck = proxy.indexOf("const liveBackendBinding = await imageBackendBindingStillCurrent");
   const finalCheck = proxy.indexOf("const liveImage = await registeredImageStillActive");
   const providerFetch = proxy.indexOf("const providerResponse = await fetch(endpoint.url");
   assert.ok(finalCheck > proxy.indexOf("loadRegisteredImage("));
   assert.ok(sourceFinalCheck > finalCheck);
   assert.ok(sourceFinalCheck < providerFetch);
+  assert.ok(backendFinalCheck > sourceFinalCheck && backendFinalCheck < providerFetch);
   assert.ok(finalCheck < providerFetch);
   assert.match(proxy, /\.eq\("storage_path", asset\.storage_path\)/);
   assert.match(proxy, /\.eq\("public_url", asset\.public_url\)/);
   assert.match(proxy, /\.eq\("content_sha256", asset\.content_sha256\)/);
+});
+
+test("image drafting derives the model only from the live persona binding", () => {
+  const imagePurposeStart = proxy.indexOf('if (purpose === "image_caption_draft")');
+  const imagePurposeEnd = proxy.indexOf("const requestedCrop", imagePurposeStart);
+  const imagePurposeAllowlist = proxy.slice(imagePurposeStart, imagePurposeEnd);
+  assert.doesNotMatch(imagePurposeAllowlist, /"backendId"/);
+  assert.match(proxy, /id,owner,ai_backend,name,handle/);
+  assert.match(proxy, /purpose === "image_caption_draft"[\s\S]*safeField\(context\?\.persona\.ai_backend, 100\)/);
+  const imageRequest = composer.slice(
+    composer.indexOf("async function generateImageText"),
+    composer.indexOf("serve(async (req) =>"),
+  );
+  assert.doesNotMatch(imageRequest, /backendId/);
 });
 
 test("Pages packages the image-drafting runtime loaded by the release HTML", () => {
@@ -333,4 +352,6 @@ test("Pages packages the image-drafting runtime loaded by the release HTML", () 
   const include = artifactStep.indexOf("--include '/image-caption-drafting.js'");
   const excludeAll = artifactStep.lastIndexOf("--exclude '*'");
   assert.ok(include >= 0 && include < excludeAll);
+  assert.match(pagesWorkflow, /IMAGE-CAPTION-CANARY-VERIFIED/);
+  assert.match(pagesWorkflow, /name: image-caption-backend-\$\{\{ github\.sha \}\}/);
 });

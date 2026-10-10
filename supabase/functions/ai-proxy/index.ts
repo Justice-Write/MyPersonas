@@ -110,6 +110,7 @@ type RegisteredImageAsset = {
 type PersonaRow = {
   id: string;
   owner: string;
+  ai_backend: string | null;
   name: string | null;
   handle: string | null;
   tagline: string | null;
@@ -388,6 +389,7 @@ function approvedAgentBoardInput(
     persona: {
       id: targetPersonaId,
       owner,
+      ai_backend: targetBackendId,
       name: safeField(persona.name, 2_000),
       handle: safeField(persona.handle, 2_000),
       tagline: safeField(persona.tagline, 4_000),
@@ -1097,6 +1099,60 @@ async function resolveBackendApiKey(backend: BackendRow, owner: string) {
   return "";
 }
 
+async function imageBackendBindingStillCurrent(options: {
+  owner: string;
+  personaId: string;
+  backend: BackendRow;
+  endpoint: ProviderEndpointResult;
+  apiKey: string;
+  model: string;
+}) {
+  const [personaResult, backendResult] = await Promise.all([
+    admin.from("personas")
+      .select("id,owner,ai_backend")
+      .eq("id", options.personaId)
+      .eq("owner", options.owner)
+      .maybeSingle(),
+    admin.from("ai_backends")
+      .select("id,owner,name,provider,base_url,api_key,model,extra")
+      .eq("id", options.backend.id)
+      .eq("owner", options.owner)
+      .maybeSingle(),
+  ]);
+  if (personaResult.error || backendResult.error) {
+    return { current: false, lookupFailed: true };
+  }
+  const currentBackend = backendResult.data as BackendRow | null;
+  if (
+    !personaResult.data || personaResult.data.ai_backend !== options.backend.id ||
+    !currentBackend || currentBackend.owner !== options.owner
+  ) {
+    return { current: false, lookupFailed: false };
+  }
+  const sameStoredConfiguration =
+    backendProvider(currentBackend.provider) === backendProvider(options.backend.provider) &&
+    safeField(currentBackend.base_url, 2_048) === safeField(options.backend.base_url, 2_048) &&
+    safeField(currentBackend.model, 300) === options.model &&
+    (currentBackend.api_key || "") === (options.backend.api_key || "") &&
+    JSON.stringify(currentBackend.extra || null) === JSON.stringify(options.backend.extra || null);
+  if (!sameStoredConfiguration) {
+    return { current: false, lookupFailed: false };
+  }
+  const currentEndpoint = await providerEndpoint(currentBackend);
+  if (!currentEndpoint.url || !options.endpoint.url) {
+    return { current: false, lookupFailed: true };
+  }
+  const currentApiKey = await resolveBackendApiKey(currentBackend, options.owner);
+  return {
+    current:
+      currentEndpoint.url.toString() === options.endpoint.url.toString() &&
+      currentEndpoint.kind === options.endpoint.kind &&
+      currentEndpoint.host === options.endpoint.host &&
+      currentApiKey === options.apiKey,
+    lookupFailed: false,
+  };
+}
+
 async function readProviderBody(response: Response) {
   if (!response.body) return "";
   const reader = response.body.getReader();
@@ -1544,7 +1600,7 @@ async function loadPersonaContext(owner: string, personaId: string) {
     await Promise.all([
       admin.from("personas")
         .select(
-          "id,owner,name,handle,tagline,bio,purpose,voice,topics,audience,hashtags,dont,nsfw,context_log",
+          "id,owner,ai_backend,name,handle,tagline,bio,purpose,voice,topics,audience,hashtags,dont,nsfw,context_log",
         )
         .eq("id", personaId).eq("owner", owner).maybeSingle(),
       admin.from("agent_bindings")
@@ -1779,7 +1835,6 @@ async function handleRequest(req: Request) {
         "action",
         "mode",
         "purpose",
-        "backendId",
         "personaId",
         "messages",
         "max_tokens",
@@ -2086,9 +2141,19 @@ async function handleRequest(req: Request) {
   }
 
   if (!approvedInput) {
-    backendId = typeof payload.backendId === "string"
+    backendId = purpose === "image_caption_draft"
+      ? safeField(context?.persona.ai_backend, 100)
+      : typeof payload.backendId === "string"
       ? payload.backendId.trim()
       : "";
+    if (purpose === "image_caption_draft" && !isUuid(backendId)) {
+      if (context) await auditDenied(owner, context, mode, "persona_backend_missing");
+      return responseJson(
+        { error: "Link a vision-capable AI model to this persona first" },
+        422,
+        origin,
+      );
+    }
   }
   if (backendId && !isUuid(backendId)) {
     if (context) await auditDenied(owner, context, mode, "backend_id_invalid");
@@ -2657,6 +2722,41 @@ async function handleRequest(req: Request) {
               : "The image or draft changed before provider disclosure; reload and try again",
           },
           lookupFailed || !budgetFinalized ? 503 : 409,
+          origin,
+        );
+      }
+      const liveBackendBinding = await imageBackendBindingStillCurrent({
+        owner,
+        personaId: requestedPersonaId,
+        backend: backendRow,
+        endpoint,
+        apiKey,
+        model,
+      });
+      if (!liveBackendBinding.current) {
+        const code = liveBackendBinding.lookupFailed
+          ? "image_backend_final_check_unavailable"
+          : "image_backend_changed_before_provider";
+        const budgetFinalized = await finalizeBudgetOnce(
+          "request_failed",
+          0,
+          code,
+        );
+        if (auditId) {
+          await finishAudit(auditId, owner, "ai.call.denied", "denied", {
+            ...auditDetail,
+            code,
+            budget_finalized: budgetFinalized,
+            provider_fetch_issued: false,
+          });
+        }
+        return responseJson(
+          {
+            error: liveBackendBinding.lookupFailed
+              ? "The persona model binding could not be revalidated; no model request was sent"
+              : "The persona model changed before provider disclosure; reload and try again",
+          },
+          liveBackendBinding.lookupFailed || !budgetFinalized ? 503 : 409,
           origin,
         );
       }

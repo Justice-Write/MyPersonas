@@ -526,7 +526,7 @@ export async function runImageTextDraft(options: {
   admin: any;
   owner: string;
   body: Record<string, unknown>;
-  generate: (source: ImageTextSource, backendId: string) => Promise<string>;
+  generate: (source: ImageTextSource) => Promise<string>;
 }) {
   const first = await resolveImageTextSource(options.admin, options.owner, options.body);
   if (!first.source) throw new ImageDraftActionError(first.error || "The registered image could not be resolved.", first.status || 400);
@@ -548,6 +548,6 @@ export async function runImageTextDraft(options: {
     options.body,
     first.source,
   );
-  const text = await options.generate(live, backendId);
+  const text = await options.generate(live);
   return { source: live, text };
 }

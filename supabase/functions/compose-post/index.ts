@@ -220,7 +220,6 @@ async function generateCaptions(
 
 async function generateImageText(
   authHeader: string,
-  backendId: string,
   source: ImageTextSource,
 ) {
   const r = await fetch(
@@ -232,7 +231,6 @@ async function generateImageText(
         "Authorization": authHeader,
       },
       body: JSON.stringify({
-        backendId,
         personaId: source.personaId,
         mode: "owner_chat",
         purpose: "image_caption_draft",
@@ -314,10 +312,9 @@ serve(async (req) => {
         admin,
         owner: user.id,
         body,
-        generate: (source: ImageTextSource, backendId: string) =>
+        generate: (source: ImageTextSource) =>
           generateImageText(
             req.headers.get("Authorization") || "",
-            backendId,
             source,
           ),
       });

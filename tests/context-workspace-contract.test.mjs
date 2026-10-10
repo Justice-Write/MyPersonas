@@ -44,7 +44,7 @@ test("persona context is bounded and loaded only by the authenticated owner", ()
   assert.match(proxy, /RECENT_CONTEXT_LOG_LINES = 10/);
   assert.match(
     proxy,
-    /id,owner,name,handle,tagline,bio,purpose,voice,topics,audience,hashtags,dont,nsfw,context_log/,
+    /id,owner,ai_backend,name,handle,tagline,bio,purpose,voice,topics,audience,hashtags,dont,nsfw,context_log/,
   );
   const load = functionBlock(proxy, "ownedContextLog");
   assert.match(load, /\.eq\("id", personaId\)\.eq\("owner", owner\)/);

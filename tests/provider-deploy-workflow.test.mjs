@@ -51,7 +51,9 @@ test("image caption deployment is main-only, protected, tested, and exactly two 
   assert.match(step, /for function_name in ai-proxy compose-post/);
   assert.doesNotMatch(step, /media-ingest|gemini-image|functions deploy\s+--project-ref/);
   assert.doesNotMatch(workflow, /all-reviewed/);
-  assert.match(workflow, /IMAGE-CAPTION-VERIFIED/);
+  assert.match(workflow, /MIGRATIONS-AND-IMAGE-CAPTION-VERIFIED/);
+  assert.match(workflow, /name: image-caption-backend-\$\{\{ github\.sha \}\}/);
+  assert.match(workflow, /sha=%s\\nscope=image-caption-drafting\\nfunctions=ai-proxy compose-post/);
 });
 
 test("provider-capable site deployment requires both migration ledgers", () => {
@@ -61,4 +63,9 @@ test("provider-capable site deployment requires both migration ledgers", () => {
   assert.match(pagesWorkflow, /--include '\/cms-connector-ui\.js'/);
   assert.match(pagesWorkflow, /if: github\.ref == 'refs\/heads\/main'/);
   assert.match(pagesWorkflow, /Validate the exact source revision before packaging[\s\S]*npm test[\s\S]*check-frontend-syntax\.mjs/);
+  assert.match(pagesWorkflow, /IMAGE-CAPTION-CANARY-VERIFIED/);
+  assert.match(pagesWorkflow, /image_caption_backend_run_id/);
+  assert.match(pagesWorkflow, /actions\/download-artifact@[0-9a-f]{40}/);
+  assert.match(pagesWorkflow, /run-id: \$\{\{ inputs\.image_caption_backend_run_id \}\}/);
+  assert.match(pagesWorkflow, /grep -Fx "sha=\$\{GITHUB_SHA\}"/);
 });
