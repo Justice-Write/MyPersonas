@@ -4,11 +4,12 @@
   "private": true,
   "description": "Local account-isolated browser workrooms for the MyPersonas owner app.",
   "main": "main.cjs",
+  "packageManager": "npm@11.17.0",
   "scripts": {
     "start": "electron .",
     "check": "node --check main.cjs && node --check provider-policy.cjs"
   },
   "devDependencies": {
-    "electron": "^38.0.0"
+    "electron": "44.7.0"
   }
 }

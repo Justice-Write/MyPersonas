@@ -21,8 +21,8 @@ in the protocol URL.
 
 ## Local development
 
-1. Run `npm install` in this folder only after reviewing the Electron version and
-   lockfile policy.
+1. Run `npm ci` in this folder. Electron is pinned exactly and the committed
+   lockfile is the installation authority; review both in every dependency PR.
 2. Run `npm run check`.
 3. Run `npm start` for a local development window.
 
