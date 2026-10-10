@@ -58,7 +58,7 @@ test("image caption deployment is main-only, protected, tested, and exactly two 
 
 test("backend and Pages production releases share one non-cancelling lock", () => {
   for (const releaseWorkflow of [workflow, pagesWorkflow]) {
-    assert.match(releaseWorkflow, /concurrency:\s*\n(?:\s*#[^\n]*\n)*\s*group: production-release\s*\n\s*cancel-in-progress: false/);
+    assert.match(releaseWorkflow, /concurrency:\s*\n(?:\s*#[^\n]*\n)*\s*group: production-release\s*\n\s*queue: max\s*\n\s*cancel-in-progress: false/);
   }
 });
 
@@ -74,4 +74,15 @@ test("provider-capable site deployment requires both migration ledgers", () => {
   assert.match(pagesWorkflow, /actions\/download-artifact@[0-9a-f]{40}/);
   assert.match(pagesWorkflow, /run-id: \$\{\{ inputs\.image_caption_backend_run_id \}\}/);
   assert.match(pagesWorkflow, /grep -Fx "sha=\$\{GITHUB_SHA\}"/);
+  const finalBackendCheck = pagesWorkflow.indexOf("- name: Verify backend workflow and current main immediately before deployment");
+  const artifactUpload = pagesWorkflow.indexOf("actions/upload-pages-artifact@");
+  const pagesDeploy = pagesWorkflow.indexOf("actions/deploy-pages@");
+  assert.ok(artifactUpload >= 0 && finalBackendCheck > artifactUpload && pagesDeploy > finalBackendCheck);
+  const finalGate = pagesWorkflow.slice(finalBackendCheck, pagesDeploy);
+  assert.match(finalGate, /actions\/runs\/\$\{IMAGE_CAPTION_BACKEND_RUN_ID\}/);
+  assert.match(finalGate, /\.head_sha[\s\S]*GITHUB_SHA/);
+  assert.match(finalGate, /\.head_branch[\s\S]*"main"/);
+  assert.match(finalGate, /\.conclusion[\s\S]*"success"/);
+  assert.match(finalGate, /supabase-deploy\\\.yml@/);
+  assert.match(finalGate, /git\/ref\/heads\/main[\s\S]*current_main_sha[\s\S]*GITHUB_SHA/);
 });

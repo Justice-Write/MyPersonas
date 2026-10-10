@@ -30,6 +30,7 @@ concurrency:
   # Shares the backend release lock so the exact deployed SHA cannot be
   # replaced while this reviewed Pages release waits for approval or deploys.
   group: production-release
+  queue: max
   cancel-in-progress: false
 
 env:
@@ -136,5 +137,22 @@ jobs:
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
           path: .pages-artifact
+      - name: Verify backend workflow and current main immediately before deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMAGE_CAPTION_BACKEND_RUN_ID: ${{ inputs.image_caption_backend_run_id }}
+        run: |
+          backend_api="repos/${GITHUB_REPOSITORY}/actions/runs/${IMAGE_CAPTION_BACKEND_RUN_ID}"
+          test "$(gh api "${backend_api}" --jq .head_sha)" = "${GITHUB_SHA}"
+          test "$(gh api "${backend_api}" --jq .head_branch)" = "main"
+          test "$(gh api "${backend_api}" --jq .event)" = "workflow_dispatch"
+          test "$(gh api "${backend_api}" --jq .status)" = "completed"
+          test "$(gh api "${backend_api}" --jq .conclusion)" = "success"
+          gh api "${backend_api}" --jq .path | grep -Eq '^\.github/workflows/supabase-deploy\.yml@'
+          current_main_sha="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq .object.sha)"
+          test "${current_main_sha}" = "${GITHUB_SHA}" || {
+            echo "Release blocked: this Pages revision is no longer the current main tip."
+            exit 1
+          }
       - id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

@@ -33,6 +33,7 @@ concurrency:
   # Serialize every production backend and Pages release. This keeps a Pages
   # approval wait from being overtaken by a newer backend deployment.
   group: production-release
+  queue: max
   cancel-in-progress: false
 
 jobs:
