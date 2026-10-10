@@ -61,6 +61,7 @@ const ownerAppState = {
   modelRoutes: [],
   researchSettings: [],
   postDrafts: [],
+  mediaAssets: [],
   fanSessions: [],
   fanMessages: [],
   unreadCount: 0,
@@ -78,7 +79,7 @@ function ownerAppReset() {
   ownerAppState.selectedPersonaId = "";
   ownerAppState.viewMode = "overview";
   ownerAppState.perspectiveGeneration += 1;
-  for (const key of ["briefs", "topics", "annotations", "packages", "variants", "notifications", "activities", "modelRoutes", "researchSettings", "postDrafts", "fanSessions", "fanMessages"]) ownerAppState[key] = [];
+  for (const key of ["briefs", "topics", "annotations", "packages", "variants", "notifications", "activities", "modelRoutes", "researchSettings", "postDrafts", "mediaAssets", "fanSessions", "fanMessages"]) ownerAppState[key] = [];
   ownerAppState.capabilities = {};
   ownerAppState.unreadCount = 0;
   ownerAppState.busy.clear();
@@ -278,6 +279,7 @@ async function ownerAppLoad(force = false) {
     sb.from("persona_ai_model_routes").select("*").eq("owner", uid).order("route_key", { ascending: true }).limit(500),
     sb.from("persona_research_settings").select("*").eq("owner", uid).limit(500),
     sb.from("post_drafts").select("*").eq("owner", uid).order("created_at", { ascending: false }).limit(500),
+    sb.from("persona_media_assets").select("id,persona_id,public_url,ai_use,status,media_type").eq("owner", uid).eq("status", "active").eq("media_type", "image").neq("declaration_source", "legacy").order("created_at", { ascending: false }).limit(2_000),
     loadOwnedPages("fan_chat_sessions", "id,owner,persona_id,escalated,escalation_reason,inbox_state,retention_mode,privacy_notice_version,privacy_acknowledged_at,ephemeral_expires_at,owner_live_until,owner_live_started_at,created_at,last_seen_at", "last_seen_at", false, uid),
   ]);
   if (requestId !== ownerAppState.requestId || session?.user?.id !== uid) return false;
@@ -293,7 +295,8 @@ async function ownerAppLoad(force = false) {
   ownerAppState.modelRoutes = ownerAppUseResult("modelRoutes", queries[7]);
   ownerAppState.researchSettings = ownerAppUseResult("researchSettings", queries[8]);
   ownerAppState.postDrafts = ownerAppUseResult("postDrafts", queries[9]);
-  ownerAppState.fanSessions = ownerAppUseResult("fanLive", queries[10]);
+  ownerAppState.mediaAssets = ownerAppUseResult("mediaAssets", queries[10]);
+  ownerAppState.fanSessions = ownerAppUseResult("fanLive", queries[11]);
   if (!ownerAppState.capabilities.fanLive) ownerAppState.fanSessions = (myFanSessions || []).slice();
   ownerAppState.fanMessages = (myFanMessages || []).slice();
   if (!ownerAppState.selectedPersonaId || !myPersonas.some((p) => p.id === ownerAppState.selectedPersonaId)) {
@@ -1477,8 +1480,20 @@ async function ownerAppLaunchHandoff(copyImage) {
 }
 
 function ownerAppVariantImage(variant) {
-  const media = Array.isArray(variant?.media_plan) ? variant.media_plan : [];
-  return safeHttpUrl(media.find((item) => item?.source_url)?.source_url || "");
+  const firstImage = window.MyPersonasImageCaptionDrafting?.firstVisibleImage(variant?.media_plan)
+    || (Array.isArray(variant?.media_plan) ? variant.media_plan : []).find((item) => item && typeof item === "object" && String(item.type || "image") === "image" && String(item.source_url || "").trim());
+  return safeHttpUrl(firstImage?.source_url || "");
+}
+
+function ownerAppVariantImageBinding(variant) {
+  const url = ownerAppVariantImage(variant);
+  if (!url || !ownerAppState.capabilities.mediaAssets || !window.MyPersonasImageCaptionDrafting) return null;
+  return MyPersonasImageCaptionDrafting.exactRegisteredBinding(
+    url,
+    variant?.persona_id,
+    variant?.channel,
+    ownerAppState.mediaAssets,
+  );
 }
 
 // ---------- owner fan inbox + bounded live takeover ----------
@@ -1719,6 +1734,88 @@ function ownerAppPackageCard(pack) {
   </article>`;
 }
 
+function ownerAppVariantGenerateButton(variant, field, enabled) {
+  if (!ownerAppVariantImage(variant)) return "";
+  const binding = ownerAppVariantImageBinding(variant);
+  const variantEditable = ["ready", "approved"].includes(String(variant.status))
+    && !String(variant.provider_id || "").trim()
+    && !String(variant.provider_url || "").trim();
+  const available = enabled && variantEditable && !!binding;
+  const title = !enabled
+    ? "Unschedule or reopen this kit for owner review before generating replacement copy"
+    : !variantEditable
+      ? "Posted or provider-bound content is immutable"
+      : !binding
+        ? "Register this exact displayed image or crop in the persona media library first"
+        : "Send a metadata-stripped, size-bounded derivative plus the saved package title, owner guidance, and saved variant copy to the linked vision model. Unsaved edits are not sent";
+  return `<button type="button" class="oa-secondary oa-small" id="ownerGenerate_${field}_${variant.id}" ${available ? `onclick="ownerAppGenerateVariantImageText('${variant.id}','${field}')"` : "disabled"} title="${title}">Generate from image</button>`;
+}
+
+function ownerAppVariantFieldLabel(variant, field, label, enabled) {
+  return `<div class="oa-panel-head" style="margin-top:10px"><label style="margin:0">${label}</label>${ownerAppVariantGenerateButton(variant, field, enabled)}</div>`;
+}
+
+async function ownerAppGenerateVariantImageText(variantId, field) {
+  const variant = ownerAppState.variants.find((row) => row.id === variantId);
+  const inputIds = {
+    title: `ownerVariantTitle_${variantId}`,
+    body: `ownerVariantBody_${variantId}`,
+    description: `ownerVariantDescription_${variantId}`,
+    alt_text: `ownerVariantAlt_${variantId}`,
+  };
+  const input = document.getElementById(inputIds[field]);
+  const button = document.getElementById(`ownerGenerate_${field}_${variantId}`);
+  const binding = ownerAppVariantImageBinding(variant);
+  if (!variant || !input || !button || !binding || typeof requestRegisteredImageText !== "function") return;
+  const originalValue = input.value;
+  const originalImage = ownerAppVariantImage(variant);
+  if (originalValue.trim() && !confirm("Replace the current text with a new AI suggestion based on this image?")) return;
+  const original = button.textContent;
+  button.disabled = true;
+  button.textContent = "Generating…";
+  try {
+    const generated = await requestRegisteredImageText({
+      sourceType: "content_variant",
+      sourceId: variantId,
+      field,
+      expectedImageAssetId: binding.assetId,
+      expectedRevision: String(variant.updated_at || ""),
+      expectedMediaUrl: binding.url,
+    });
+    if (ownerAppState.variants.find((row) => row.id === variantId) !== variant || !document.contains(input) || input.value !== originalValue || ownerAppVariantImage(variant) !== originalImage) {
+      throw new Error("The content kit changed while the image was being analyzed");
+    }
+    if (generated.imageAssetId !== binding.assetId) throw new Error("The server did not verify the exact registered image for this content kit");
+    input.value = generated.text;
+    ownerAppSetPackageDirty(true);
+    toast("Image-based draft inserted. Review it and save the kit to clear prior approval.");
+  } catch (error) {
+    toast(error?.message || "The image description could not be generated");
+  } finally {
+    if (button.isConnected) {
+      button.disabled = false;
+      button.textContent = original;
+    }
+  }
+}
+
+function ownerAppPackageModalDirty() {
+  return document.getElementById("ownerPackageModal")?.dataset.imageDraftDirty === "true";
+}
+
+function ownerAppSetPackageDirty(dirty = true) {
+  return window.MyPersonasImageCaptionDrafting?.setModalDirty(
+    document.getElementById("ownerPackageModal"),
+    dirty,
+  ) || false;
+}
+
+function ownerAppRequireSavedPackage() {
+  if (!ownerAppPackageModalDirty()) return true;
+  toast("Save and reload this changed kit before copying, opening a portal, approving, scheduling, or recording a manual post.");
+  return false;
+}
+
 function ownerAppLegacyDraftCard(draft) {
   const persona = ownerAppPersona(draft.persona_id);
   const targets = Array.isArray(draft.targets) ? draft.targets : [];
@@ -1747,19 +1844,23 @@ function ownerAppEditPackage(id) {
   if (!pack) return;
   document.getElementById("ownerPackageModal")?.remove();
   const variants = ownerAppPackageVariants(id);
+  const editable = ["owner_review", "approved"].includes(pack.status);
   const modal = document.createElement("div");
   modal.className = "oa-modal"; modal.id = "ownerPackageModal";
   modal.innerHTML = `<div class="oa-sheet" role="dialog" aria-modal="true"><div class="oa-sheethead"><div><span class="oa-eyebrow">${esc(ownerAppPackageStatus(pack.status))}</span><h2>${esc(pack.title || "Content kit")}</h2></div><button class="oa-close" onclick="ownerAppClosePackage()">×</button></div><div class="oa-sheetbody">
     <div class="oa-capability">Material edits clear approval and remove the kit from the schedule. This screen never publishes.</div>
+    <div class="oa-capability" data-image-draft-dirty-notice hidden><b>Unsaved changes.</b> Save and reload before copying, opening a provider portal, approving, scheduling, or confirming a manual post. Those actions remain bound to the last saved bytes.</div>
     <label>Package title</label><input id="ownerPackageTitle" maxlength="300" value="${esc(pack.title || "")}">
     <label>Owner guidance</label><textarea id="ownerPackageGuidance" maxlength="6000">${esc(pack.owner_guidance || "")}</textarea>
-    ${variants.map((variant) => `<section class="oa-panel wide" style="margin-top:12px"><h3>${esc(OWNER_APP_CHANNELS.find((row) => row.key === variant.channel)?.label || variant.channel)}</h3>
-      <label>Title</label><input id="ownerVariantTitle_${variant.id}" maxlength="300" value="${esc(variant.title || "")}"><label>Body</label><textarea id="ownerVariantBody_${variant.id}" maxlength="${variant.channel === "x" ? 280 : variant.channel === "website" ? 30000 : 10000}" style="min-height:${variant.channel === "website" ? 220 : 120}px">${esc(variant.body || "")}</textarea>
-      <label>Description / SEO summary</label><textarea id="ownerVariantDescription_${variant.id}" maxlength="2000">${esc(variant.description || "")}</textarea><label>Accessibility text</label><textarea id="ownerVariantAlt_${variant.id}" maxlength="2000">${esc(variant.alt_text || "")}</textarea>
-      <div class="oa-actions"><button class="oa-secondary oa-small" onclick="ownerAppCopyVariant('${variant.id}')">Copy ${esc(variant.channel)}</button><button class="oa-secondary oa-small" onclick="ownerAppOpenChannel('${variant.id}')">Open portal</button>${["scheduled", "approved"].includes(variant.status) ? `<button class="oa-secondary oa-small" onclick="ownerAppMarkVariantPosted('${variant.id}')">Confirm manually posted</button>` : ""}</div></section>`).join("")}
-    <div class="oa-actions" style="margin-top:14px"><button class="oa-primary" onclick="ownerAppSavePackage('${id}')">Save changes</button>${pack.status === "owner_review" ? `<button class="oa-secondary" onclick="ownerAppApprovePackage('${id}')">Preview saved kit &amp; approve</button><button class="oa-danger" onclick="ownerAppRejectPackage('${id}')">Reject draft</button>` : ""}<button class="oa-secondary" onclick="ownerAppClosePackage()">Close</button></div>
+    ${variants.map((variant) => `<section class="oa-panel wide" style="margin-top:12px"><h3>${esc(OWNER_APP_CHANNELS.find((row) => row.key === variant.channel)?.label || variant.channel)}</h3>${ownerAppVariantImage(variant) ? `<p class="oa-sub">Image selected · AI suggestions require this exact image to be active in the persona media library.</p>` : ""}
+      ${ownerAppVariantFieldLabel(variant, "title", "Title", editable)}<input id="ownerVariantTitle_${variant.id}" maxlength="300" value="${esc(variant.title || "")}" ${editable ? "" : "disabled"}>${ownerAppVariantFieldLabel(variant, "body", "Body", editable)}<textarea id="ownerVariantBody_${variant.id}" maxlength="${variant.channel === "x" ? 280 : variant.channel === "website" ? 30000 : 10000}" style="min-height:${variant.channel === "website" ? 220 : 120}px" ${editable ? "" : "disabled"}>${esc(variant.body || "")}</textarea>
+      ${ownerAppVariantFieldLabel(variant, "description", "Description / SEO summary", editable)}<textarea id="ownerVariantDescription_${variant.id}" maxlength="2000" ${editable ? "" : "disabled"}>${esc(variant.description || "")}</textarea>${ownerAppVariantFieldLabel(variant, "alt_text", "Accessibility text", editable)}<textarea id="ownerVariantAlt_${variant.id}" maxlength="2000" ${editable ? "" : "disabled"}>${esc(variant.alt_text || "")}</textarea>
+      <div class="oa-actions"><button class="oa-secondary oa-small" data-requires-saved-kit onclick="ownerAppCopyVariant('${variant.id}')">Copy ${esc(variant.channel)}</button><button class="oa-secondary oa-small" data-requires-saved-kit onclick="ownerAppOpenChannel('${variant.id}')">Open portal</button>${["scheduled", "approved"].includes(variant.status) ? `<button class="oa-secondary oa-small" data-requires-saved-kit onclick="ownerAppMarkVariantPosted('${variant.id}')">Confirm manually posted</button>` : ""}</div></section>`).join("")}
+    <div class="oa-actions" style="margin-top:14px"><button class="oa-primary" onclick="ownerAppSavePackage('${id}')">Save changes</button>${pack.status === "owner_review" ? `<button class="oa-secondary" data-requires-saved-kit onclick="ownerAppApprovePackage('${id}')">Preview saved kit &amp; approve</button><button class="oa-danger" onclick="ownerAppRejectPackage('${id}')">Reject draft</button>` : ""}<button class="oa-secondary" onclick="ownerAppClosePackage()">Close</button></div>
   </div></div>`;
   document.body.appendChild(modal);
+  modal.querySelectorAll("input,textarea").forEach((control) => control.addEventListener("input", () => ownerAppSetPackageDirty(true)));
+  ownerAppSetPackageDirty(false);
   ownerAppReadNotificationFor("content_package", id);
   ownerAppSyncStickyChrome();
 }
@@ -1829,6 +1930,7 @@ async function ownerAppSchedulePackage(id) {
 }
 
 async function ownerAppPreviewPackageAction(id, action) {
+  if (!ownerAppRequireSavedPackage()) return;
   const workflow = ownerAppWorkflow();
   const pack = ownerAppState.packages.find((row) => row.id === id);
   if (workflow) {
@@ -1917,6 +2019,7 @@ async function ownerAppUnschedulePackage(id) {
 }
 
 async function ownerAppCopyVariant(id) {
+  if (!ownerAppRequireSavedPackage()) return;
   const variant = ownerAppState.variants.find((row) => row.id === id);
   if (!variant) return;
   const text = `${variant.title ? `${variant.title}\n\n` : ""}${variant.body}`;
@@ -1925,6 +2028,7 @@ async function ownerAppCopyVariant(id) {
 }
 
 function ownerAppOpenChannel(id) {
+  if (!ownerAppRequireSavedPackage()) return;
   const variant = ownerAppState.variants.find((row) => row.id === id);
   if (!variant) return;
   const provider = variant.channel === "x" ? "twitter" : variant.channel;
@@ -1938,6 +2042,7 @@ function ownerAppOpenChannel(id) {
 }
 
 async function ownerAppMarkVariantPosted(id) {
+  if (!ownerAppRequireSavedPackage()) return;
   const variant = ownerAppState.variants.find((row) => row.id === id);
   if (!variant || !confirm(`Confirm that you personally posted the ${variant.channel} variant? This records your attestation, not a provider receipt.`)) return;
   const result = await sb.rpc("mark_owner_content_variant_manually_posted", { p_variant_id: id });

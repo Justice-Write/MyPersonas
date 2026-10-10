@@ -241,10 +241,14 @@ test("Pages deployment ships both provenance assets only after migration 060 rel
   assert.ok(artifactStep.indexOf("--include '/ai-content-provenance.js'") < excludeAll);
 });
 
-test("the provenance release deploys only its reviewed function set by default", async () => {
+test("the provenance core release cannot bypass the separately gated image functions", async () => {
   const workflow = await readFile(path.join(repoRoot, ".github/workflows/supabase-deploy.yml"), "utf8");
   assert.match(workflow, /release_scope:[\s\S]*default: "ai-provenance"/);
   assert.match(workflow, /if: \$\{\{ inputs\.release_scope == 'ai-provenance' \}\}/);
-  assert.match(workflow, /for function_name in media-ingest gemini-image compose-post ai-proxy/);
-  assert.match(workflow, /inputs\.release_scope == 'all-reviewed'/);
+  const start = workflow.indexOf("- name: Deploy AI provenance core functions");
+  const end = workflow.indexOf("\n      - name:", start + 1);
+  const step = workflow.slice(start, end);
+  assert.match(step, /for function_name in media-ingest gemini-image/);
+  assert.doesNotMatch(step, /compose-post|ai-proxy/);
+  assert.doesNotMatch(workflow, /all-reviewed|supabase functions deploy --project-ref/);
 });
