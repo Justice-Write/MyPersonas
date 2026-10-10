@@ -319,6 +319,7 @@ test("secure proxy revalidates the source binding and exact active asset after d
   assert.match(proxy, /async function imageBackendBindingStillCurrent/);
   assert.match(proxy, /personaResult\.data\.ai_backend !== options\.backend\.id/);
   assert.match(proxy, /image_backend_changed_before_provider/);
+  assert.match(proxy, /local_fleet_bound_before_provider/);
   assert.match(proxy, /provider_fetch_issued: false/);
   const sourceFinalCheck = proxy.lastIndexOf("await revalidateImageTextSource(");
   const backendFinalCheck = proxy.indexOf("const liveBackendBinding = await imageBackendBindingStillCurrent");
@@ -332,6 +333,21 @@ test("secure proxy revalidates the source binding and exact active asset after d
   assert.match(proxy, /\.eq\("storage_path", asset\.storage_path\)/);
   assert.match(proxy, /\.eq\("public_url", asset\.public_url\)/);
   assert.match(proxy, /\.eq\("content_sha256", asset\.content_sha256\)/);
+});
+
+test("a local fleet binding added during image work blocks the final cloud disclosure", () => {
+  const helperStart = proxy.indexOf("async function imageBackendBindingStillCurrent");
+  const helperEnd = proxy.indexOf("async function readProviderBody", helperStart);
+  const helper = proxy.slice(helperStart, helperEnd);
+  const keyRevalidation = helper.indexOf("await resolveBackendApiKey");
+  const finalFleetLookup = helper.indexOf('admin.from("local_fleet_personas")');
+  const providerFetch = proxy.indexOf("const providerResponse = await fetch(endpoint.url");
+  const finalBindingCall = proxy.indexOf("const liveBackendBinding = await imageBackendBindingStillCurrent");
+  assert.ok(keyRevalidation >= 0 && finalFleetLookup > keyRevalidation);
+  assert.match(helper, /\.eq\("owner", options\.owner\)[\s\S]*\.eq\("persona_id", options\.personaId\)/);
+  assert.match(helper, /fleetBinding\.data[\s\S]*localFleetRequired: true/);
+  assert.ok(finalBindingCall >= 0 && finalBindingCall < providerFetch);
+  assert.match(proxy.slice(finalBindingCall, providerFetch), /if \(!liveBackendBinding\.current\)[\s\S]*return responseJson/);
 });
 
 test("image drafting derives the model only from the live persona binding", () => {

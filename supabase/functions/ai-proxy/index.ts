@@ -1120,14 +1120,14 @@ async function imageBackendBindingStillCurrent(options: {
       .maybeSingle(),
   ]);
   if (personaResult.error || backendResult.error) {
-    return { current: false, lookupFailed: true };
+    return { current: false, lookupFailed: true, localFleetRequired: false };
   }
   const currentBackend = backendResult.data as BackendRow | null;
   if (
     !personaResult.data || personaResult.data.ai_backend !== options.backend.id ||
     !currentBackend || currentBackend.owner !== options.owner
   ) {
-    return { current: false, lookupFailed: false };
+    return { current: false, lookupFailed: false, localFleetRequired: false };
   }
   const sameStoredConfiguration =
     backendProvider(currentBackend.provider) === backendProvider(options.backend.provider) &&
@@ -1136,21 +1136,40 @@ async function imageBackendBindingStillCurrent(options: {
     (currentBackend.api_key || "") === (options.backend.api_key || "") &&
     JSON.stringify(currentBackend.extra || null) === JSON.stringify(options.backend.extra || null);
   if (!sameStoredConfiguration) {
-    return { current: false, lookupFailed: false };
+    return { current: false, lookupFailed: false, localFleetRequired: false };
   }
   const currentEndpoint = await providerEndpoint(currentBackend);
   if (!currentEndpoint.url || !options.endpoint.url) {
-    return { current: false, lookupFailed: true };
+    return { current: false, lookupFailed: true, localFleetRequired: false };
   }
   const currentApiKey = await resolveBackendApiKey(currentBackend, options.owner);
-  return {
-    current:
-      currentEndpoint.url.toString() === options.endpoint.url.toString() &&
-      currentEndpoint.kind === options.endpoint.kind &&
-      currentEndpoint.host === options.endpoint.host &&
-      currentApiKey === options.apiKey,
-    lookupFailed: false,
-  };
+  if (
+    currentEndpoint.url.toString() !== options.endpoint.url.toString() ||
+    currentEndpoint.kind !== options.endpoint.kind ||
+    currentEndpoint.host !== options.endpoint.host ||
+    currentApiKey !== options.apiKey
+  ) {
+    return { current: false, lookupFailed: false, localFleetRequired: false };
+  }
+
+  // This must be the last authoritative lookup before provider disclosure.
+  // A persona provisioned onto the local fleet while its cloud backend row is
+  // unchanged must never fall through and send its private image to the cloud.
+  const fleetBinding = await admin.from("local_fleet_personas")
+    .select("persona_id")
+    .eq("owner", options.owner)
+    .eq("persona_id", options.personaId)
+    .maybeSingle();
+  const tableNotInstalled = ["42P01", "PGRST205"].includes(
+    fleetBinding.error?.code || "",
+  ) && Deno.env.get("LOCAL_FLEET_ENABLED") !== "true";
+  if (fleetBinding.error && !tableNotInstalled) {
+    return { current: false, lookupFailed: true, localFleetRequired: false };
+  }
+  if (fleetBinding.data) {
+    return { current: false, lookupFailed: false, localFleetRequired: true };
+  }
+  return { current: true, lookupFailed: false, localFleetRequired: false };
 }
 
 async function readProviderBody(response: Response) {
@@ -2734,7 +2753,9 @@ async function handleRequest(req: Request) {
         model,
       });
       if (!liveBackendBinding.current) {
-        const code = liveBackendBinding.lookupFailed
+        const code = liveBackendBinding.localFleetRequired
+          ? "local_fleet_bound_before_provider"
+          : liveBackendBinding.lookupFailed
           ? "image_backend_final_check_unavailable"
           : "image_backend_changed_before_provider";
         const budgetFinalized = await finalizeBudgetOnce(
@@ -2752,7 +2773,9 @@ async function handleRequest(req: Request) {
         }
         return responseJson(
           {
-            error: liveBackendBinding.lookupFailed
+            error: liveBackendBinding.localFleetRequired
+              ? "This persona now requires its configured local fleet connection; no model request was sent"
+              : liveBackendBinding.lookupFailed
               ? "The persona model binding could not be revalidated; no model request was sent"
               : "The persona model changed before provider disclosure; reload and try again",
           },
