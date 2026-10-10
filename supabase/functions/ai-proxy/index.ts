@@ -10,7 +10,6 @@ import {
   ImageMagick,
   initializeImageMagick,
   MagickFormat,
-  MagickGeometry,
 } from "npm:@imagemagick/magick-wasm@0.0.42";
 import {
   ImageDraftActionError,
@@ -39,7 +38,7 @@ const MAX_MAX_TOKENS = 4_096;
 const PROVIDER_TIMEOUT_MS = 45_000;
 const MAX_PROVIDER_RESPONSE_BYTES = 1_000_000;
 const MAX_PROVIDER_SOURCE_IMAGE_BYTES = 10 * 1024 * 1024;
-const MAX_PROVIDER_INFERENCE_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_PROVIDER_INFERENCE_IMAGE_BYTES = 10 * 1024 * 1024;
 const MAX_PROVIDER_IMAGE_ENCODED_BYTES =
   4 * Math.ceil(MAX_PROVIDER_INFERENCE_IMAGE_BYTES / 3) + 4_096;
 const MAX_PROVIDER_IMAGE_PIXELS = 12_000_000;
@@ -100,6 +99,7 @@ type RegisteredImageInput = {
 type RegisteredImageAsset = {
   id: string;
   storage_path: string;
+  public_url: string;
   mime_type: string;
   byte_size: number;
   content_sha256: string;
@@ -557,7 +557,6 @@ async function ensureInferenceMagick() {
 async function renderInferenceRaster(
   sourceBytes: Uint8Array,
   mime: string,
-  cropKey: keyof typeof IMAGE_CAPTION_CROPS | "",
 ) {
   await ensureInferenceMagick();
   const format = magickFormat(mime);
@@ -574,20 +573,7 @@ async function renderInferenceRaster(
     // Re-encoding after strip ensures EXIF, GPS, device identifiers, comments,
     // and other ancillary metadata never leave MyPersonas with the pixels.
     image.strip();
-    const crop = cropKey ? IMAGE_CAPTION_CROPS[cropKey] : null;
-    if (crop) {
-      const scale = Math.max(crop.width / image.width, crop.height / image.height);
-      const resizedWidth = Math.max(crop.width, Math.ceil(image.width * scale));
-      const resizedHeight = Math.max(crop.height, Math.ceil(image.height * scale));
-      image.resize(resizedWidth, resizedHeight);
-      image.crop(new MagickGeometry(
-        Math.floor((image.width - crop.width) / 2),
-        Math.floor((image.height - crop.height) / 2),
-        crop.width,
-        crop.height,
-      ));
-      image.resetPage();
-    } else if (image.width * image.height > MAX_PROVIDER_INFERENCE_PIXELS) {
+    if (image.width * image.height > MAX_PROVIDER_INFERENCE_PIXELS) {
       const scale = Math.sqrt(
         MAX_PROVIDER_INFERENCE_PIXELS / (image.width * image.height),
       );
@@ -597,28 +583,127 @@ async function renderInferenceRaster(
       );
       image.resetPage();
     }
-    if (mime !== "image/png") image.quality = 86;
-    return image.write(format, (data) => new Uint8Array(data));
+    // A lossless PNG preserves the decoded pixels while still dropping source
+    // metadata. For a registered Storage transform, those are the exact pixels
+    // the owner reviewed in the browser rather than a guessed local recrop.
+    return image.write(MagickFormat.Png, (data) => new Uint8Array(data));
   });
   if (!output.byteLength ||
     output.byteLength > MAX_PROVIDER_INFERENCE_IMAGE_BYTES ||
-    !registeredImageMagicMatches(output, mime)) {
+    !registeredImageMagicMatches(output, "image/png")) {
     throw new Error("The inference image derivative is invalid or too large");
   }
   return output;
 }
 
+function exactRegisteredTransformUrl(
+  reference: string,
+  publicUrl: string,
+  cropKey: keyof typeof IMAGE_CAPTION_CROPS,
+) {
+  try {
+    const rendered = new URL(reference);
+    const registered = new URL(publicUrl);
+    const service = new URL(SUPABASE_URL);
+    const crop = IMAGE_CAPTION_CROPS[cropKey];
+    if (
+      !crop || rendered.protocol !== "https:" || registered.protocol !== "https:" ||
+      rendered.username || rendered.password || rendered.hash ||
+      registered.username || registered.password || registered.hash ||
+      rendered.origin !== service.origin || registered.origin !== service.origin
+    ) return null;
+    const renderMarker = "/storage/v1/render/image/public/";
+    const objectMarker = "/storage/v1/object/public/";
+    if (!rendered.pathname.includes(renderMarker) || !registered.pathname.includes(objectMarker)) {
+      return null;
+    }
+    if (rendered.pathname.replace(renderMarker, objectMarker) !== registered.pathname) {
+      return null;
+    }
+    const allowed = new Set(["width", "height", "resize", "quality", "format"]);
+    const seen = new Set<string>();
+    for (const [key, value] of rendered.searchParams.entries()) {
+      if (!allowed.has(key) || seen.has(key)) return null;
+      seen.add(key);
+      if (key === "quality" && !/^(?:[2-9][0-9]|100)$/.test(value)) return null;
+      if (key === "format" && !["origin", "webp"].includes(value)) return null;
+    }
+    if (
+      rendered.searchParams.get("width") !== String(crop.width) ||
+      rendered.searchParams.get("height") !== String(crop.height) ||
+      rendered.searchParams.get("resize") !== "cover"
+    ) return null;
+    return rendered;
+  } catch {
+    return null;
+  }
+}
+
+async function readBoundedImageBytes(response: Response) {
+  const declared = Number(response.headers.get("Content-Length") || "0");
+  if (Number.isFinite(declared) && declared > MAX_PROVIDER_SOURCE_IMAGE_BYTES) {
+    throw new Error("Rendered image is too large");
+  }
+  if (!response.body) throw new Error("Rendered image has no body");
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    if (!value) continue;
+    total += value.byteLength;
+    if (total > MAX_PROVIDER_SOURCE_IMAGE_BYTES) {
+      await reader.cancel();
+      throw new Error("Rendered image is too large");
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return bytes;
+}
+
+async function loadExactRegisteredTransform(
+  reference: string,
+  publicUrl: string,
+  cropKey: keyof typeof IMAGE_CAPTION_CROPS,
+) {
+  const url = exactRegisteredTransformUrl(reference, publicUrl, cropKey);
+  if (!url) return null;
+  const response = await fetch(url, {
+    method: "GET",
+    redirect: "error",
+    signal: AbortSignal.timeout(15_000),
+    headers: { Accept: "image/png,image/jpeg,image/webp" },
+  });
+  if (!response.ok) return null;
+  const mime = (response.headers.get("Content-Type") || "")
+    .toLowerCase().split(";")[0].trim();
+  if (!["image/png", "image/jpeg", "image/webp"].includes(mime)) return null;
+  const bytes = await readBoundedImageBytes(response);
+  if (!registeredImageMagicMatches(bytes, mime)) return null;
+  return { bytes, mime };
+}
+
 async function loadRegisteredImage(
   id: string,
   storagePath: unknown,
+  publicUrl: unknown,
   declaredMime: unknown,
   declaredByteSize: unknown,
   declaredSha256: unknown,
   owner: string,
   personaId: string,
   cropKey: keyof typeof IMAGE_CAPTION_CROPS | "",
+  imageReferenceUrl: string,
 ) {
   const path = typeof storagePath === "string" ? storagePath.trim() : "";
+  const registeredPublicUrl = typeof publicUrl === "string" ? publicUrl.trim() : "";
   const expectedMime = typeof declaredMime === "string"
     ? declaredMime.toLowerCase().split(";")[0].trim()
     : "";
@@ -629,7 +714,7 @@ async function loadRegisteredImage(
   const ownerPrefix = `${owner.toLowerCase()}/published/provenance/`;
   const personaSegment = `/${personaId.toLowerCase()}/`;
   if (
-    !path || path.length > 1024 || path.includes("\\") ||
+    !path || !registeredPublicUrl || path.length > 1024 || path.includes("\\") ||
     path.split("/").includes("..") || !path.startsWith(ownerPrefix) ||
     !path.toLowerCase().includes(personaSegment) ||
     !["image/jpeg", "image/png", "image/webp"].includes(expectedMime) ||
@@ -650,14 +735,21 @@ async function loadRegisteredImage(
   if (bytes.length !== expectedByteSize ||
     !registeredImageMagicMatches(bytes, expectedMime) ||
     sourceSha256 !== expectedSha256) return null;
+  const exactTransform = cropKey
+    ? await loadExactRegisteredTransform(
+      imageReferenceUrl,
+      registeredPublicUrl,
+      cropKey,
+    )
+    : null;
+  if (cropKey && !exactTransform) return null;
   const inferenceBytes = await renderInferenceRaster(
-    bytes,
-    expectedMime,
-    cropKey,
+    exactTransform?.bytes || bytes,
+    exactTransform?.mime || expectedMime,
   );
   return {
     id,
-    mime: expectedMime,
+    mime: "image/png",
     base64: imageBase64(inferenceBytes),
     sourceSha256,
     inferenceSha256: await sha256Hex(inferenceBytes),
@@ -680,6 +772,7 @@ async function registeredImageStillActive(
     .eq("status", "active")
     .neq("declaration_source", "legacy")
     .eq("storage_path", asset.storage_path)
+    .eq("public_url", asset.public_url)
     .eq("mime_type", asset.mime_type)
     .eq("byte_size", asset.byte_size)
     .eq("content_sha256", asset.content_sha256)
@@ -1944,7 +2037,7 @@ async function handleRequest(req: Request) {
       );
     }
     const imageResult = await admin.from("persona_media_assets")
-      .select("id,storage_path,mime_type,byte_size,content_sha256")
+      .select("id,storage_path,public_url,mime_type,byte_size,content_sha256")
       .eq("id", String(payload.imageAssetId))
       .eq("owner", owner)
       .eq("persona_id", requestedPersonaId)
@@ -2321,12 +2414,14 @@ async function handleRequest(req: Request) {
         registeredImage = await loadRegisteredImage(
           registeredImageAsset.id,
           registeredImageAsset.storage_path,
+          registeredImageAsset.public_url,
           registeredImageAsset.mime_type,
           registeredImageAsset.byte_size,
           registeredImageAsset.content_sha256,
           owner,
           requestedPersonaId,
           imageCrop,
+          imageDraftSource?.imageReferenceUrl || "",
         );
       } catch {
         registeredImage = null;

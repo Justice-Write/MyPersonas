@@ -36,6 +36,7 @@ export type ImageTextSource = {
   personaId: string;
   imageAssetId: string;
   imageCrop: CropKey;
+  imageReferenceUrl: string;
   platform: string;
   field: string;
   context: string;
@@ -289,7 +290,7 @@ async function ownedAssetByReference(
 
 async function expectedSource(
   body: Record<string, unknown>,
-  source: Omit<ImageTextSource, "bindingHash">,
+  source: Omit<ImageTextSource, "bindingHash" | "imageReferenceUrl">,
   mediaUrl: string,
 ): Promise<ImageTextResolution> {
   const expectedAssetId = clean(body.expectedImageAssetId);
@@ -316,7 +317,13 @@ async function expectedSource(
       status: 409,
     };
   }
-  return { source: { ...source, bindingHash: actualHash } };
+  return {
+    source: {
+      ...source,
+      imageReferenceUrl: clean(mediaUrl),
+      bindingHash: actualHash,
+    },
+  };
 }
 
 export async function resolveImageTextSource(
@@ -502,6 +509,7 @@ export async function revalidateImageTextSource(
     live.source.personaId === expected.personaId &&
     live.source.imageAssetId === expected.imageAssetId &&
     live.source.imageCrop === expected.imageCrop &&
+    live.source.imageReferenceUrl === expected.imageReferenceUrl &&
     live.source.platform === expected.platform &&
     live.source.field === expected.field &&
     live.source.context === expected.context;

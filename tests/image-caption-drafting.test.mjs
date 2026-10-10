@@ -216,8 +216,10 @@ test("legacy platform draft analyzes the exact shown transform and direct fallba
   const admin = fakeAdmin(tables);
   const facebook = await resolveImageTextSource(admin, OWNER, await boundBody({ sourceType: "post_draft", field: "fb_caption", mediaUrl: FB_RENDER_A }));
   assert.equal(facebook.source?.imageCrop, "facebook");
+  assert.equal(facebook.source?.imageReferenceUrl, FB_RENDER_A);
   const instagram = await resolveImageTextSource(admin, OWNER, await boundBody({ sourceType: "post_draft", field: "ig_caption", mediaUrl: OBJECT_A }));
   assert.equal(instagram.source?.imageCrop, "");
+  assert.equal(instagram.source?.imageReferenceUrl, OBJECT_A);
 });
 
 test("four-channel resolver skips an empty placeholder and binds the later displayed image", async () => {
@@ -303,6 +305,10 @@ test("UI and service wire every field to immutable preconditions and unsaved-onl
 
 test("secure proxy revalidates the source binding and exact active asset after derivative creation and before fetch", () => {
   assert.match(proxy, /async function registeredImageStillActive/);
+  assert.match(proxy, /async function loadExactRegisteredTransform/);
+  assert.match(proxy, /exactTransform\?\.bytes \|\| bytes/);
+  assert.match(proxy, /mime: "image\/png"/);
+  assert.match(proxy, /imageDraftSource\?\.imageReferenceUrl \|\| ""/);
   assert.match(proxy, /image_asset_inactive_before_provider/);
   assert.match(proxy, /image_source_changed_before_provider/);
   assert.match(proxy, /provider_fetch_issued: false/);
@@ -314,6 +320,7 @@ test("secure proxy revalidates the source binding and exact active asset after d
   assert.ok(sourceFinalCheck < providerFetch);
   assert.ok(finalCheck < providerFetch);
   assert.match(proxy, /\.eq\("storage_path", asset\.storage_path\)/);
+  assert.match(proxy, /\.eq\("public_url", asset\.public_url\)/);
   assert.match(proxy, /\.eq\("content_sha256", asset\.content_sha256\)/);
 });
 
