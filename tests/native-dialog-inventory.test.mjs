@@ -10,19 +10,20 @@ const skippedDirs = new Set(["node_modules", "vendor", "Downloads"]);
 
 async function appSources() {
   const files = [];
-  async function walk(directory) {
+  async function walk(directory, extensions) {
     const entries = await readdir(directory, { withFileTypes: true });
     for (const entry of entries) {
       if (skippedDirs.has(entry.name)) continue;
       const fullPath = path.join(directory, entry.name);
       if (entry.isDirectory()) {
-        await walk(fullPath);
+        await walk(fullPath, extensions);
         continue;
       }
-      if (/\.(?:js|mjs|html)$/i.test(entry.name)) files.push(fullPath);
+      if (extensions.test(entry.name)) files.push(fullPath);
     }
   }
-  await walk(appRoot);
+  await walk(appRoot, /\.(?:js|mjs|html)$/i);
+  await walk(path.join(root, "supabase/functions"), /\.(?:ts|js|mjs)$/i);
   return files.sort();
 }
 
@@ -54,7 +55,7 @@ function codeWithoutComments(line) {
 
 function nativeDialogCalls(source) {
   const calls = [];
-  const pattern = /(^|[^.\w$])(prompt|confirm)\s*\(/g;
+  const pattern = /(^|[^.\w$])(prompt|confirm|alert)\s*\(/g;
   source.split(/\r?\n/).forEach((line, index) => {
     const code = codeWithoutComments(line);
     pattern.lastIndex = 0;
@@ -63,7 +64,7 @@ function nativeDialogCalls(source) {
   return calls;
 }
 
-test("app source has no new prompt() or confirm() calls", async () => {
+test("app source has no new prompt(), confirm(), or alert() calls", async () => {
   const findings = [];
   for (const file of await appSources()) {
     const calls = nativeDialogCalls(await readFile(file, "utf8"));
