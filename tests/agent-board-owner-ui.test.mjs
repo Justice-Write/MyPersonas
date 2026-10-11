@@ -15,7 +15,7 @@ const[html,source,css,pagesWorkflow,functionsWorkflow]=await Promise.all([
 
 test("agent board is reachable from desktop, mobile, sidebar, and router",()=>{
   assert.match(html,/agent-board\.css\?v=20260822-2/);
-  assert.match(html,/agent-board\.js\?v=20260822-4/);
+  assert.match(html,/agent-board\.js\?v=20261011-1/);
   assert.match(html,/siteGo\('agent-board'\)/);
   assert.match(html,/ownerAppMobileGo\('agent-board'\)/);
   assert.match(html,/nav\(view==="agent-board","agent-board","chip","Agent board"\)/);
@@ -121,7 +121,7 @@ test("fresh review packets with an empty queue hash load once and approve on the
   const requestId="00000000-0000-4000-8000-000000000011",reviewHash="a".repeat(64),calls=[],messages=[];
   const context=vm.createContext({
     console,renderEpoch:1,session:{user:{id:"owner-a"}},myPersonas:[],myBackends:[],
-    esc:value=>String(value??""),confirm:()=>true,toast:message=>messages.push(message),
+    esc:value=>String(value??""),appConfirm:async()=>true,toast:message=>messages.push(message),
     requireAal2ForSensitiveAction:async()=>true,
     sb:{rpc(name,args){calls.push({name,args});if(name==="get_agent_board_review_item")return Promise.resolve({data:[{request_id:requestId,review_hash:reviewHash,review_payload:{schema_version:1,execution:{prompt_schema:"agent-board-v1"}}}],error:null});if(name==="approve_agent_board_request")return Promise.resolve({data:null,error:null});throw new Error(`Unexpected RPC ${name}`)}},
   });

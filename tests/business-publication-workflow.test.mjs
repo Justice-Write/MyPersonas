@@ -153,8 +153,8 @@ test("owner UI exposes review, explicit publish/unpublish, public mission visibi
 
 test("external browser-AI packet omits nonpublic rows, UUIDs, asset URLs, and private notes", async () => {
   const source = await read("MyPersonas.Online_v0/platform-governance.js");
-  const packetFunction = source.match(/function governanceBusinessExternalReviewPacket\([\s\S]*?\nfunction governanceCopyBusinessReview/)?.[0]
-    .replace(/\nfunction governanceCopyBusinessReview$/, "") || "";
+  const packetFunction = source.match(/function governanceBusinessExternalReviewPacket\([\s\S]*?\n(?:async )?function governanceCopyBusinessReview/)?.[0]
+    .replace(/\n(?:async )?function governanceCopyBusinessReview$/, "") || "";
   assert.ok(packetFunction, "business external-review packet function");
   const context = vm.createContext({
     governanceState: {

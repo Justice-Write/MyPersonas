@@ -913,7 +913,8 @@ function ownerAppPortalUrl(account) {
 }
 
 function ownerAppPortalIcon(provider) {
-  return ({ twitter: "𝕏", instagram: "◎", facebook: "f", website: "⌂", gmail: "✉", youtube: "▶", reddit: "r", discord: "◈" })[provider] || "↗";
+  if (typeof platformGlyph === "function" && typeof PLATS === "object" && PLATS && Object.prototype.hasOwnProperty.call(PLATS, provider)) return platformGlyph(provider);
+  return "↗";
 }
 
 function ownerAppAccountsFor(personaId) {
@@ -1202,9 +1203,9 @@ async function ownerAppSaveComment(briefId) {
 }
 
 async function ownerAppAddImage(briefId) {
-  const value = prompt("Paste the public HTTPS image or figure URL to include as a reference:", "")?.trim() || "";
+  const value = (await appPrompt("Paste the public HTTPS image or figure URL to include as a reference:", ""))?.trim() || "";
   if (!safeHttpUrl(value) || !value.startsWith("https://")) { if (value) toast("Use a public HTTPS image URL"); return; }
-  const comment = prompt("Optional note about how this image should influence the post:", "") || "";
+  const comment = await appPrompt("Optional note about how this image should influence the post:", "") || "";
   const brief = ownerAppState.briefs.find((row) => row.id === briefId);
   const result = await sb.rpc("save_owner_research_annotation", {
     p_annotation_id: null, p_brief_id: briefId, p_topic_id: null,
@@ -1237,7 +1238,7 @@ async function ownerAppApproveTopic(id) {
 async function ownerAppRejectTopic(id) {
   const topic = ownerAppState.topics.find((row) => row.id === id);
   if (!topic) return;
-  const reason = prompt("Why should this topic stay out of future posts?", topic.rejection_reason || "") ?? "";
+  const reason = await appPrompt("Why should this topic stay out of future posts?", topic.rejection_reason || "") ?? "";
   if (!reason.trim()) return;
   const result = await sb.rpc("reject_research_topic", { p_topic_id: id, p_reason: reason.slice(0, 2000) });
   if (result.error) { toast(result.error.message); return; }
@@ -1604,7 +1605,7 @@ function ownerAppCloseFanThread(clearRoute = true) {
 }
 
 async function ownerAppStartFanLive(id, minutes) {
-  if (!confirm(`Talk directly as the human owner for ${minutes} minutes? AI replies pause, and every human message is labeled Owner.`)) return;
+  if (!await appConfirm(`Talk directly as the human owner for ${minutes} minutes? AI replies pause, and every human message is labeled Owner.`)) return;
   const result = await sb.rpc("start_fan_chat_live", { p_session_id: id, p_minutes: minutes });
   if (result.error) { toast(result.error.message); return; }
   await ownerAppRefreshFanThread(id, false); toast(`Live owner chat started for ${minutes} minutes`);
@@ -1633,7 +1634,7 @@ async function ownerAppMarkFanRead(id) {
 }
 
 async function ownerAppDeleteFanThread(id) {
-  if (!confirm("Delete this full fan conversation and transcript? This cannot be undone and will end any live chat.")) return;
+  if (!await appConfirm("Delete this full fan conversation and transcript? This cannot be undone and will end any live chat.")) return;
   const result = await sb.rpc("delete_my_fan_chat_session", { p_session_id: id });
   if (result.error || result.data !== true) { toast(result.error?.message || "Conversation could not be deleted"); return; }
   ownerAppCloseFanThread(false); ownerAppState.loadedAt = 0; await ownerAppLoad(true); ownerAppRenderFanInboxLoaded(); toast("Fan conversation deleted");
@@ -1769,7 +1770,7 @@ async function ownerAppGenerateVariantImageText(variantId, field) {
   if (!variant || !input || !button || !binding || typeof requestRegisteredImageText !== "function") return;
   const originalValue = input.value;
   const originalImage = ownerAppVariantImage(variant);
-  if (originalValue.trim() && !confirm("Replace the current text with a new AI suggestion based on this image?")) return;
+  if (originalValue.trim() && !await appConfirm("Replace the current text with a new AI suggestion based on this image?")) return;
   const original = button.textContent;
   button.disabled = true;
   button.textContent = "Generating…";
@@ -1885,7 +1886,7 @@ async function ownerAppRejectPackage(id) {
     });
     if (!decision.ok) { toast(decision.error); return; }
   }
-  if (!confirm("Delete this owner-review draft? Nothing is published. This cannot be undone.")) return;
+  if (!await appConfirm("Delete this owner-review draft? Nothing is published. This cannot be undone.")) return;
   if (typeof sb?.rpc !== "function") { toast("Signed-in owner RPCs are unavailable"); return; }
   const result = await sb.rpc("delete_owner_content_package_draft", { p_package_id: id });
   if (result.error) { toast(result.error.message); return; }
@@ -2011,7 +2012,7 @@ async function ownerAppCommitPackagePreview(id, snapshot) {
 }
 
 async function ownerAppUnschedulePackage(id) {
-  if (!confirm("Remove this kit from the manual schedule and clear its approval?")) return;
+  if (!await appConfirm("Remove this kit from the manual schedule and clear its approval?")) return;
   const result = await sb.rpc("unschedule_content_package", { p_package_id: id });
   if (result.error) { toast(result.error.message); return; }
   toast("Kit returned to owner review");
@@ -2044,7 +2045,7 @@ function ownerAppOpenChannel(id) {
 async function ownerAppMarkVariantPosted(id) {
   if (!ownerAppRequireSavedPackage()) return;
   const variant = ownerAppState.variants.find((row) => row.id === id);
-  if (!variant || !confirm(`Confirm that you personally posted the ${variant.channel} variant? This records your attestation, not a provider receipt.`)) return;
+  if (!variant || !await appConfirm(`Confirm that you personally posted the ${variant.channel} variant? This records your attestation, not a provider receipt.`)) return;
   const result = await sb.rpc("mark_owner_content_variant_manually_posted", { p_variant_id: id });
   if (result.error) { toast(result.error.message); return; }
   toast("Owner manual-post attestation recorded; no provider receipt was claimed");

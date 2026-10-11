@@ -12,8 +12,12 @@ connector (meta-oauth, gmail-oauth, twitter-oauth, reddit-oauth).
 
 ## Status
 
-- **ADDITIVE / not yet adopted.** Nothing imports this module, so deployed function
-  behavior is unchanged. Safe to merge as-is.
+- **Adopted by `reddit-oauth` only, and not deployed.** That function imports
+  `validLedgerId`, `normalizeScopes`, and `safeExpiry`. Ordinary ledger UUIDs,
+  Reddit scope strings, and `expires_in` values keep the previous results. The
+  historical 36-character ledger check stays in place beside `validLedgerId`, so
+  ids the function already forwarded still reach Postgres. No other function
+  imports this module, and this change does not deploy `reddit-oauth`.
 - **Tested directly:** `tests/pure-core.test.mjs` imports this real `.ts` file (via
   Node's `--experimental-strip-types`) — no mirrored copy to drift. `npm test`.
 
