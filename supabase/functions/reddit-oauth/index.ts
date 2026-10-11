@@ -186,7 +186,8 @@ async function callback(req: Request): Promise<Response> {
   const token = await tokenResponse.json().catch(() => ({}));
   if (!tokenResponse.ok || !token.access_token) return redirectToApp({ reddit: "error", reason: "token_exchange_failed" });
   const grantedScopes = String(token.scope || "").split(/[ ,]+/).filter(Boolean)
-    .filter((scope) => normalizeScopes(scope).includes(scope));
+    // Preserve historical tokens even when the shared validator rejects them.
+    .map((scope) => normalizeScopes(scope).find((normalized) => normalized === scope) ?? scope);
   if (!grantedScopes.includes("identity") || !grantedScopes.includes("submit")) {
     return await redirectAfterIssuedGrantFailure(token, "scope_missing");
   }

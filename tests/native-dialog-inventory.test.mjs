@@ -55,7 +55,7 @@ function codeWithoutComments(line) {
 
 function nativeDialogCalls(source) {
   const calls = [];
-  const pattern = /(^|[^.\w$])(prompt|confirm|alert)\s*\(/g;
+  const pattern = /(^|[^.\w$])(?:(?:window|globalThis|self)\s*\.\s*)?(prompt|confirm|alert)\s*\(/g;
   source.split(/\r?\n/).forEach((line, index) => {
     const code = codeWithoutComments(line);
     pattern.lastIndex = 0;
@@ -71,6 +71,13 @@ test("app source has no new prompt(), confirm(), or alert() calls", async () => 
     for (const call of calls) findings.push(`${path.relative(root, file)}:${call}`);
   }
   assert.deepEqual(findings, [], `browser dialogs still called from app code:\n${findings.join("\n")}`);
+});
+
+test("inventory catches qualified browser calls and preserves the install event", () => {
+  for (const call of ["prompt('x')", "window.confirm('x')", "globalThis.alert('x')", "self.prompt('x')"]) {
+    assert.equal(nativeDialogCalls(call).length, 1, call);
+  }
+  assert.deepEqual(nativeDialogCalls("await promptEvent.prompt(); // window.alert('comment')"), []);
 });
 
 test("the install prompt still uses the browser beforeinstallprompt event", async () => {

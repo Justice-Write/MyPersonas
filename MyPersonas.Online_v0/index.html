@@ -512,6 +512,7 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
     </div>
   </aside>
 </div>
+<script src="./src/assets/platform-icons/index.js"></script>
 <script src="./mobile-owner-workflow.js?v=20260920-2"></script>
 <script src="./image-caption-drafting.js?v=20261009-1"></script>
 <script src="./owner-app.js?v=20261011-1"></script>
@@ -761,7 +762,7 @@ function go(h){if(typeof ownerAppToggleMore==="function")ownerAppToggleMore(fals
 function copyText(t){navigator.clipboard.writeText(t).then(()=>toast("Copied ✓"))}
 function pageUrl(handle){return location.host+location.pathname.replace(/index\.html$/,"")+"#/p/"+handle}
 function ico(n){return `<svg class="ico" aria-hidden="true"><use href="#i-${n}"/></svg>`}
-function platformGlyph(id){const key=id&&Object.prototype.hasOwnProperty.call(PLATS,id)?id:"other";return ico("plat-"+key)}
+function platformGlyph(id){const key=id&&Object.prototype.hasOwnProperty.call(PLATS,id)?id:"other";return PLATFORM_ICONS[key]()}
 function sharePage(handle){copyText(location.origin+location.pathname.replace(/index\.html$/,"")+"#/p/"+handle)}
 function setMeta(title,desc){
   document.title=title;

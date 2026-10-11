@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -45,9 +45,27 @@ test("every ledger platform id the UI names has one hologram glyph", () => {
 
 test("ledger rows and named platform links use the hologram glyph", () => {
   assert.match(html, /function platformGlyph\(id\)/);
+  assert.match(html, /return PLATFORM_ICONS\[key\]\(\)/);
   assert.match(html, /platformGlyph\(provider\)/);
   assert.match(html, /platformGlyph\(l\.platform\)/);
   assert.match(personaView, /platformGlyph\(link\.platform\)/);
   assert.doesNotMatch(html, /meta\.icon/);
   assert.doesNotMatch(html, /\$\{ico\("node"\)\}\$\{esc\(l\.handle/);
+});
+
+test("standalone SVGs and typed component map match the ledger and sprite", async () => {
+  const dir = path.join(root, "MyPersonas.Online_v0/src/assets/platform-icons");
+  const ids = ledgerPlatformIds(html).sort();
+  assert.deepEqual((await readdir(dir)).filter(name => name.endsWith(".svg")).map(name => name.slice(0, -4)).sort(), ids);
+  const map = await readFile(path.join(dir, "index.js"), "utf8");
+  assert.match(map, /Readonly<Record<PlatformId, \(\) => string>>/);
+  assert.deepEqual([...map.matchAll(/"([a-z0-9]+)": \(\) => ico/g)].map(match => match[1]).sort(), ids);
+  for (const {id, body} of hologramGlyphs(html)) {
+    const svg = await readFile(path.join(dir, id + ".svg"), "utf8");
+    assert.ok(Buffer.byteLength(svg) <= 2048, id);
+    assert.match(svg, /viewBox="0 0 24 24"/);
+    assert.match(svg, /stroke="currentColor"/);
+    assert.doesNotMatch(svg, /(?:href|src)=/);
+    assert.ok(svg.includes(body), id + " differs from the rendered sprite");
+  }
 });
