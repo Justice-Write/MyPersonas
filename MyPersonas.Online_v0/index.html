@@ -145,6 +145,7 @@ input[type=checkbox]{width:auto}
 .empty{text-align:center;color:var(--dim);padding:48px 0;font-size:16px}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:150;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;padding:20px}
 .appdialogactions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
+#appDialogOv{z-index:500}
 .ledgerprovidericon{display:grid;place-items:center;width:28px;height:28px;flex:0 0 28px}
 .ledgerprovidericon .ico{width:20px;height:20px;margin:0}
 .linkrow{display:flex;gap:8px;align-items:center;margin-bottom:6px}
@@ -1814,8 +1815,9 @@ function appDialog(kind,message,defaultValue){
     const o=document.createElement("div");o.className="overlay";o.id="appDialogOv";
     const field=asking?`<textarea id="appDialogInput" rows="3" aria-labelledby="appDialogText" autocomplete="off">${esc(defaultValue??"")}</textarea>`:"";
     o.innerHTML=`<div class="wizbox appdialog" role="dialog" aria-modal="true" aria-labelledby="appDialogTitle" aria-describedby="appDialogText" tabindex="-1"><h2 id="appDialogTitle">${asking?"Enter a value":"Please confirm"}</h2><p id="appDialogText" style="white-space:pre-wrap">${esc(text)}</p>${field}<div class="appdialogactions"><button class="btn ${!asking&&destructive?"danger":""}" type="button" id="appDialogOk">${asking?"Continue":"Confirm"}</button><button class="btn sec" type="button" id="appDialogCancel">Cancel</button></div></div>`;
+    const previousFocus=document.activeElement;
     let settled=false;
-    const finish=value=>{if(settled)return;settled=true;document.removeEventListener("keydown",onKey,true);o.remove();resolve(value)};
+    const finish=value=>{if(settled)return;settled=true;document.removeEventListener("keydown",onKey,true);o.remove();if(previousFocus?.isConnected)previousFocus.focus();resolve(value)};
     const cancelValue=asking?null:false;
     const accept=()=>{if(asking)finish(document.getElementById("appDialogInput")?.value??"");else finish(true)};
     const onKey=event=>{

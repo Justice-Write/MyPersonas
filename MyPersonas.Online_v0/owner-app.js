@@ -1203,7 +1203,7 @@ async function ownerAppSaveComment(briefId) {
 }
 
 async function ownerAppAddImage(briefId) {
-  const value = await appPrompt("Paste the public HTTPS image or figure URL to include as a reference:", "")?.trim() || "";
+  const value = (await appPrompt("Paste the public HTTPS image or figure URL to include as a reference:", ""))?.trim() || "";
   if (!safeHttpUrl(value) || !value.startsWith("https://")) { if (value) toast("Use a public HTTPS image URL"); return; }
   const comment = await appPrompt("Optional note about how this image should influence the post:", "") || "";
   const brief = ownerAppState.briefs.find((row) => row.id === briefId);

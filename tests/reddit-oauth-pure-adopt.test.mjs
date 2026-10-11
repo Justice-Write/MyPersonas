@@ -28,6 +28,8 @@ test("reddit-oauth imports the shared pure helpers", () => {
 
 test("ordinary Reddit ledger ids, scopes, and expiries stay on the previous results", () => {
   const samples = [
+    "-".repeat(36),
+    "a".repeat(36),
     "3f2504e0-4f89-41d3-9a0c-0305e82c3301",
     "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
     "not-a-ledger",
@@ -47,4 +49,23 @@ test("ordinary Reddit ledger ids, scopes, and expiries stay on the previous resu
     );
   }
   assert.equal(safeExpiry(undefined, 3600, now) || new Date(now + Math.max(60, 3600) * 1000).toISOString(), new Date(now + 3600 * 1000).toISOString());
+});
+
+test("actual Reddit expiry expression preserves defaults, clamps, and historical errors", () => {
+  const expression = source.match(/const relativeExpiry = ([\s\S]*?);\s*const \{ error: storeError \}/)[1];
+  const now = 1_700_000_000_000;
+  class FixedDate extends Date {
+    static now() { return now; }
+  }
+  const evaluate = new Function("token", "safeExpiry", "Date", `const relativeExpiry = ${expression}; return expiresAt;`);
+  for (const value of [undefined, null, 0, "", false, 1, -1, 59, 60, 3600, "3600", 34560001, "invalid", Infinity]) {
+    const previous = () => new Date(now + Math.max(60, Number(value || 3600)) * 1000).toISOString();
+    const current = () => evaluate({ expires_in: value }, (absolute, relative) => safeExpiry(absolute, relative, now), FixedDate);
+    let expected;
+    try { expected = previous(); } catch (error) {
+      assert.throws(current, { name: error.name });
+      continue;
+    }
+    assert.equal(current(), expected, String(value));
+  }
 });
