@@ -82,7 +82,7 @@ test("route and dropdown persona changes update the companion selection", async 
   assert.match(source, /function ownerAppSelectPersona[\s\S]*?ownerAppRememberPersona\(personaId\)/);
   assert.match(html, /ownerAppSelectRoutePersona\(view,arg\)/);
   assert.match(html, /mobile-owner-workflow\.js\?v=20260920-2/);
-  assert.match(html, /owner-app\.js\?v=20261010-1/);
+  assert.match(html, /owner-app\.js\?v=20261011-1/);
 });
 
 test("clicking the persona tagline bubble dismisses it without opening chat", async () => {

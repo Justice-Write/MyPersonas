@@ -76,8 +76,8 @@ function contextWith(tablePromises) {
     },
     document: { getElementById: () => null },
     requireAal2ForSensitiveAction: async () => true,
-    confirm: () => true,
-    prompt: () => "",
+    appConfirm: async () => true,
+    appPrompt: async () => "",
     navigator: { clipboard: { writeText: async () => {} } },
     window: { open() {} },
     console,
@@ -201,6 +201,7 @@ test("an intention edit during AI explanation discards the stale reply and re-en
   vm.runInContext('governanceState.personaId="persona-a"', context);
 
   const explaining = context.governanceExplainIntentionWithAi();
+  for (let attempt = 0; attempt < 6 && !button.disabled; attempt += 1) await Promise.resolve();
   assert.equal(button.disabled, true);
   assert.equal(button.textContent, "Explaining…");
 

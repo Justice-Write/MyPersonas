@@ -766,7 +766,7 @@ test("owner governance UI parses and keeps browser AI handoff and submission con
   assert.match(source, /destination_host:governanceReviewHost\(widget\.url\)/);
   assert.match(source, /requireAal2ForSensitiveAction\("approve this persona page review"\)/);
   assert.match(source, /requireAal2ForSensitiveAction\("publish this reviewed persona page"\)/);
-  assert.match(source, /confirm\(`Submit this exact feature request/);
+  assert.match(source, /appConfirm\(`Submit this exact feature request/);
   assert.match(source, /Source stays inert and cannot execute on a public page/);
   assert.match(source, /Email and phone values are never exposed or compared in the browser/);
   assert.match(source, /function renderFriendInvite/);

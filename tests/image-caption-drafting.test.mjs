@@ -36,7 +36,7 @@ const browserContract = browserContext.MyPersonasImageCaptionDrafting;
 
 test("image drafting owner controls use the release cache key", () => {
   assert.match(html, /image-caption-drafting\.js\?v=20261009-1/);
-  assert.match(html, /owner-app\.js\?v=20261010-1/);
+  assert.match(html, /owner-app\.js\?v=20261011-1/);
 });
 
 const OWNER = "11111111-1111-4111-8111-111111111111";

@@ -81,6 +81,7 @@
 button.oa-listitem{width:100%;font:inherit;cursor:pointer}
 .oa-listitem:hover{border-color:#afc6e8;background:#f9fbff}
 .oa-listicon{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border-radius:12px;background:#eef4ff;font-size:18px}
+.oa-listicon .ico{width:20px;height:20px;margin:0}
 .oa-listcopy{min-width:0;flex:1}
 .oa-listcopy b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}
 .oa-listcopy span{display:block;color:var(--oa-muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}

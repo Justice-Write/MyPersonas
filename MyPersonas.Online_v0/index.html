@@ -26,7 +26,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="AliaSpaces">
 <link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png">
-<link rel="stylesheet" href="./owner-app.css?v=20260920-2">
+<link rel="stylesheet" href="./owner-app.css?v=20261011-1">
 <link rel="stylesheet" href="./persona-view.css?v=20260822-2">
 <link rel="stylesheet" href="./platform-governance.css?v=20260822-1">
 <link rel="stylesheet" href="./agent-board.css?v=20260822-2">
@@ -144,6 +144,9 @@ input[type=checkbox]{width:auto}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1c1e21;color:#fff;padding:12px 24px;border-radius:8px;display:none;z-index:200;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.3)}
 .empty{text-align:center;color:var(--dim);padding:48px 0;font-size:16px}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:150;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;padding:20px}
+.appdialogactions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
+.ledgerprovidericon{display:grid;place-items:center;width:28px;height:28px;flex:0 0 28px}
+.ledgerprovidericon .ico{width:20px;height:20px;margin:0}
 .linkrow{display:flex;gap:8px;align-items:center;margin-bottom:6px}
 .gate h2{font-size:24px;font-weight:800;margin-bottom:10px}
 a{color:var(--accent)}
@@ -380,7 +383,50 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
   <symbol id="i-bug" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 1 4 4v3a4 4 0 0 1-8 0v-3a4 4 0 0 1 4-4Z"/><path d="M9 6L8 4M15 6l1-2M8 13H4M20 13h-4M6 19l2.5-2M18 19l-2.5-2"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.5 5.6L20.5 9.4l-4.3 4.1 1 5.9L12 16.6l-5.2 2.8 1-5.9L3.5 9.4l6-.8Z"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.6A8 8 0 1 1 9.4 4 6.5 6.5 0 0 0 20 14.6Z"/></symbol>
-  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol></svg>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+  <symbol id="i-plat-twitter" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></symbol>
+  <symbol id="i-plat-instagram" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.4"/><circle cx="17" cy="7" r="0.8"/></symbol>
+  <symbol id="i-plat-facebook" viewBox="0 0 24 24"><path d="M14 4h-2.4A3.6 3.6 0 0 0 8 7.6V10H6v3h2v7h3v-7h2.2l.8-3H11V7.8c0-.7.3-1.2 1.1-1.2H15V4Z"/></symbol>
+  <symbol id="i-plat-tiktok" viewBox="0 0 24 24"><path d="M10 18V7.2L18 6v5.2"/><circle cx="7.6" cy="18" r="2.4"/></symbol>
+  <symbol id="i-plat-onlyfans" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="11" r="2"/><path d="M12 13v3.4"/></symbol>
+  <symbol id="i-plat-patreon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M9.5 16.2V7.8h2.6a2.8 2.8 0 0 1 0 5.6H9.5"/></symbol>
+  <symbol id="i-plat-snapchat" viewBox="0 0 24 24"><path d="M8 10.2a4 4 0 0 1 8 0V16l-1.5-1.1L13 16.4 12 15.2 11 16.4 9.5 14.9 8 16Z"/></symbol>
+  <symbol id="i-plat-discord" viewBox="0 0 24 24"><path d="M7.2 8.4c1.8-1.4 7.8-1.4 9.6 0 1 2.6.6 5.2-1.1 6.4l-1.3-1.5"/><path d="M7.2 8.4C6 11 6.2 13.6 8 14.8l1.3-1.5"/><circle cx="9.6" cy="12.4" r="0.8"/><circle cx="14.4" cy="12.4" r="0.8"/></symbol>
+  <symbol id="i-plat-reddit" viewBox="0 0 24 24"><circle cx="12" cy="13" r="6"/><circle cx="9.6" cy="12.4" r="0.8"/><circle cx="14.4" cy="12.4" r="0.8"/><path d="M10 15.6c.7.7 3.3.7 4 0M14.2 8.2 16.4 5"/><circle cx="17.2" cy="4.2" r="1"/></symbol>
+  <symbol id="i-plat-youtube" viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="11" rx="3"/><path d="M11 9.6v4.8l4.2-2.4Z"/></symbol>
+  <symbol id="i-plat-twitch" viewBox="0 0 24 24"><path d="M5 5h14v9.2L15.2 18v-3.8H5Z"/><path d="M9 8.4v4.2M12.4 8.4v4.2"/></symbol>
+  <symbol id="i-plat-kick" viewBox="0 0 24 24"><path d="M7 4.5v15M7 12l7-7.2M7 12l7 7.2"/></symbol>
+  <symbol id="i-plat-rumble" viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="10" rx="2"/><path d="M15 10.2 21 7.2v9.6l-6-3Z"/></symbol>
+  <symbol id="i-plat-steam" viewBox="0 0 24 24"><circle cx="10" cy="14.2" r="4"/><circle cx="16.4" cy="8" r="2.4"/><path d="M13.2 11.4 15.4 9.6"/></symbol>
+  <symbol id="i-plat-psn" viewBox="0 0 24 24"><path d="M12 4.2 20 18.4H4Z"/></symbol>
+  <symbol id="i-plat-xbox" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 8l8 8M16 8l-8 8"/></symbol>
+  <symbol id="i-plat-nintendo" viewBox="0 0 24 24"><rect x="3" y="6" width="7" height="12" rx="3.2"/><rect x="14" y="6" width="7" height="12" rx="3.2"/><path d="M6.5 10v4M4.6 12h3.8"/></symbol>
+  <symbol id="i-plat-epic" viewBox="0 0 24 24"><path d="M4 19.5V9.2L7 7l2.2 2.2L12 6l2.8 3.2L17 7l3 2.2v10.3Z"/></symbol>
+  <symbol id="i-plat-battlenet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 8.2h4.6a2 2 0 0 1 0 4H8h4.6a2 2 0 0 1 0 4H8"/></symbol>
+  <symbol id="i-plat-linkedin" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 11v5M8 8h.1M12 16v-3a2 2 0 0 1 4 0v3"/></symbol>
+  <symbol id="i-plat-signal" viewBox="0 0 24 24"><path d="M5 7h10.5A2.5 2.5 0 0 1 18 9.5v4A2.5 2.5 0 0 1 15.5 16H9l-4 3V9.5A2.5 2.5 0 0 1 7.5 7"/></symbol>
+  <symbol id="i-plat-whatsapp" viewBox="0 0 24 24"><path d="M6.2 17.8 7.6 15A6.4 6.4 0 1 1 9.2 16.6Z"/><path d="M10 10.4c.5 1.3 1.7 2.3 3 2.7"/></symbol>
+  <symbol id="i-plat-telegram" viewBox="0 0 24 24"><path d="M3.8 11.6 20.2 5l-3.6 14.2-5.2-4.6Z"/><path d="M11.4 14.6 12.6 11l5.2-4.6"/></symbol>
+  <symbol id="i-plat-bluesky" viewBox="0 0 24 24"><path d="M5.5 8.6c2.2 2.6 4.2 3.8 6.5 3.8s4.3-1.2 6.5-3.8c-.8 4.6-2.8 7.4-6.5 7.4s-5.7-2.8-6.5-7.4Z"/></symbol>
+  <symbol id="i-plat-threads" viewBox="0 0 24 24"><circle cx="12" cy="12.2" r="2.8"/><path d="M14.8 12.2c0 3.2-1.5 6-4.6 6A6.2 6.2 0 1 1 15 8.4v4.2"/></symbol>
+  <symbol id="i-plat-legalzoom" viewBox="0 0 24 24"><path d="M7 3.5h7.2L18 7.2V20.5H7Z"/><circle cx="12" cy="14" r="2.3"/></symbol>
+  <symbol id="i-plat-wix" viewBox="0 0 24 24"><path d="M4 7.2 7.2 18l3.2-7.4L13.4 18 16.6 7.2"/></symbol>
+  <symbol id="i-plat-wordpress" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M7.2 9.2 9.4 16 12 9.2l2.6 6.8 2.2-6.8"/></symbol>
+  <symbol id="i-plat-fiverr" viewBox="0 0 24 24"><circle cx="8" cy="8" r="1.3"/><circle cx="12" cy="8" r="1.3"/><circle cx="16" cy="8" r="1.3"/><circle cx="8" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/></symbol>
+  <symbol id="i-plat-amazon" viewBox="0 0 24 24"><rect x="7" y="5" width="10" height="7" rx="1.2"/><path d="M6 15.2c2.2 2.6 9.8 2.6 12 0"/><path d="M16.2 15.2 18 13.8"/></symbol>
+  <symbol id="i-plat-etsy" viewBox="0 0 24 24"><path d="M4 12.2 12 4.2h7.2V11l-8 8.2Z"/><circle cx="16.2" cy="8" r="1"/></symbol>
+  <symbol id="i-plat-yelp" viewBox="0 0 24 24"><path d="M12 4.2v8M12 12.2 7 18.4M12 12.2l5 6.2"/></symbol>
+  <symbol id="i-plat-trustpilot" viewBox="0 0 24 24"><path d="M12 3.4 14.2 8l5 .7-3.6 3.4.9 5L12 14.8 7.5 17.1l.9-5L4.8 8.7l5-.7Z"/></symbol>
+  <symbol id="i-plat-gmail" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3.5 8 12 13.2 20.5 8"/></symbol>
+  <symbol id="i-plat-outlook" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1.4"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-plat-yahoo" viewBox="0 0 24 24"><path d="M6 5.2 12 13l6-7.8M12 13v6"/></symbol>
+  <symbol id="i-plat-icloud" viewBox="0 0 24 24"><path d="M8 17.2h8.2a3.4 3.4 0 0 0 .3-6.8 5 5 0 0 0-9.5 1.6A3 3 0 0 0 8 17.2Z"/></symbol>
+  <symbol id="i-plat-proton" viewBox="0 0 24 24"><path d="M12 3.2 19 6.2v5.2c0 4.2-3 6.8-7 8-4-1.2-7-3.8-7-8V6.2Z"/><circle cx="12" cy="11" r="1.5"/><path d="M12 12.5v2.6"/></symbol>
+  <symbol id="i-plat-family" viewBox="0 0 24 24"><circle cx="9" cy="8" r="2.2"/><circle cx="16" cy="9" r="1.8"/><path d="M4.4 19c.5-3 2.3-4.6 4.6-4.6s4.1 1.6 4.6 4.6M14 14.8c1.6-.3 3.2.5 3.8 2.6"/></symbol>
+  <symbol id="i-plat-website" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c2.4 2.5 2.4 11.5 0 16M12 4c-2.4 2.5-2.4 11.5 0 16"/></symbol>
+  <symbol id="i-plat-email" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7.2 12 13l8-5.8"/></symbol>
+  <symbol id="i-plat-other" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><ellipse cx="12" cy="12" rx="8" ry="3.6" transform="rotate(-20 12 12)"/></symbol>
+</svg>
 <header>
   <h1 onclick="go('')">AliaSpaces</h1>
   <input id="gsearch" placeholder="find personas..." onkeydown="if(event.key==='Enter')go('search/'+encodeURIComponent(this.value))">
@@ -468,10 +514,10 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
 </div>
 <script src="./mobile-owner-workflow.js?v=20260920-2"></script>
 <script src="./image-caption-drafting.js?v=20261009-1"></script>
-<script src="./owner-app.js?v=20261010-1"></script>
-<script src="./persona-view.js?v=20260823-1"></script>
-<script src="./platform-governance.js?v=20260830-1"></script>
-<script src="./agent-board.js?v=20260822-4"></script>
+<script src="./owner-app.js?v=20261011-1"></script>
+<script src="./persona-view.js?v=20261011-1"></script>
+<script src="./platform-governance.js?v=20261011-1"></script>
+<script src="./agent-board.js?v=20261011-1"></script>
 <script src="./ai-content-provenance.js?v=20260823-2"></script>
 <script>
 // ================= CONFIG — paste your Supabase values here =================
@@ -575,7 +621,7 @@ window.addEventListener("unhandledrejection",e=>logErr("promise",e.reason&&e.rea
 function toast(m){logErr("toast",m);const t=document.getElementById("toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",2500)}
 function inputsWithinUtf8Limits(rules){for(const rule of rules){const[id,max,label,original]=rule,el=document.getElementById(id),value=el?.value||"",size=new TextEncoder().encode(value).length,unchangedLegacy=rule.length>3&&value===String(original??"");if(size>max&&!unchangedLegacy){toast(`${label} is ${size} bytes; shorten it to ${max} UTF-8 bytes or less`);el?.focus();return false}}return true}
 async function reportError(){
-  const note=prompt("What were you doing when it broke? (optional)")||"";
+  const note=await appPrompt("What were you doing when it broke? (optional)")||"";
   try{
     const{data:au}=await sb.auth.getUser();
     if(!au?.user){toast("Sign in to send a private diagnostic report");return}
@@ -715,6 +761,7 @@ function go(h){if(typeof ownerAppToggleMore==="function")ownerAppToggleMore(fals
 function copyText(t){navigator.clipboard.writeText(t).then(()=>toast("Copied ✓"))}
 function pageUrl(handle){return location.host+location.pathname.replace(/index\.html$/,"")+"#/p/"+handle}
 function ico(n){return `<svg class="ico" aria-hidden="true"><use href="#i-${n}"/></svg>`}
+function platformGlyph(id){const key=id&&Object.prototype.hasOwnProperty.call(PLATS,id)?id:"other";return ico("plat-"+key)}
 function sharePage(handle){copyText(location.origin+location.pathname.replace(/index\.html$/,"")+"#/p/"+handle)}
 function setMeta(title,desc){
   document.title=title;
@@ -1672,7 +1719,7 @@ async function renderPersonaPage(handle,skipGate,epoch=++renderEpoch){
       <div style="margin-top:10px;padding:10px;border:1px solid #cbd8e9;border-radius:10px;background:#f6f9fd"><b>AI transparency</b><div class="muted" style="margin-top:3px">${esc(p.ai_disclosure||"This is an AI-assisted persona. Public content may be drafted with AI and is owner-reviewed unless stated otherwise.")}</div></div>
       ${p.topics?`<div style="margin-top:8px">${p.topics.split(",").filter(t=>t.trim()).map(t=>`<span class="tag2" data-page-search="${esc(t.trim())}" onclick="pageSearch(this.dataset.pageSearch)">${esc(t.trim())}</span>`).join("")}</div>`:""}</div></section>`:""}
     ${fanAvailable?`<section class="${personaLayoutItemClass(pageLayout,"fan_chat")}" style="${personaLayoutItemStyle(pageLayout,"fan_chat")}"><div class="card"><h3>${ico("spark")}Chat with ${esc(p.name)}'s AI</h3><p class="muted">This is a disclosed AI assistant, not the human owner. The owner can see saved chats and open private-session chats. If the owner joins live, every human reply is labeled Owner.</p><button class="btn sm" onclick="openPublicFanChat('${p.id}')">Start fan chat</button></div></section>`:""}
-    ${M("links")&&(links||[]).length?`<section class="${personaLayoutItemClass(pageLayout,"links")}" style="${personaLayoutItemStyle(pageLayout,"links")}"><div class="card"><h3>${ico("link")}Find me on</h3>${links.map(l=>{const pl=PLATS[l.platform]||PLATS.other,url=safeHttpUrl(l.url);return url?`<a class="chip" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${ico("node")}${esc(l.handle||pl.name)}</a>`:`<span class="chip">${ico("node")}${esc(l.handle||pl.name)}</span>`}).join("")}</div></section>`:""}
+    ${M("links")&&(links||[]).length?`<section class="${personaLayoutItemClass(pageLayout,"links")}" style="${personaLayoutItemStyle(pageLayout,"links")}"><div class="card"><h3>${ico("link")}Find me on</h3>${links.map(l=>{const pl=PLATS[l.platform]||PLATS.other,url=safeHttpUrl(l.url);return url?`<a class="chip" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${platformGlyph(l.platform)}${esc(l.handle||pl.name)}</a>`:`<span class="chip">${platformGlyph(l.platform)}${esc(l.handle||pl.name)}</span>`}).join("")}</div></section>`:""}
     ${M("top8")&&top8.length?`<section class="${personaLayoutItemClass(pageLayout,"top8")}" style="${personaLayoutItemStyle(pageLayout,"top8")}"><div class="card"><h3>${ico("crown")}Top ${top8.length}</h3><div class="top8grid">${top8.map(t=>{const mark=MyPersonasAiProvenance.publicMarkerHtml(safeHttpUrl(t.avatar_url),"image");return`<div class="t8" data-handle="${esc(t.handle)}" onclick="go('p/'+this.dataset.handle)"><div class="av8 ai-asset-shell${mark?" has-ai-provenance":""}" style="${safeBgStyle(t.avatar_url)}">${mark}</div>${esc(t.name)}</div>`}).join("")}</div></div></section>`:""}
     ${M("linked")&&linkedP.length?`<section class="${personaLayoutItemClass(pageLayout,"linked")}" style="${personaLayoutItemStyle(pageLayout,"linked")}"><div class="card"><h3>${ico("mask")}More of me</h3>${linkedP.map(t=>`<div class="t8pick" style="cursor:pointer" data-handle="${esc(t.handle)}" onclick="go('p/'+this.dataset.handle)">${personaRelationAvatarHtml(t.avatar_url)}<div><b>${esc(t.name)}</b><br><span class="muted">${esc(t.tagline||"@"+t.handle)}</span></div></div>`).join("")}</div></section>`:""}
     ${M("family")&&familyP.length?`<section class="${personaLayoutItemClass(pageLayout,"family")}" style="${personaLayoutItemStyle(pageLayout,"family")}"><div class="card"><h3>${ico("user")}Family</h3>${familyP.map(t=>`<div class="t8pick" style="cursor:pointer" data-handle="${esc(t.handle)}" onclick="go('p/'+this.dataset.handle)">${personaRelationAvatarHtml(t.avatar_url)}<div><b>${esc(t.name)}</b><br><span class="muted">${esc(t.relationship_label||"family")}</span></div></div>`).join("")}</div></section>`:""}
@@ -1758,7 +1805,38 @@ async function publicFanSend(){
   catch(e){if(publicFanCtx===ctx)ctx.messages.push({role:"system",content:"Error: "+e.message})}if(publicFanCtx===ctx){ctx.busy=false;renderPublicFanMsgs();if(publicFanPollTimer)publicFanPoll();else publicFanBeginPoll()}
 }
 
-// ---------- friends / blocks ----------
+// ---------- in-app dialog (same overlay as Act as…) ----------
+let appDialogChain=Promise.resolve();
+function appDialog(kind,message,defaultValue){
+  const task=appDialogChain.then(()=>new Promise(resolve=>{
+    const asking=kind==="prompt",text=String(message??""),destructive=/delete|permanently|erase|cannot be undone|revoke|disconnect|remove this|remove all|clear the retained/i.test(text);
+    const o=document.createElement("div");o.className="overlay";o.id="appDialogOv";
+    const field=asking?`<textarea id="appDialogInput" rows="3" aria-labelledby="appDialogText" autocomplete="off">${esc(defaultValue??"")}</textarea>`:"";
+    o.innerHTML=`<div class="wizbox appdialog" role="dialog" aria-modal="true" aria-labelledby="appDialogTitle" aria-describedby="appDialogText" tabindex="-1"><h2 id="appDialogTitle">${asking?"Enter a value":"Please confirm"}</h2><p id="appDialogText" style="white-space:pre-wrap">${esc(text)}</p>${field}<div class="appdialogactions"><button class="btn ${!asking&&destructive?"danger":""}" type="button" id="appDialogOk">${asking?"Continue":"Confirm"}</button><button class="btn sec" type="button" id="appDialogCancel">Cancel</button></div></div>`;
+    let settled=false;
+    const finish=value=>{if(settled)return;settled=true;document.removeEventListener("keydown",onKey,true);o.remove();resolve(value)};
+    const cancelValue=asking?null:false;
+    const accept=()=>{if(asking)finish(document.getElementById("appDialogInput")?.value??"");else finish(true)};
+    const onKey=event=>{
+      if(!o.isConnected)return;
+      if(event.key==="Escape"){event.preventDefault();event.stopPropagation();finish(cancelValue);return}
+      if(event.key==="Enter"&&event.target?.id==="appDialogInput"&&!event.shiftKey){event.preventDefault();accept();return}
+      if(event.key!=="Tab")return;
+      const dialog=o.querySelector(".appdialog"),focusable=[...dialog.querySelectorAll("button,textarea,input,select,a[href]")].filter(el=>!el.disabled);
+      if(!focusable.length){event.preventDefault();return}
+      const first=focusable[0],last=focusable[focusable.length-1];
+      if(event.shiftKey&&(document.activeElement===first||!dialog.contains(document.activeElement))){event.preventDefault();last.focus()}
+      else if(!event.shiftKey&&(document.activeElement===last||!dialog.contains(document.activeElement))){event.preventDefault();first.focus()}
+    };
+    o.addEventListener("click",event=>{if(event.target===o||event.target.id==="appDialogCancel")finish(cancelValue);else if(event.target.id==="appDialogOk")accept()});
+    document.addEventListener("keydown",onKey,true);document.body.appendChild(o);
+    const input=document.getElementById("appDialogInput");if(input){input.focus();input.setSelectionRange(input.value.length,input.value.length)}else document.getElementById("appDialogOk")?.focus();
+  }));
+  appDialogChain=task.then(()=>{},()=>{});
+  return task;
+}
+function appConfirm(message){return appDialog("confirm",message)}
+function appPrompt(message,defaultValue){return appDialog("prompt",message,defaultValue)}
 function pickMine(candidates=myPersonas){
   if(!candidates.length)return Promise.resolve(null);
   if(candidates.length===1)return Promise.resolve(candidates[0].id);
@@ -1801,7 +1879,7 @@ async function unfriend(ownedPersonaId,targetId){
 }
 async function blockPersona(pid,kind){
   const enabled=!hasPersonaVisibilityRule(pid,kind);
-  if(enabled&&!confirm(kind==="block"?"Block this persona for your entire account? Every follow, friendship, and pending request between it and all of your personas will be removed atomically.":"Mute this persona for your entire account? None of your personas will see them here, although they can still see your public pages."))return;
+  if(enabled&&!await appConfirm(kind==="block"?"Block this persona for your entire account? Every follow, friendship, and pending request between it and all of your personas will be removed atomically.":"Mute this persona for your entire account? None of your personas will see them here, although they can still see your public pages."))return;
   const{error}=await sb.rpc("set_persona_visibility_rule",{p_other_persona_id:pid,p_kind:kind,p_enabled:enabled});
   if(error){toast(error.message);return}
   await loadMine();toast(enabled?(kind==="block"?"Blocked":"Muted"):(kind==="block"?"Unblocked":"Unmuted"));go("");
@@ -1838,7 +1916,7 @@ async function publishPost(){
   toast("Post saved; the page is draft again and needs review");go("review/"+p.id);
 }
 async function deletePost(id){
-  if(!confirm("Delete this post?"))return;
+  if(!await appConfirm("Delete this post?"))return;
   const p=pageState.p,uid=session?.user?.id,generation=authLoadGeneration;
   const{error}=await sb.rpc("delete_persona_post",{p_post_id:id});if(error){toast(error.message);return}
   await loadMine(uid,generation);if(session?.user?.id!==uid||authLoadGeneration!==generation)return;
@@ -2065,7 +2143,7 @@ async function saveAutomationDirection(){
 }
 async function setAgentAutonomy(level){
   const p=autoPersona(),b=autoBinding(p.id);if(!b)return;
-  if(level===3&&!confirm("Enable L3 research and private-draft automation for this persona? Native and external auto-publication remain paused; every page still needs exact owner review and explicit publication."))return;
+  if(level===3&&!await appConfirm("Enable L3 research and private-draft automation for this persona? Native and external auto-publication remain paused; every page still needs exact owner review and explicit publication."))return;
   if(!await requireAal2ForSensitiveAction("change persona autonomy"))return;
   const{error}=await sb.rpc("save_my_agent_binding_controls",{p_persona_id:p.id,p_status:b.status,p_autonomy_level:level,p_fan_chat_enabled:!!b.fan_chat_enabled,p_fan_daily_message_limit:Number(b.fan_daily_message_limit||30)});if(error){toast(sensitiveActionErrorMessage(error));return}await loadMine();autoTab="direction";renderStudio();toast(`Autonomy set to L${level}`);
 }
@@ -2074,7 +2152,7 @@ async function saveAgentSafety(){
   if(!Number.isInteger(fanCap)||fanCap<1||fanCap>500){toast("Fan-chat cap must be a whole number from 1 to 500");return}
   if(fanEnabled&&!fanBackend){toast("Link a ready hosted AI model before enabling fan chat");return}
   if(!await requireAal2ForSensitiveAction("change persona agent controls"))return;
-  if(fanEnabled&&p.ai_backend!==fanBackend.id){if(!confirm(`Use ${fanBackend.name} as this persona's default model for fan chat?`))return;const{error:modelError}=await sb.rpc("set_persona_backend",{p_persona_id:p.id,p_backend_id:fanBackend.id});if(modelError){toast(modelError.message);return}}
+  if(fanEnabled&&p.ai_backend!==fanBackend.id){if(!await appConfirm(`Use ${fanBackend.name} as this persona's default model for fan chat?`))return;const{error:modelError}=await sb.rpc("set_persona_backend",{p_persona_id:p.id,p_backend_id:fanBackend.id});if(modelError){toast(modelError.message);return}}
   const{error}=await sb.rpc("save_my_agent_binding_controls",{p_persona_id:p.id,p_status:val("abStatus"),p_autonomy_level:Number(b.autonomy_level||0),p_fan_chat_enabled:fanEnabled,p_fan_daily_message_limit:fanCap});if(error){toast(sensitiveActionErrorMessage(error));return}await loadMine();autoTab="direction";renderStudio();toast("Agent controls saved");
 }
 function validTimezone(tz){try{Intl.DateTimeFormat(undefined,{timeZone:tz}).format();return true}catch(e){return false}}
@@ -2085,8 +2163,8 @@ async function saveOwnerAutomationSettings(){
   const row={owner:session.user.id,default_timezone:timezone,daily_draft_limit,quiet_hours_start,quiet_hours_end};const{error}=await sb.from("agent_owner_settings").upsert(row,{onConflict:"owner"});if(error){toast(error.message);return}await loadMine();renderStudio();toast("Owner limits saved");
 }
 async function toggleGlobalAutomation(){
-  const paused=!!myAgentSettings?.automation_paused;if(!paused&&!confirm("Pause every persona agent, scheduled draft, publish queue, and new fan-chat response? You can resume at any time."))return;
-  const reason=paused?"":(prompt("Optional reason for the pause:")||"");const row={owner:session.user.id,automation_paused:!paused,pause_reason:reason,paused_at:paused?null:new Date().toISOString(),default_timezone:autoTz(),daily_draft_limit:myAgentSettings?.daily_draft_limit||12};
+  const paused=!!myAgentSettings?.automation_paused;if(!paused&&!await appConfirm("Pause every persona agent, scheduled draft, publish queue, and new fan-chat response? You can resume at any time."))return;
+  const reason=paused?"":(await appPrompt("Optional reason for the pause:")||"");const row={owner:session.user.id,automation_paused:!paused,pause_reason:reason,paused_at:paused?null:new Date().toISOString(),default_timezone:autoTz(),daily_draft_limit:myAgentSettings?.daily_draft_limit||12};
   const{error}=await sb.from("agent_owner_settings").upsert(row,{onConflict:"owner"});if(error){toast(error.message);return}await loadMine();renderStudio();toast(paused?"All agents resumed":"All agents paused");
 }
 async function saveAutomationDestination(accountId){
@@ -2218,7 +2296,7 @@ async function verifyDiscordDraft(id,button){
 }
 async function deleteDiscordDraft(id,button){
   const draft=myDrafts.find(row=>row.id===id),account=draft&&myAccounts.find(row=>row.id===draft.account_id),connection=account?autoConn(account):null,messageId=String(draft?.provider_post_id||"").trim(),channelId=String(connection?.row?.provider_subject||"").trim();if(!draft||!messageId||!channelId){toast("The exact Discord message or channel ID is unavailable; verify the record first.");return}
-  const typedMessage=(prompt(`To delete this provider message, type its exact Discord message ID:\n${messageId}`,"")||"").trim();if(typedMessage!==messageId){toast("Message ID did not match; nothing was deleted.");return}const typedChannel=(prompt(`Now type the exact Discord channel ID:\n${channelId}`,"")||"").trim();if(typedChannel!==channelId){toast("Channel ID did not match; nothing was deleted.");return}if(!await requireAal2ForSensitiveAction("delete an exact Discord message"))return;if(button){button.disabled=true;button.textContent="Deleting…"}
+  const typedMessage=(await appPrompt(`To delete this provider message, type its exact Discord message ID:\n${messageId}`,"")||"").trim();if(typedMessage!==messageId){toast("Message ID did not match; nothing was deleted.");return}const typedChannel=(await appPrompt(`Now type the exact Discord channel ID:\n${channelId}`,"")||"").trim();if(typedChannel!==channelId){toast("Channel ID did not match; nothing was deleted.");return}if(!await requireAal2ForSensitiveAction("delete an exact Discord message"))return;if(button){button.disabled=true;button.textContent="Deleting…"}
   const result=await providerPostAction("discord-post",{action:"delete",draftId:id,confirmMessageId:messageId,confirmChannelId:channelId});await loadMine();autoTab="queue";renderStudio();if(result.error){toast(result.error);return}toast(result.data?.alreadyAbsent?"Discord confirmed the exact message was already absent.":"Discord deleted the exact confirmed message.")
 }
 async function exactVerifiedVideoAsset(draft,allowedMimes){
@@ -2339,14 +2417,14 @@ function copyPatreonPreparedPackage(){if(!patreonPreparedHandoff)return;copyText
 async function openPatreonPreparedEditor(){
   const handoff=patreonPreparedHandoff;if(!handoff?.handoffId)return;let destination;try{destination=new URL(handoff.nativeEditorUrl);if(destination.origin!=="https://www.patreon.com")throw new Error("Build and acknowledge a fresh Patreon preview before opening the editor") }catch(error){toast(error.message);return}window.open(destination.toString(),"_blank","noopener,noreferrer");
 }
-async function completePatreonPreparedHandoff(){const handoff=patreonPreparedHandoff;if(!handoff?.handoffId)return;const note=(prompt("Record exactly what you completed in Patreon (for example: saved draft after native preview, or scheduled for Aug 31 at 9:00 AM):","")||"").trim();if(!note){toast("Add a completion note; no status was changed");return}const result=await providerPostAction("patreon-handoff",{action:"owner-completed",handoffId:handoff.handoffId,ownerCompletionNote:note});if(result.error){toast(result.error);return}patreonPreparedHandoff={...handoff,...(result.data||{}),status:"owner_completed"};showPatreonPreparedHandoff();toast("Recorded as owner-attested only; Patreon completion was not API-verified.")}
-async function abandonPatreonPreparedHandoff(){const handoff=patreonPreparedHandoff;if(!handoff?.handoffId||!confirm("Abandon this prepared Patreon handoff? Nothing will be changed in Patreon."))return;const result=await providerPostAction("patreon-handoff",{action:"abandon",handoffId:handoff.handoffId});if(result.error){toast(result.error);return}patreonPreparedHandoff=null;document.getElementById("patreonPreparedOv")?.remove();toast("Patreon handoff abandoned; no provider action was claimed.")}
-async function markManualDraftPosted(id){if(!confirm("Confirm that you posted this yourself on the external platform?"))return;const{error}=await sb.rpc("mark_manual_draft_posted",{p_draft_id:id});if(error){toast(error.message);return}await loadMine();autoTab="queue";renderStudio();toast("Marked as manually posted")}
+async function completePatreonPreparedHandoff(){const handoff=patreonPreparedHandoff;if(!handoff?.handoffId)return;const note=(await appPrompt("Record exactly what you completed in Patreon (for example: saved draft after native preview, or scheduled for Aug 31 at 9:00 AM):","")||"").trim();if(!note){toast("Add a completion note; no status was changed");return}const result=await providerPostAction("patreon-handoff",{action:"owner-completed",handoffId:handoff.handoffId,ownerCompletionNote:note});if(result.error){toast(result.error);return}patreonPreparedHandoff={...handoff,...(result.data||{}),status:"owner_completed"};showPatreonPreparedHandoff();toast("Recorded as owner-attested only; Patreon completion was not API-verified.")}
+async function abandonPatreonPreparedHandoff(){const handoff=patreonPreparedHandoff;if(!handoff?.handoffId||!await appConfirm("Abandon this prepared Patreon handoff? Nothing will be changed in Patreon."))return;const result=await providerPostAction("patreon-handoff",{action:"abandon",handoffId:handoff.handoffId});if(result.error){toast(result.error);return}patreonPreparedHandoff=null;document.getElementById("patreonPreparedOv")?.remove();toast("Patreon handoff abandoned; no provider action was claimed.")}
+async function markManualDraftPosted(id){if(!await appConfirm("Confirm that you posted this yourself on the external platform?"))return;const{error}=await sb.rpc("mark_manual_draft_posted",{p_draft_id:id});if(error){toast(error.message);return}await loadMine();autoTab="queue";renderStudio();toast("Marked as manually posted")}
 async function openFanTranscript(id){
   const s=myFanSessions.find(x=>x.id===id);if(!s)return;toast("Loading the full conversation…");const result=await fetchAllPages((from,to)=>sb.from("fan_chat_messages").select("*",{count:"exact"}).eq("owner",session.user.id).eq("session_id",id).order("created_at",{ascending:true}).range(from,to));if(result.error){toast("Could not load this conversation: "+result.error.message);return}const ms=result.data||[],o=document.createElement("div");o.className="overlay";o.id="fanTranscriptOv";o.innerHTML=`<div class="wizbox"><h2>${s.escalated?"Escalated fan conversation":"Fan conversation"}</h2><p class="muted">${esc(s.escalation_reason||"The fan accepted the owner-visibility and AI-labeling warning before messaging.")}</p>${ms.map(m=>`<div class="cmsg ${m.role==="fan"?"u":m.role==="owner"?"h":m.role==="system"?"s":"a"}"><b>${m.role==="fan"?"Fan":m.role==="owner"?"Owner":m.role==="system"?"Notice":"AI"}</b> ${esc(m.content)}</div>`).join("")||'<p class="muted">No messages.</p>'}<div class="autoformactions"><button class="btn danger" onclick="deleteFanConversation('${s.id}')">Delete conversation</button><button class="btn sec" onclick="document.getElementById('fanTranscriptOv').remove()">Close</button></div></div>`;document.body.appendChild(o);
 }
 async function setFanThreadState(id,state){const{error}=await sb.from("fan_chat_sessions").update({inbox_state:state}).eq("id",id);if(error){toast(error.message);return}await loadMine();autoTab="chats";renderStudio()}
-async function deleteFanConversation(id){if(!confirm("Delete this full fan conversation and transcript? This cannot be undone."))return;const{data,error}=await sb.rpc("delete_my_fan_chat_session",{p_session_id:id});if(error||data!==true){toast(error?.message||"Conversation could not be deleted");return}document.getElementById("fanTranscriptOv")?.remove();await loadMine();autoTab="chats";renderStudio();toast("Conversation deleted")}
+async function deleteFanConversation(id){if(!await appConfirm("Delete this full fan conversation and transcript? This cannot be undone."))return;const{data,error}=await sb.rpc("delete_my_fan_chat_session",{p_session_id:id});if(error||data!==true){toast(error?.message||"Conversation could not be deleted");return}document.getElementById("fanTranscriptOv")?.remove();await loadMine();autoTab="chats";renderStudio();toast("Conversation deleted")}
 
 // ---------- studio ----------
 function renderStudio(){
@@ -2621,7 +2699,7 @@ function restoreFromFile(input){
   const f=input.files&&input.files[0];if(!f)return;if(f.size>RESTORE_MAX_FILE_BYTES){toast("This backup is larger than the 20 MB restore limit");input.value="";return}const r=new FileReader();
   r.onload=async()=>{try{const data=JSON.parse(r.result);validateRestoreImport(data,f.size);
     const c=k=>Array.isArray(data[k])?data[k].length:0;
-    if(!confirm(`This backup has ${c("personas")} personas, ${c("persona_family_relationships")} family edges, ${c("persona_projects")} projects, ${c("businesses")} businesses, ${c("persona_backup_relationships")} backup relationships, ${c("persona_page_layouts")} page layouts, and ${c("persona_page_code_snippets")} private snippets.\n\nRestore safe owner-authored drafts now? Restored persona and business pages stay unpublished; organization visibility is owner-only; resources are disconnected and disabled; extension source is inert and must be reviewed again.\n\nPersonas whose handle already exists are skipped. Business publication review evidence, provider connections, sync authority, follows/friends, invitations, platform roles, staff decisions, and security/audit state are export-only and will NOT be restored.`)){input.value="";return}
+    if(!await appConfirm(`This backup has ${c("personas")} personas, ${c("persona_family_relationships")} family edges, ${c("persona_projects")} projects, ${c("businesses")} businesses, ${c("persona_backup_relationships")} backup relationships, ${c("persona_page_layouts")} page layouts, and ${c("persona_page_code_snippets")} private snippets.\n\nRestore safe owner-authored drafts now? Restored persona and business pages stay unpublished; organization visibility is owner-only; resources are disconnected and disabled; extension source is inert and must be reviewed again.\n\nPersonas whose handle already exists are skipped. Business publication review evidence, provider connections, sync authority, follows/friends, invitations, platform roles, staff decisions, and security/audit state are export-only and will NOT be restored.`)){input.value="";return}
     await restoreImport(data);
   }catch(e){toast(e?.message||"That's not a MyPersonas backup (.json)")}input.value="";};
   r.readAsText(f);
@@ -2844,7 +2922,7 @@ async function createGroup(){
   await loadGroups();toast("Group created");
 }
 async function deleteGroup(id){
-  if(!confirm("Delete this group? Your personas are not affected."))return;
+  if(!await appConfirm("Delete this group? Your personas are not affected."))return;
   const{error}=await sb.rpc("delete_persona_group",{p_group_id:id});if(error){toast(error.message);return}
   await loadGroups();toast("Group deleted");
 }
@@ -2903,7 +2981,7 @@ function openPromo(pid){
 // ----- content drafts (for external platforms) -----
 function copyDraft(id){const d=myDrafts.find(x=>x.id===id);if(!d)return;copyText([d.title||"",d.body||"",d.tags||"",d.media_url?`Media: ${d.media_url}`:""].filter(Boolean).join("\n\n"))}
 async function deleteDraft(id){
-  if(!confirm("Delete this draft?"))return;
+  if(!await appConfirm("Delete this draft?"))return;
   const result=await sb.rpc("delete_my_draft",{p_draft_id:id});
   if(result.error){toast(result.error.message);return}
   await loadMine();renderStudio();
@@ -2990,13 +3068,13 @@ function movePageBuilderModule(id,delta){const order=editPageLayout.order,index=
 function setPageBuilderCard(id,key,value){if(!PAGE_LAYOUT_MODULES.includes(id)||!["span","shape","tone"].includes(key))return;editPageLayout.cards[id]={...normalizePageCard(editPageLayout.cards[id]),[key]:value};editPageLayout=normalizePersonaPageLayout(editPageLayout);renderPageBuilder()}
 function movePageBuilderWidget(id,delta){const list=editPageLayout.widgets,index=list.findIndex(widget=>widget.id===id),next=index+delta;if(index<0||next<0||next>=list.length)return;[list[index],list[next]]=[list[next],list[index]];renderPageBuilder()}
 function removePageBuilderWidget(id){editPageLayout.widgets=editPageLayout.widgets.filter(widget=>widget.id!==id);renderPageBuilder()}
-function addPageBuilderWidget(kind){if(editPageLayout.widgets.length>=12){toast("A page can have at most 12 custom boxes");return}const title=(prompt(kind==="link"?"Link box title":"Text box title",kind==="link"?"Useful link":"Custom box")||"").trim();if(!title)return;let body="",label="",url="";if(kind==="link"){label=(prompt("Link button label","Open link")||"").trim();url=(prompt("HTTPS destination","https://")||"").trim();if(!safeHttpUrl(url).startsWith("https://")){toast("Link boxes require a valid HTTPS URL");return}}else body=(prompt("Text for this box")||"").trim();editPageLayout.widgets.push({id:"widget_"+crypto.randomUUID().replace(/-/g,"").slice(0,18),kind,title,body,label,url,span:"half",shape:"soft",tone:"default"});editPageLayout=normalizePersonaPageLayout(editPageLayout);renderPageBuilder()}
+async function addPageBuilderWidget(kind){if(editPageLayout.widgets.length>=12){toast("A page can have at most 12 custom boxes");return}const title=(await appPrompt(kind==="link"?"Link box title":"Text box title",kind==="link"?"Useful link":"Custom box")||"").trim();if(!title)return;let body="",label="",url="";if(kind==="link"){label=(await appPrompt("Link button label","Open link")||"").trim();url=(await appPrompt("HTTPS destination","https://")||"").trim();if(!safeHttpUrl(url).startsWith("https://")){toast("Link boxes require a valid HTTPS URL");return}}else body=(await appPrompt("Text for this box")||"").trim();editPageLayout.widgets.push({id:"widget_"+crypto.randomUUID().replace(/-/g,"").slice(0,18),kind,title,body,label,url,span:"half",shape:"soft",tone:"default"});editPageLayout=normalizePersonaPageLayout(editPageLayout);renderPageBuilder()}
 function refreshPageBuilderCode(){const language=document.getElementById("pageBuilderCodeLang")?.value||"html",box=document.getElementById("pageBuilderCode");if(box)box.value=pageLayoutLearningCode(editPageLayout,language);const explanation=document.getElementById("pageBuilderExplain");if(explanation)explanation.textContent=explainPageCodeSelection("")}
 function explainSelectedPageCode(){const box=document.getElementById("pageBuilderCode"),out=document.getElementById("pageBuilderExplain");if(!box||!out)return;out.textContent=explainPageCodeSelection(box.value.slice(box.selectionStart,box.selectionEnd))}
 function copyPageBuilderSnippet(id){const snippet=editPageSnippets.find(row=>row.id===id);if(snippet)copyText(snippet.code)}
 async function reloadPageBuilderSnippets(){const result=await sb.rpc("my_persona_page_code_snippets",{p_persona_id:editId});if(!result.error)editPageSnippets=result.data||[]}
-async function savePageBuilderSnippet(){const name=(prompt("Snippet name","My page layout recipe")||"").trim(),language=document.getElementById("pageBuilderCodeLang")?.value||"html",code=document.getElementById("pageBuilderCode")?.value||"";if(!name)return;const result=await sb.rpc("save_persona_page_code_snippet",{p_snippet_id:null,p_persona_id:editId,p_name:name,p_language:language,p_code:code});if(result.error){toast(result.error.message);return}await reloadPageBuilderSnippets();renderPageBuilder();toast("Private snippet saved")}
-async function deletePageBuilderSnippet(id){if(!confirm("Delete this private snippet?"))return;const result=await sb.rpc("delete_persona_page_code_snippet",{p_snippet_id:id});if(result.error){toast(result.error.message);return}editPageSnippets=editPageSnippets.filter(row=>row.id!==id);renderPageBuilder()}
+async function savePageBuilderSnippet(){const name=(await appPrompt("Snippet name","My page layout recipe")||"").trim(),language=document.getElementById("pageBuilderCodeLang")?.value||"html",code=document.getElementById("pageBuilderCode")?.value||"";if(!name)return;const result=await sb.rpc("save_persona_page_code_snippet",{p_snippet_id:null,p_persona_id:editId,p_name:name,p_language:language,p_code:code});if(result.error){toast(result.error.message);return}await reloadPageBuilderSnippets();renderPageBuilder();toast("Private snippet saved")}
+async function deletePageBuilderSnippet(id){if(!await appConfirm("Delete this private snippet?"))return;const result=await sb.rpc("delete_persona_page_code_snippet",{p_snippet_id:id});if(result.error){toast(result.error.message);return}editPageSnippets=editPageSnippets.filter(row=>row.id!==id);renderPageBuilder()}
 function personaBackupEditorHtml(targetId){
   const privacy='<p class="muted">Private roster organization only. This does not publish, reveal, or publicly link either profile; use public Linked personas separately if you intentionally want a public funnel.</p>';
   if(!targetId)return `<section class="backupeditor"><h3>Backup persona</h3>${privacy}<p class="muted">Save this persona first, then reopen it to assign one of your other personas as its backup.</p></section>`;
@@ -3193,7 +3271,7 @@ async function createAlbum(){
   if(error){toast(error.message);return}
   document.getElementById("nAlbTitle").value="";await loadMine();await loadEditAlbums();toast("Album saved to the page draft; review before publishing");
 }
-async function deleteAlbum(id){if(!confirm("Delete this album and its items?"))return;const{error}=await sb.rpc("delete_persona_album",{p_album_id:id});if(error){toast(error.message);return}await loadMine();await loadEditAlbums();toast("Album removed from the page draft; review before publishing")}
+async function deleteAlbum(id){if(!await appConfirm("Delete this album and its items?"))return;const{error}=await sb.rpc("delete_persona_album",{p_album_id:id});if(error){toast(error.message);return}await loadMine();await loadEditAlbums();toast("Album removed from the page draft; review before publishing")}
 async function addAlbumItem(aid){
   const thumb=document.getElementById("ait_"+aid).value.trim();
   if(!thumb){toast("Add a thumbnail first (URL or upload)");return}
@@ -3208,7 +3286,7 @@ async function deleteAlbumItem(id){const{error}=await sb.rpc("delete_persona_alb
 function renderEditLinks(){
   document.getElementById("eLinks").innerHTML=editLinks.map((l,i)=>{
     const pl=PLATS[l.platform]||PLATS.other;
-    return `<div class="linkrow"><span class="chip">${ico("node")}${esc(l.handle||pl.name)}</span>
+    return `<div class="linkrow"><span class="chip">${platformGlyph(l.platform)}${esc(l.handle||pl.name)}</span>
     <span class="muted" style="flex:1;overflow:hidden;text-overflow:ellipsis">${esc(l.url)}</span>
     <button class="btn danger sm" onclick="editLinks.splice(${i},1);renderEditLinks()">✕</button></div>`}).join("")||'<p class="muted">No links yet.</p>';
 }
@@ -3325,7 +3403,7 @@ async function savePersona(destination="default"){
   go(requiresReview?"review/"+_pid:"p/"+(savedPersona?.handle||handle));
 }
 async function deletePersona(){
-  const targetId=editId,uid=session?.user?.id,epoch=renderEpoch;if(!targetId||!confirm("Delete this persona, its page, links and all its posts? This cannot be undone. If it is in a backup pair, the other persona stays and becomes standalone."))return;
+  const targetId=editId,uid=session?.user?.id,epoch=renderEpoch;if(!targetId||!await appConfirm("Delete this persona, its page, links and all its posts? This cannot be undone. If it is in a backup pair, the other persona stays and becomes standalone."))return;
   const{error}=await sb.rpc("delete_owned_persona",{p_persona_id:targetId});if(editId!==targetId||session?.user?.id!==uid||epoch!==renderEpoch)return;if(error){toast(error.message);return}
   await loadMine(uid,authLoadGeneration);if(session?.user?.id===uid)go("studio");
 }
@@ -3411,7 +3489,7 @@ async function createChatWorkspace(personaId){
   myChatWorkspaces.push(row);myChatWorkspaces.sort(sortChatWorkspaces);const input=document.getElementById("newWorkspaceTitle");if(input)input.value="";renderWorkspaceList(personaId);toast("Workspace created — choose Resume when you are ready to chat");
 }
 async function renameChatWorkspace(id){
-  const uid=session?.user?.id,w=myChatWorkspaces.find(row=>row.id===id&&row.owner===uid);if(!w)return;const title=validWorkspaceTitle(prompt("Workspace name",w.title||"")||"");if(!title)return;
+  const uid=session?.user?.id,w=myChatWorkspaces.find(row=>row.id===id&&row.owner===uid);if(!w)return;const title=validWorkspaceTitle(await appPrompt("Workspace name",w.title||"")||"");if(!title)return;
   const now=new Date().toISOString(),{data,error}=await sb.from("chat_workspaces").update({title,updated_at:now}).eq("id",id).eq("owner",uid).select("id").maybeSingle();if(session?.user?.id!==uid)return;if(error||!data){toast("Workspace could not be renamed"+(error?": "+error.message:" because it no longer exists"));return}w.title=title;w.updated_at=now;renderWorkspaceList(w.persona_id);if(chatCtx?.workspaceId===id){chatCtx.workspaceTitle=title;document.querySelector("#chatov .chtitle").textContent=(myPersonas.find(p=>p.id===w.persona_id)?.name||"Persona")+" — "+title}toast("Workspace renamed");
 }
 async function pinChatWorkspace(id,pinned){
@@ -3451,7 +3529,7 @@ async function attachSelectedWorkspaces(){
 }
 async function saveChatToContext(){
   const ctx=chatCtx,uid=ctx?.ownerUid;if(!ctx?.personaId||ctx.contextBusy||session?.user?.id!==uid)return;const p=myPersonas.find(row=>row.id===ctx.personaId);if(!p)return;const title=ctx.workspaceTitle||ctx.title||"Persona chat";ctx.contextBusy=true;toast("Distilling the recent conversation…");
-  try{const summary=await distillTranscriptForContext(ctx.personaId,title,ctx.messages,ctx.backendId);if(chatCtx!==ctx||session?.user?.id!==uid)return;const reviewed=prompt("Review or edit the distilled takeaway before saving it to this persona's AI-readable context:",summary);if(reviewed===null)return;const approved=distilledSummary(reviewed,430);if(!approved){toast("Nothing was saved because the takeaway was empty");return}await appendContextLog(ctx.personaId,`Chat workspace “${distilledSummary(title,120)}”: ${approved}`);if(chatCtx===ctx)toast("Approved takeaway saved to persona context")}
+  try{const summary=await distillTranscriptForContext(ctx.personaId,title,ctx.messages,ctx.backendId);if(chatCtx!==ctx||session?.user?.id!==uid)return;const reviewed=await appPrompt("Review or edit the distilled takeaway before saving it to this persona's AI-readable context:",summary);if(reviewed===null)return;const approved=distilledSummary(reviewed,430);if(!approved){toast("Nothing was saved because the takeaway was empty");return}await appendContextLog(ctx.personaId,`Chat workspace “${distilledSummary(title,120)}”: ${approved}`);if(chatCtx===ctx)toast("Approved takeaway saved to persona context")}
   catch(e){if(chatCtx===ctx&&session?.user?.id===uid)toast("Context was not saved: "+e.message)}finally{ctx.contextBusy=false}
 }
 function openChat(opts){
@@ -3682,7 +3760,7 @@ image:"Write 3 detailed image-generation prompts (style, composition, lighting, 
 newsletter:"Write a newsletter email: 3 subject lines, punchy intro, 2-4 short sections, sign-off with call-to-action.",
 promo:"Write 3 promo posts for a product/offer in the persona's voice with clear call-to-action.",
 custom:""};
-async function deleteTask(id){if(!confirm("Delete this content schedule? Existing drafts stay in the queue."))return;if(!await requireAal2ForSensitiveAction("delete an automation schedule"))return;const{error}=await sb.rpc("delete_ai_task_definition",{p_task_id:id});if(error){toast(error.message);return}await loadMine();autoTab="schedule";renderStudio();toast("Content schedule deleted")}
+async function deleteTask(id){if(!await appConfirm("Delete this content schedule? Existing drafts stay in the queue."))return;if(!await requireAal2ForSensitiveAction("delete an automation schedule"))return;const{error}=await sb.rpc("delete_ai_task_definition",{p_task_id:id});if(error){toast(error.message);return}await loadMine();autoTab="schedule";renderStudio();toast("Content schedule deleted")}
 async function runTask(id){
   const t=myTasks.find(x=>x.id===id);if(!t)return;
   const p=myPersonas.find(x=>x.id===t.persona_id);
@@ -3754,13 +3832,13 @@ async function toggleBackendHostConfirmation(id,surface){
       ?{key:"mailbox_host_confirmed",secret:"MAILBOX_AI_HOSTS",label:"Inbox"}
       :{key:"schedule_host_confirmed",secret:"SCHEDULE_AI_HOSTS",label:"Schedule"};
   const next=b.extra?.[spec.key]!==true;
-  if(next&&!confirm(`Confirm only after this hostname was added to the deployed ${spec.secret} secret. The server will still reject it if the allowlist is missing or unsafe.`))return;
+  if(next&&!await appConfirm(`Confirm only after this hostname was added to the deployed ${spec.secret} secret. The server will still reject it if the allowlist is missing or unsafe.`))return;
   const extra={...(b.extra||{}),[spec.key]:next};
   const res=await sb.rpc("update_ai_backend",{p_backend_id:id,p_name:b.name,p_model:b.model,p_extra:extra});
   if(res.error){toast(res.error.message);return}
   await loadMine();renderStudio();toast(next?`${spec.label} host confirmation saved`:`${spec.label} host confirmation removed`);
 }
-async function deleteBackend(id){if(!await requireAal2ForSensitiveAction("remove this model credential"))return;const b=myBackends.find(x=>x.id===id);if(!b)return;const oauth=b.provider==="openrouter"&&b.extra?.auth_method==="openrouter_oauth";if(!confirm(oauth?"Remove this model and its encrypted key from AliaSpaces? You must also revoke the key on OpenRouter.":"Remove this model and its encrypted key from AliaSpaces? This does not revoke a key at the provider."))return;const res=await sb.rpc("delete_ai_backend",{p_backend_id:id});if(res.error){toast(res.error.message);return}await loadMine();renderStudio();if(oauth)showOpenRouterKeyWarning("The encrypted AliaSpaces copy was removed. OpenRouter still controls the issued key; revoke it there now.");else toast("Model connection removed from AliaSpaces")}
+async function deleteBackend(id){if(!await requireAal2ForSensitiveAction("remove this model credential"))return;const b=myBackends.find(x=>x.id===id);if(!b)return;const oauth=b.provider==="openrouter"&&b.extra?.auth_method==="openrouter_oauth";if(!await appConfirm(oauth?"Remove this model and its encrypted key from AliaSpaces? You must also revoke the key on OpenRouter.":"Remove this model and its encrypted key from AliaSpaces? This does not revoke a key at the provider."))return;const res=await sb.rpc("delete_ai_backend",{p_backend_id:id});if(res.error){toast(res.error.message);return}await loadMine();renderStudio();if(oauth)showOpenRouterKeyWarning("The encrypted AliaSpaces copy was removed. OpenRouter still controls the issued key; revoke it there now.");else toast("Model connection removed from AliaSpaces")}
 async function setDefaultBackend(id){
   if(!await requireAal2ForSensitiveAction("change the default model connection"))return;
   const target=myBackends.find(x=>x.id===id);if(!target)return;
@@ -4527,7 +4605,7 @@ function mailboxPlanKeydown(event){
 function mailboxClosePlan(){document.getElementById("mailActionOv")?.remove();mailboxPlanInert.forEach(element=>element.inert=false);mailboxPlanInert=[];mailboxPendingPlan=null;const target=mailboxPlanReturnFocus;mailboxPlanReturnFocus=null;target?.focus?.()}
 async function mailboxCancelPreview(planId="",fromModal=false){
   const id=mailboxSafeId(planId||mailboxPendingPlan?.id),account=mailboxSelectedAccount();if(!id||!account)return;
-  if(!fromModal&&!confirm("Cancel this unapproved cleanup preview? No email will be changed."))return;
+  if(!fromModal&&!await appConfirm("Cancel this unapproved cleanup preview? No email will be changed."))return;
   const buttons=[...document.querySelectorAll("#mailActionOv button")];buttons.forEach(button=>button.disabled=true);
   const cancelButton=document.querySelector("#mailActionOv .btn.sec");if(cancelButton)cancelButton.textContent="Cancelling…";
   try{
@@ -4551,13 +4629,13 @@ async function mailboxApprovePlan(){
 }
 async function mailboxDismissSelected(){
   const findingIds=mailboxSelectedIds(),account=mailboxSelectedAccount();if(!findingIds.length||!account)return;
-  if(!confirm(`Deny ${findingIds.length} suggestion${findingIds.length===1?"":"s"} and remove ${findingIds.length===1?"it":"them"} from this report? This does not change the email.`))return;
+  if(!await appConfirm(`Deny ${findingIds.length} suggestion${findingIds.length===1?"":"s"} and remove ${findingIds.length===1?"it":"them"} from this report? This does not change the email.`))return;
   try{await mailboxCall("dismiss",{ledgerId:account.id,findingIds});toast("Suggestions denied; no email was changed.");await mailboxLoad(true)}catch(e){toast(e.message)}
 }
 async function mailboxUnsubscribe(findingId){
   const id=mailboxSafeId(findingId),account=mailboxSelectedAccount(),finding=mailboxFindings().find(f=>String(f.id)===id);if(!id||!account||!finding)return;
   const sender=mailboxFindingSender(finding);
-  if(!confirm(`Review the unsubscribe destination supplied by ${sender}? MyPersonas will not visit it or send an email automatically.`))return;
+  if(!await appConfirm(`Review the unsubscribe destination supplied by ${sender}? MyPersonas will not visit it or send an email automatically.`))return;
   try{
     const target=await mailboxCall("unsubscribe-target",{ledgerId:account.id,findingId:id}),kind=String(target.kind||"").toLowerCase(),raw=String(target.url||"");
     if(kind==="https"){
@@ -4565,14 +4643,14 @@ async function mailboxUnsubscribe(findingId){
       if(url.protocol!=="https:"||url.username||url.password||url.port||!url.hostname.includes(".")||raw.length>2048)throw new Error("The unsubscribe destination is not a safe HTTPS URL.");
       if(target.hostname&&String(target.hostname).toLowerCase()!==url.hostname.toLowerCase())throw new Error("The unsubscribe hostname did not match the reviewed destination.");
       url.hash="";
-      if(!confirm(`Open the unsubscribe page on ${url.hostname}? This leaves MyPersonas; review that site's confirmation before submitting.`))return;
+      if(!await appConfirm(`Open the unsubscribe page on ${url.hostname}? This leaves MyPersonas; review that site's confirmation before submitting.`))return;
       const opened=window.open(url.toString(),"_blank","noopener,noreferrer");if(opened)opened.opener=null;else toast("Your browser blocked the new tab. Allow pop-ups and try again.");
       return;
     }
     if(kind==="mailto"&&/^mailto:[^\r\n]{1,2000}$/i.test(raw)){
       const url=new URL(raw),recipient=decodeURIComponent(url.pathname).trim(),domain=recipient.split("@")[1]?.toLowerCase()||"";
       if(url.protocol!=="mailto:"||url.username||url.password||url.search||url.hash||!/^[A-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?(?:\.[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?)+$/i.test(recipient)||!domain||target.hostname&&String(target.hostname).toLowerCase()!==domain)throw new Error("The unsubscribe email destination did not pass safety checks.");
-      if(!confirm(`Open your mail app with an unsubscribe email addressed to ${recipient}? Review it before sending; MyPersonas will not send it.`))return;
+      if(!await appConfirm(`Open your mail app with an unsubscribe email addressed to ${recipient}? Review it before sending; MyPersonas will not send it.`))return;
       location.href=`mailto:${encodeURIComponent(recipient)}`;return;
     }
     throw new Error("This message did not provide a supported HTTPS or email unsubscribe destination.");
@@ -4593,7 +4671,7 @@ async function mailboxUndo(planId){
   const id=mailboxSafeId(planId),account=mailboxSelectedAccount();if(!id||!account)return;
   if(mailboxGlobalPaused()){toast("Resume the global Matrix safety switch before starting an undo job.");return}
   if(mailboxInboxPaused()){toast("Open inbox settings, clear “Pause this inbox,” and save before requesting undo.");return}
-  if(!confirm("Queue the available undo for this action plan? Gmail may not be able to restore changes made later outside MyPersonas."))return;
+  if(!await appConfirm("Queue the available undo for this action plan? Gmail may not be able to restore changes made later outside MyPersonas."))return;
   try{await mailboxCall("request-undo",{ledgerId:account.id,planId:id});toast("Undo queued. Refreshing until it finishes.");await mailboxLoad(true)}catch(e){toast(e.message)}
 }
 
@@ -4687,15 +4765,15 @@ function refreshLedgerSavedPicker(providerSelect){
   row.dataset.ledgerId="";delete row.dataset.savedSnapshot;providerSelect.disabled=false;picker.disabled=!saved.count;picker.innerHTML=saved.html;
   row.querySelector(".lrUser").disabled=false;row.querySelector(".lrEmail").disabled=false;setLedgerSavedHelp(row);
 }
-function applyLedgerSavedAccount(picker){
+async function applyLedgerSavedAccount(picker){
   const row=picker.closest(".ledgerrow"),id=picker.value,previous=row.dataset.ledgerId||"";
   if(!id){
-    if(previous&&ledgerSavedRowDirty(row)&&!confirm("Clear your changes and start a new account?")){picker.value=previous;return}
+    if(previous&&ledgerSavedRowDirty(row)&&!await appConfirm("Clear your changes and start a new account?")){picker.value=previous;return}
     if(previous)clearLedgerRowDetails(row);row.dataset.ledgerId="";delete row.dataset.savedSnapshot;row.querySelector(".lrProvider").disabled=false;row.querySelector(".lrUser").disabled=false;row.querySelector(".lrEmail").disabled=false;setLedgerSavedHelp(row);return
   }
   const a=myAccounts.find(x=>x.id===id);if(!a){picker.value="";toast("That saved account is no longer available");return}
   const hasTyped=[".lrUser",".lrEmail",".lrUrl",".lrNotes"].some(s=>row.querySelector(s).value.trim());
-  if(hasTyped&&previous!==id&&!confirm("Replace the values in this row with the saved account?")){picker.value=previous;return}
+  if(hasTyped&&previous!==id&&!await appConfirm("Replace the values in this row with the saved account?")){picker.value=previous;return}
   row.dataset.ledgerId=a.id;row.querySelector(".lrProvider").value=a.provider;row.querySelector(".lrProvider").disabled=true;
   row.querySelector(".lrUser").value=a.username||"";row.querySelector(".lrEmail").value=a.login_email||"";row.querySelector(".lrUrl").value=a.url||"";row.querySelector(".lrNotes").value=a.notes||"";
   const persona=row.querySelector(".lrPersona");persona.value=a.persona_id&&myPersonas.some(p=>p.id===a.persona_id)?a.persona_id:"";toggleLedgerQuick(persona);
@@ -5088,7 +5166,7 @@ function ledgerProviderGroupHtml(provider,accounts){
   const picker=count>1?`<div class="ledgerproviderpickerrow"><label for="${pickerId}">Account</label><select class="ledgerproviderpicker" id="${pickerId}" data-provider="${esc(provider)}" onchange="selectLedgerProviderAccount(this)">${accounts.map(account=>`<option value="${account.id}" ${account.id===selectedId?"selected":""}>${esc(ledgerSavedAccountLabel(account))}</option>`).join("")}</select></div>`:"";
   const panels=accounts.map(account=>`<div class="ledgeraccountpanel" data-ledger-id="${account.id}" ${account.id===selectedId?"":"hidden"}>${ledgerAccountItemHtml(account)}</div>`).join("");
   return `<details class="ledgerprovider" data-provider="${esc(provider)}" ontoggle="rememberLedgerProvider(this)" ${ledgerOpenProvider===provider?"open":""}>
-    <summary><span class="ledgerprovidericon" aria-hidden="true">${esc(meta.icon||"🔗")}</span><span class="ledgerprovidersummary"><b>${esc(name)}</b><span class="ledgerprovidercounts">${count} ${count===1?"account":"accounts"} · ${esc(ledgerProviderStatusSummary(accounts))}</span></span></summary>
+    <summary><span class="ledgerprovidericon" aria-hidden="true">${platformGlyph(provider)}</span><span class="ledgerprovidersummary"><b>${esc(name)}</b><span class="ledgerprovidercounts">${count} ${count===1?"account":"accounts"} · ${esc(ledgerProviderStatusSummary(accounts))}</span></span></summary>
     <div class="ledgerproviderbody">${picker}${panels}</div>
   </details>`;
 }
@@ -5283,14 +5361,14 @@ async function finishPendingGmail(expectedUid=session?.user?.id||null,generation
   toast(gmailNoticeMessage);
 }
 async function disconnectGmail(id){
-  if(!confirm("Disconnect Gmail and revoke MyPersonas inbox access? Your Gmail account and messages will not be deleted."))return;
+  if(!await appConfirm("Disconnect Gmail and revoke MyPersonas inbox access? Your Gmail account and messages will not be deleted."))return;
   const result=await gmailOAuthAction("disconnect",id);
   if(result.error){toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();
   toast(result.data.googleRevocationConfirmed?"Gmail disconnected and access revoked.":"Gmail disconnected locally. Review Google Account permissions to confirm revocation.");
 }
 async function resetGmailAttempt(id){
-  if(!confirm("Clear this failed local Gmail attempt? This will not revoke the Google grant used by the Gmail account that is already connected elsewhere."))return;
+  if(!await appConfirm("Clear this failed local Gmail attempt? This will not revoke the Google grant used by the Gmail account that is already connected elsewhere."))return;
   const result=await gmailOAuthAction("reset",id);
   if(result.error){toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();toast("Failed Gmail attempt reset. The other connected Gmail account was not changed.");
@@ -5345,7 +5423,7 @@ async function enableTwitterPosting(id){
   const account=myAccounts.find(a=>a.id===id);if(!account||account.provider!=="twitter"){toast("That X account is no longer available");return}
   const capability=await twitterOAuthAction("capabilities",id);if(capability.error){toast(capability.error);return}
   if(capability.data?.postingEnabled===true){toast("This X account already has verified posting access.");await loadMine();acctTab="accounts";renderStudio();return}
-  if(!confirm(`Reconnect @${normalizeLedgerUsername(account.username)} with X posting access? MyPersonas will revoke the current read-only grant, then X will show a new consent screen requesting tweet.write. This does not publish or delete any post.`))return;
+  if(!await appConfirm(`Reconnect @${normalizeLedgerUsername(account.username)} with X posting access? MyPersonas will revoke the current read-only grant, then X will show a new consent screen requesting tweet.write. This does not publish or delete any post.`))return;
   if(capability.data?.connectionState==="connected"){
     const disconnected=await twitterOAuthAction("disconnect",id);
     if(disconnected.error){await loadMine();acctTab="accounts";renderStudio();toast(disconnected.error);return}
@@ -5363,7 +5441,7 @@ async function finishPendingTwitter(expectedUid=session?.user?.id||null,generati
   twitterOAuthNotice={message:result.error||(result.data?.postingEnabled?"X connected with tweet.write for this exact account. Posts still require an exact preview and an explicit owner Queue action.":"X connected and its identity was verified with read-only access. Reconnect explicitly if you want to enable posting.")};
 }
 async function disconnectTwitter(id){
-  if(!confirm("Disconnect X and revoke MyPersonas access? This does not delete the external X account or its posts."))return;
+  if(!await appConfirm("Disconnect X and revoke MyPersonas access? This does not delete the external X account or its posts."))return;
   const result=await twitterOAuthAction("disconnect",id);
   if(result.error){await loadMine();if(result.details&&result.details.manualRevocationRequired)focusLedgerConnection(id);else{acctTab="accounts";renderStudio()}toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();
@@ -5376,13 +5454,13 @@ async function refreshTwitter(id){
   await loadMine();acctTab="accounts";renderStudio();toast("X connection refreshed and reverified.");
 }
 async function resetTwitterAttempt(id){
-  if(!confirm("Clear this failed local X authorization attempt? No external X account or posts will be deleted."))return;
+  if(!await appConfirm("Clear this failed local X authorization attempt? No external X account or posts will be deleted."))return;
   const result=await twitterOAuthAction("reset",id);
   if(result.error){toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();toast("Failed X authorization attempt reset.");
 }
 async function confirmManualTwitterRevocation(id){
-  if(!confirm("Continue only if you already opened X Connected Apps and revoked MyPersonas. This removes the local encrypted token copy; it cannot verify a provider grant whose final state was ambiguous."))return;
+  if(!await appConfirm("Continue only if you already opened X Connected Apps and revoked MyPersonas. This removes the local encrypted token copy; it cannot verify a provider grant whose final state was ambiguous."))return;
   const result=await twitterOAuthAction("reset",id,{manualRevocationAcknowledged:true});
   if(result.error){toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();toast("Manual X revocation acknowledged and the local connection was reset.");
@@ -5417,7 +5495,7 @@ async function connectReddit(id){
   try{const destination=new URL(result.data.authorizationUrl);if(destination.origin!=="https://www.reddit.com"||destination.pathname!=="/api/v1/authorize")throw new Error("Unexpected Reddit authorization destination");location.assign(destination.toString())}catch(e){toast(e.message||"Invalid Reddit authorization link")}
 }
 async function disconnectReddit(id){
-  if(!confirm("Disconnect Reddit and ask Reddit to revoke MyPersonas access? This does not delete the external account or its posts."))return;
+  if(!await appConfirm("Disconnect Reddit and ask Reddit to revoke MyPersonas access? This does not delete the external account or its posts."))return;
   const result=await redditOAuthAction("disconnect",id);if(result.error){toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();toast(result.data?.providerRevoked?"Reddit confirmed revocation and the local token copies were cleared.":"No stored Reddit grant remained; the local connection was cleared.");
 }
@@ -5459,7 +5537,7 @@ async function refreshYouTube(id){
   if(!await requireAal2ForSensitiveAction("refresh a YouTube channel"))return;toast("Refreshing the YouTube connection…");const result=await youtubeOAuthAction("refresh",id);if(result.error){toast(result.error);await loadMine();acctTab="accounts";renderStudio();return}await loadMine();acctTab="accounts";renderStudio();toast("YouTube channel refreshed and reverified.");
 }
 async function disconnectYouTube(id){
-  if(!confirm("Disconnect this YouTube channel and ask Google to revoke MyPersonas upload access? This does not delete the channel or any video."))return;
+  if(!await appConfirm("Disconnect this YouTube channel and ask Google to revoke MyPersonas upload access? This does not delete the channel or any video."))return;
   if(!await requireAal2ForSensitiveAction("disconnect a YouTube channel"))return;const result=await youtubeOAuthAction("disconnect",id);if(result.error){toast(result.error);return}await loadMine();acctTab="accounts";renderStudio();toast("YouTube access was revoked and the local credential was removed.");
 }
 async function tiktokOAuthAction(action,id=null,extra={}){
@@ -5481,8 +5559,8 @@ async function finishPendingTikTok(expectedUid=session?.user?.id||null,generatio
   if(!tiktokOAuthPending||tiktokOAuthCompleting||!expectedUid||session?.user?.id!==expectedUid||generation!==authLoadGeneration)return;const pending=tiktokOAuthPending;tiktokOAuthPending=null;tiktokOAuthCompleting=true;const result=await tiktokOAuthAction("complete",null,pending);tiktokOAuthCompleting=false;if(session?.user?.id!==expectedUid||generation!==authLoadGeneration)return;tiktokOAuthNotice={message:result.error||(result.data?.connected?`TikTok @${result.data.username||"creator"} connected for Upload-to-inbox. Every video remains previewed and completed in TikTok.`:"TikTok authorization did not complete.")};
 }
 async function refreshTikTok(id){if(!await requireAal2ForSensitiveAction("refresh a TikTok creator"))return;toast("Refreshing the TikTok connection…");const result=await tiktokOAuthAction("refresh",id);if(result.error){toast(result.error);await loadMine();acctTab="accounts";renderStudio();return}await loadMine();acctTab="accounts";renderStudio();toast("TikTok creator refreshed and reverified.")}
-async function disconnectTikTok(id){if(!confirm("Disconnect this TikTok creator and revoke MyPersonas access? This does not delete the account or its posts."))return;if(!await requireAal2ForSensitiveAction("disconnect a TikTok creator"))return;const result=await tiktokOAuthAction("disconnect",id);if(result.error){await loadMine();acctTab="accounts";renderStudio();toast(result.error);return}await loadMine();acctTab="accounts";renderStudio();toast("TikTok access was revoked and the local credential was removed.")}
-async function confirmManualTikTokRevocation(id){if(!confirm("Continue only if you already revoked MyPersonas in TikTok Manage app permissions. This clears the retained encrypted token after an ambiguous provider result."))return;if(!await requireAal2ForSensitiveAction("reset a revoked TikTok connection"))return;const result=await tiktokOAuthAction("reset",id,{manualRevocationAcknowledged:true});if(result.error){toast(result.error);return}await loadMine();acctTab="accounts";renderStudio();toast("Manual TikTok revocation acknowledged and the local connection was reset.")}
+async function disconnectTikTok(id){if(!await appConfirm("Disconnect this TikTok creator and revoke MyPersonas access? This does not delete the account or its posts."))return;if(!await requireAal2ForSensitiveAction("disconnect a TikTok creator"))return;const result=await tiktokOAuthAction("disconnect",id);if(result.error){await loadMine();acctTab="accounts";renderStudio();toast(result.error);return}await loadMine();acctTab="accounts";renderStudio();toast("TikTok access was revoked and the local credential was removed.")}
+async function confirmManualTikTokRevocation(id){if(!await appConfirm("Continue only if you already revoked MyPersonas in TikTok Manage app permissions. This clears the retained encrypted token after an ambiguous provider result."))return;if(!await requireAal2ForSensitiveAction("reset a revoked TikTok connection"))return;const result=await tiktokOAuthAction("reset",id,{manualRevocationAcknowledged:true});if(result.error){toast(result.error);return}await loadMine();acctTab="accounts";renderStudio();toast("Manual TikTok revocation acknowledged and the local connection was reset.")}
 async function discordOAuthAction(action,id=null,extra={}){
   const{data}=await sb.auth.getSession(),active=data&&data.session;if(!active||active.user.id!==session?.user?.id)return{error:"Sign in again before connecting Discord."};
   try{const payload=Object.assign({action},id?{ledgerId:id}:{},extra),response=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/discord-oauth",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+active.access_token},body:JSON.stringify(payload)}),result=await response.json().catch(()=>({}));return response.ok?{data:result,status:response.status}:{error:result.error||("Discord authorization failed (HTTP "+response.status+")"),details:result,status:response.status}}catch(error){return{error:"Could not reach Discord authorization: "+(error.message||error)}}
@@ -5502,7 +5580,7 @@ async function finishPendingDiscord(expectedUid=session?.user?.id||null,generati
   discordOAuthNotice={message:result.error||(result.data?.connected?`Discord channel ${result.data.webhookName||result.data.channelId||""} connected. Every message remains previewed and owner-triggered; scheduling is off.`:"Discord authorization did not complete.")};
 }
 async function disconnectDiscord(id){
-  if(!confirm("Disconnect this exact Discord channel and delete the provider webhook? This does not delete the server, channel, or messages already sent."))return;if(!await requireAal2ForSensitiveAction("disconnect a Discord channel"))return;const result=await discordOAuthAction("disconnect",id);if(result.error){toast(result.error+" The account remains visibly locked until Discord cleanup is proven.");await loadMine();acctTab="accounts";renderStudio();return}await loadMine();acctTab="accounts";renderStudio();toast("Discord confirmed webhook cleanup, OAuth revocation, and local credential removal.");
+  if(!await appConfirm("Disconnect this exact Discord channel and delete the provider webhook? This does not delete the server, channel, or messages already sent."))return;if(!await requireAal2ForSensitiveAction("disconnect a Discord channel"))return;const result=await discordOAuthAction("disconnect",id);if(result.error){toast(result.error+" The account remains visibly locked until Discord cleanup is proven.");await loadMine();acctTab="accounts";renderStudio();return}await loadMine();acctTab="accounts";renderStudio();toast("Discord confirmed webhook cleanup, OAuth revocation, and local credential removal.");
 }
 async function twitchOAuthAction(action,id=null,extra={}){
   const{data}=await sb.auth.getSession(),active=data&&data.session;if(!active||active.user.id!==session?.user?.id)return{error:"Sign in again before connecting Twitch."};
@@ -5521,7 +5599,7 @@ async function startTwitchConnection(id){
 }
 async function finishPendingTwitch(expectedUid=session?.user?.id||null,generation=authLoadGeneration){if(!twitchOAuthPending||twitchOAuthCompleting||!expectedUid||session?.user?.id!==expectedUid||generation!==authLoadGeneration)return;const pending=twitchOAuthPending;twitchOAuthPending=null;twitchOAuthCompleting=true;const result=await twitchOAuthAction("complete",null,pending);twitchOAuthCompleting=false;if(session?.user?.id!==expectedUid||generation!==authLoadGeneration)return;twitchOAuthNotice={message:result.error||(result.data?.connected?`Twitch broadcaster @${result.data.broadcasterLogin||""} connected for only the selected features. General posting remains unavailable.`:"Twitch authorization did not complete.")}}
 async function refreshTwitch(id){if(!await requireAal2ForSensitiveAction("refresh Twitch access"))return;const result=await twitchOAuthAction("refresh",id);await loadMine();acctTab="accounts";renderStudio();toast(result.error||"Twitch identity and feature scopes were revalidated.")}
-async function disconnectTwitch(id){if(!confirm("Disconnect this exact Twitch broadcaster and revoke MyPersonas feature access? This does not delete the channel or its content."))return;if(!await requireAal2ForSensitiveAction("disconnect Twitch"))return;const result=await twitchOAuthAction("disconnect",id);await loadMine();acctTab="accounts";renderStudio();toast(result.error?result.error+" The connection remains locked until provider revocation is proven.":"Twitch confirmed revocation and local credential cleanup.")}
+async function disconnectTwitch(id){if(!await appConfirm("Disconnect this exact Twitch broadcaster and revoke MyPersonas feature access? This does not delete the channel or its content."))return;if(!await requireAal2ForSensitiveAction("disconnect Twitch"))return;const result=await twitchOAuthAction("disconnect",id);await loadMine();acctTab="accounts";renderStudio();toast(result.error?result.error+" The connection remains locked until provider revocation is proven.":"Twitch confirmed revocation and local credential cleanup.")}
 async function patreonOAuthAction(action,id=null,extra={}){
   const{data}=await sb.auth.getSession(),active=data&&data.session;if(!active||active.user.id!==session?.user?.id)return{error:"Sign in again before connecting Patreon."};
   try{const payload=Object.assign({action},id?{ledgerId:id}:{},extra),response=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/patreon-oauth",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+active.access_token},body:JSON.stringify(payload)}),result=await response.json().catch(()=>({}));return response.ok?{data:result,status:response.status}:{error:result.error||("Patreon request failed (HTTP "+response.status+")"),details:result,status:response.status}}catch(error){return{error:"Could not reach Patreon: "+(error.message||error)}}
@@ -5534,7 +5612,7 @@ function openPatreonCampaignSelection(){const selection=patreonCampaignSelection
 async function selectPatreonCampaign(){const selection=patreonCampaignSelection,campaignId=document.querySelector('input[name="patreonCampaign"]:checked')?.value||"";if(!selection?.ledgerId||!campaignId){toast("Choose one Patreon campaign");return}if(!await requireAal2ForSensitiveAction("bind a Patreon campaign"))return;const result=await patreonOAuthAction("select-campaign",selection.ledgerId,{campaignId});if(result.error){toast(result.error);return}patreonCampaignSelection=null;document.getElementById("patreonCampaignOv")?.remove();await loadMine();acctTab="accounts";renderStudio();toast(`Patreon campaign ${result.data?.campaign?.name||campaignId} bound for read/report and native-editor handoff.`)}
 async function refreshPatreon(id){if(!await requireAal2ForSensitiveAction("refresh Patreon access"))return;const result=await patreonOAuthAction("refresh",id);await loadMine();acctTab="accounts";renderStudio();toast(result.error||"Patreon campaign access was revalidated.")}
 async function loadPatreonReport(id){if(!await requireAal2ForSensitiveAction("read a Patreon post report"))return;const result=await patreonOAuthAction("report",id);if(result.error){toast(result.error);return}const data=result.data||{},overlay=document.createElement("div");overlay.className="overlay";overlay.id="patreonReportOv";overlay.innerHTML=`<div class="wizbox" role="dialog" aria-modal="true"><h2>${esc(data.campaignName||"Patreon campaign")} · existing posts</h2><p class="muted">Read-only API v2 report. No post was created, edited, scheduled, or deleted.</p><div class="schedulelist">${(data.posts||[]).map(post=>`<div class="scheduleitem"><b>${esc(post.title||post.id||"Post")}</b><br><span class="muted">${esc(post.published_at||"")}${post.is_public===true?" · public":""}${post.is_paid===true?" · paid":""}</span>${safeHttpUrl(post.url)?`<br><a href="${esc(safeHttpUrl(post.url))}" target="_blank" rel="noopener">Open on Patreon ↗</a>`:""}</div>`).join("")||'<p class="muted">No posts were returned.</p>'}</div><div class="autoformactions"><button class="btn sec" onclick="document.getElementById('patreonReportOv')?.remove()">Close</button></div></div>`;document.body.appendChild(overlay)}
-async function disconnectPatreon(id,manual=false){if(!manual&&!confirm("Disconnect this Patreon campaign? Patreon requires you to remove MyPersonas under connected apps before local credentials can be cleared."))return;if(!await requireAal2ForSensitiveAction("disconnect Patreon"))return;const result=await patreonOAuthAction("disconnect",id,{manualRevocationAcknowledged:manual===true});if(result.error&&result.details?.manualRevocationRequired){const url=safeHttpUrl(result.details.manualRevocationUrl)||"https://www.patreon.com/settings/apps";document.getElementById("patreonDisconnectOv")?.remove();const overlay=document.createElement("div");overlay.className="overlay";overlay.id="patreonDisconnectOv";overlay.innerHTML=`<div class="wizbox" role="dialog" aria-modal="true"><h2>Finish Patreon revocation</h2><p>Open Patreon's connected-app settings and remove MyPersonas first. Then return here and confirm. Local credentials remain locked until you do.</p><div class="autoformactions"><a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Open Patreon connected apps ↗</a><button class="btn danger" onclick="disconnectPatreon('${id}',true)">I removed MyPersonas — clear local access</button><button class="btn sec" onclick="document.getElementById('patreonDisconnectOv')?.remove()">Cancel</button></div></div>`;document.body.appendChild(overlay);return}await loadMine();acctTab="accounts";renderStudio();if(result.error){toast(result.error);return}document.getElementById("patreonDisconnectOv")?.remove();toast("Patreon provider revocation was owner-confirmed and local credentials were cleared.")}
+async function disconnectPatreon(id,manual=false){if(!manual&&!await appConfirm("Disconnect this Patreon campaign? Patreon requires you to remove MyPersonas under connected apps before local credentials can be cleared."))return;if(!await requireAal2ForSensitiveAction("disconnect Patreon"))return;const result=await patreonOAuthAction("disconnect",id,{manualRevocationAcknowledged:manual===true});if(result.error&&result.details?.manualRevocationRequired){const url=safeHttpUrl(result.details.manualRevocationUrl)||"https://www.patreon.com/settings/apps";document.getElementById("patreonDisconnectOv")?.remove();const overlay=document.createElement("div");overlay.className="overlay";overlay.id="patreonDisconnectOv";overlay.innerHTML=`<div class="wizbox" role="dialog" aria-modal="true"><h2>Finish Patreon revocation</h2><p>Open Patreon's connected-app settings and remove MyPersonas first. Then return here and confirm. Local credentials remain locked until you do.</p><div class="autoformactions"><a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Open Patreon connected apps ↗</a><button class="btn danger" onclick="disconnectPatreon('${id}',true)">I removed MyPersonas — clear local access</button><button class="btn sec" onclick="document.getElementById('patreonDisconnectOv')?.remove()">Cancel</button></div></div>`;document.body.appendChild(overlay);return}await loadMine();acctTab="accounts";renderStudio();if(result.error){toast(result.error);return}document.getElementById("patreonDisconnectOv")?.remove();toast("Patreon provider revocation was owner-confirmed and local credentials were cleared.")}
 async function metaOAuthAction(action,id=null,extra={}){
   const{data}=await sb.auth.getSession(),s=data&&data.session;
   if(!s)return{error:"Sign in again before connecting Meta."};
@@ -5603,9 +5681,9 @@ async function cancelPendingMetaAuthorization(manualAcknowledgement=false){
   if(metaOwnershipInvestigationActive()){toast("Do not revoke Meta access for this ownership-investigation hold. Recheck from the original MyPersonas sign-in or report the problem.");acctTab="accounts";renderStudio();return}
   const manual=(manualAcknowledgement||metaOAuthCapability.pendingAuthorizationManualRevocationRequired)&&metaOAuthCapability.manualRevocationSafe,providerRevoked=metaOAuthCapability.pendingAuthorizationProviderRevoked;
   const hasConnectedAssets=myAccountConnections.some(connection=>["facebook","instagram"].includes(connection.provider)&&connection.connection_state==="connected");
-  if(manual&&!confirm("Continue only if you already removed MyPersonas in Meta Business Integrations. One shared Meta grant covers every paired Facebook Page and linked Instagram account; this acknowledgement clears the retained encrypted token and shared local connection records."))return;
-  if(!manual&&!providerRevoked&&hasConnectedAssets&&!confirm("Cancel the previous Meta authorization and revoke the shared grant? Every Facebook Page and linked Instagram record already paired through it will be disconnected."))return;
-  if(!manual&&!providerRevoked&&!hasConnectedAssets&&!confirm("Cancel the previous Meta authorization and revoke its retained provider access? No new Page or Instagram record will be paired."))return;
+  if(manual&&!await appConfirm("Continue only if you already removed MyPersonas in Meta Business Integrations. One shared Meta grant covers every paired Facebook Page and linked Instagram account; this acknowledgement clears the retained encrypted token and shared local connection records."))return;
+  if(!manual&&!providerRevoked&&hasConnectedAssets&&!await appConfirm("Cancel the previous Meta authorization and revoke the shared grant? Every Facebook Page and linked Instagram record already paired through it will be disconnected."))return;
+  if(!manual&&!providerRevoked&&!hasConnectedAssets&&!await appConfirm("Cancel the previous Meta authorization and revoke its retained provider access? No new Page or Instagram record will be paired."))return;
   metaOAuthCancelling=true;setMetaActionBusy("cancel",true,providerRevoked?"Finishing cleanup…":"Revoking…");
   try{
     const result=await metaOAuthAction("cancel_pending",null,manual?{manualRevocationAcknowledged:true}:{});
@@ -5647,7 +5725,7 @@ async function enableMetaPublishing(id){
   if(capability.data?.postingEnabled===true){toast("This exact Meta destination already has a recorded write-ready grant. The publisher will still recheck it live before every post.");await loadMine();acctTab="accounts";renderStudio();return}
   const connectedProviders=new Set(myAccounts.filter(row=>["facebook","instagram"].includes(row.provider)&&ledgerConnectionInfo(row).state==="connected").map(row=>row.provider)),publishTargets=["facebook",...(connectedProviders.has("instagram")?["instagram"]:[])];
   const label=publishTargets.length===2?"Facebook Page and linked Instagram publishing":"Facebook Page publishing";
-  if(!confirm(`Authorize ${label} for the shared Meta grant? Meta will show the exact permissions on its consent screen. This does not schedule or publish anything, and existing Page bindings cannot be changed in this flow.`))return;
+  if(!await appConfirm(`Authorize ${label} for the shared Meta grant? Meta will show the exact permissions on its consent screen. This does not schedule or publish anything, and existing Page bindings cannot be changed in this flow.`))return;
   return connectMeta(id,{requestPublishing:true,publishTargets});
 }
 async function finishPendingMeta(expectedUid=session?.user?.id||null,generation=authLoadGeneration){
@@ -5739,8 +5817,8 @@ async function cancelMetaSelection(){
   if(metaOAuthCancelling||metaOAuthFinalizing)return;
   if(metaOwnershipInvestigationActive()){toast("This Meta ownership hold must be reviewed before provider access can be revoked. Do not cancel or revoke the shared integration from this state.");return}
   const acknowledged=selection.manualRevocationRequired===true,hasConnectedAssets=metaSelectionHasConnectedAssets(selection);
-  if(acknowledged&&!confirm(`Continue only if you already removed MyPersonas in Meta Business Integrations. This clears the retained encrypted token${hasConnectedAssets?" and disconnects every Page and linked Instagram record in the shared grant":""} after your provider-side revocation.`))return;
-  if(!acknowledged&&hasConnectedAssets&&!confirm("Cancel this selection and revoke the shared Meta grant? Every Facebook Page and linked Instagram record already paired through it will be disconnected."))return;
+  if(acknowledged&&!await appConfirm(`Continue only if you already removed MyPersonas in Meta Business Integrations. This clears the retained encrypted token${hasConnectedAssets?" and disconnects every Page and linked Instagram record in the shared grant":""} after your provider-side revocation.`))return;
+  if(!acknowledged&&hasConnectedAssets&&!await appConfirm("Cancel this selection and revoke the shared Meta grant? Every Facebook Page and linked Instagram record already paired through it will be disconnected."))return;
   metaOAuthCancelling=true;setMetaSelectionBusy(true,"cancel");
   try{
     const result=await metaOAuthAction("cancel",null,{selectionToken:selection.selectionToken,browserNonce:selection.browserNonce,...(acknowledged?{manualRevocationAcknowledged:true}:{})});
@@ -5790,7 +5868,7 @@ async function finalizeMetaSelection(){
 async function disconnectMeta(id){
   if(metaOAuthDisconnecting)return;
   if(metaOwnershipInvestigationActive()){toast("Do not revoke the shared Meta integration while the ownership-investigation hold is active. Recheck from the original MyPersonas sign-in or report the problem.");acctTab="accounts";renderStudio();return}
-  if(!confirm("Disconnect this shared Meta grant? This revokes MyPersonas access for every Facebook Page and linked Instagram account paired through the same Meta authorization. It does not delete external accounts or posts."))return;
+  if(!await appConfirm("Disconnect this shared Meta grant? This revokes MyPersonas access for every Facebook Page and linked Instagram account paired through the same Meta authorization. It does not delete external accounts or posts."))return;
   metaOAuthDisconnecting=true;setMetaActionBusy("disconnect",true,"Disconnecting…");
   try{
     const result=await metaOAuthAction("disconnect",id);if(result.error){await refreshMetaCleanupAfterError(result.details);await loadMine();if(result.details?.manualRevocationRequired)focusLedgerConnection(id);else{acctTab="accounts";renderStudio()}toast(result.error);return}
@@ -5799,7 +5877,7 @@ async function disconnectMeta(id){
 }
 async function confirmManualMetaRevocation(id){
   if(metaOwnershipInvestigationActive()){toast("Manual Meta revocation is disabled for this ownership-investigation hold. Do not revoke provider access; report the problem.");acctTab="accounts";renderStudio();return}
-  if(!confirm("Continue only if you already removed MyPersonas from Facebook Business Integrations. This deletes the retained encrypted Meta token copies and disconnects every Page and linked Instagram account in the shared grant."))return;
+  if(!await appConfirm("Continue only if you already removed MyPersonas from Facebook Business Integrations. This deletes the retained encrypted Meta token copies and disconnects every Page and linked Instagram account in the shared grant."))return;
   const result=await metaOAuthAction("reset",id,{manualRevocationAcknowledged:true});if(result.error){if(await refreshMetaCleanupAfterError(result.details)){acctTab="accounts";renderStudio()}toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();toast("Manual Meta revocation acknowledged and the shared local grant was removed.");
 }
@@ -5810,7 +5888,7 @@ async function deleteLedgerAccount(id){
   if(twitterManualRevoke){toggleLedgerAuth(id);toast("Revoke MyPersonas in X Connected Apps, then use “I revoked it — reset” before deleting this ledger record.");return}
   if(metaManualRevoke){toggleLedgerAuth(id);toast("Remove MyPersonas in Meta Business Integrations, then use “I removed it — reset” before deleting this ledger record.");return}
   const warning=gmailResetOnly?"Remove this failed Gmail ledger entry and its local token copy? The Google grant used by the account connected elsewhere will not be revoked.":twitterResetOnly?"Remove this failed local X ledger attempt? The X grant used by the account connected elsewhere will not be revoked.":isGmail?"Remove this account from your private ledger and revoke any stored Gmail access? The external Gmail account and messages will not be deleted.":isTwitter?"Remove this account from your private ledger and revoke any stored X access? The external X account and posts will not be deleted.":isReddit?"Remove this account from your private ledger, ask Reddit to revoke access, and delete the local token copies? The external Reddit account and posts will not be deleted.":isMeta&&connection?.connection_state==="connected"?"Remove this record and revoke the shared Meta grant? Every Facebook Page and linked Instagram account paired through that grant will be disconnected. External accounts and posts will not be deleted.":"Remove this account from your private ledger? This does not delete the external account.";
-  if(!confirm(warning))return;
+  if(!await appConfirm(warning))return;
   if(!await requireAal2ForSensitiveAction("disconnect and remove this account record"))return;
   if(isGmail){const disconnected=await gmailOAuthAction(gmailResetOnly?"reset":"disconnect",id);if(disconnected.error){toast(disconnected.error);return}}
   if(isTwitter&&connection&&["connected","error"].includes(connection.connection_state)){const disconnected=await twitterOAuthAction(twitterResetOnly?"reset":"disconnect",id);if(disconnected.error){await loadMine();if(disconnected.details&&disconnected.details.manualRevocationRequired)focusLedgerConnection(id);else{acctTab="accounts";renderStudio()}toast(disconnected.error);return}}
@@ -5893,7 +5971,7 @@ async function mfaDiscard(factorId){
 }
 async function mfaRemove(factorId,status="verified"){
   if(status==="verified"&&!await requireAal2ForSensitiveAction("remove this authenticator"))return;
-  if(!confirm("Remove this authenticator from your account?"))return;
+  if(!await appConfirm("Remove this authenticator from your account?"))return;
   const{error}=await sb.auth.mfa.unenroll({factorId});
   if(error){toast(error.message);return}
   const box=document.getElementById("mfaBox");if(box)box.innerHTML='<p class="muted">This authenticator was removed.</p><button class="btn sm sec" onclick="mfaStart()">Set up an authenticator</button>';
@@ -5940,7 +6018,7 @@ function showEraseProviderWarning(requiredProviders){
   document.body.appendChild(o);activateOwnerModal(o);document.getElementById("confirmEraseProviderRevocations").addEventListener("click",()=>{releaseOwnerModal("eraseProviderWarning");deleteAllContentConfirmed(acknowledged)});return true;
 }
 async function deleteAllContent(){
-  if(!confirm("Delete ALL your personas, pages, posts, albums, account ledger, drafts, tasks and linked models? This cannot be undone. Your sign-in record stays. Model keys are removed from AliaSpaces, but pasted provider keys are not revoked at their provider."))return;
+  if(!await appConfirm("Delete ALL your personas, pages, posts, albums, account ledger, drafts, tasks and linked models? This cannot be undone. Your sign-in record stays. Model keys are removed from AliaSpaces, but pasted provider keys are not revoked at their provider."))return;
   const hasMetaInvestigation=metaOwnershipInvestigationActive();
   if(hasMetaInvestigation){acctTab="accounts";renderStudio();toast("Content erasure is fail-closed during the Meta ownership investigation. Do not revoke provider access; recheck from the original MyPersonas sign-in or report the problem.");return}
   const hasOpenRouter=myBackends.some(isOpenRouterBackend),hasAmbiguousX=myAccountConnections.some(c=>c.provider==="twitter"&&c.error_code==="x_manual_revoke_required"),hasAmbiguousMeta=myAccountConnections.some(c=>["facebook","instagram"].includes(c.provider)&&c.error_code==="meta_manual_revoke_required")||(metaOAuthCapability.pendingAuthorizationCleanupRequired&&metaOAuthCapability.pendingAuthorizationManualRevocationRequired&&metaOAuthCapability.manualRevocationSafe);
@@ -6339,7 +6417,7 @@ async function handleOAuthReturn(expectedUid=session?.user?.id||null,generation=
     if(!pending||typeof pending.verifier!=="string"||typeof pending.createdAt!=="number"||Date.now()-pending.createdAt>10*60*1000){toast("This OpenRouter connection expired. Start it again; no key was requested.");return}
     if(!s||s.user.id!==pending.initiatingUserId||session?.user?.id!==pending.initiatingUserId||expectedUid!==pending.initiatingUserId||generation!==authLoadGeneration){toast("The signed-in account changed. Start OpenRouter again from the correct account; no key was requested.");return}
     const initiatingUid=s.user.id,initiatingGeneration=generation;
-    const model=(prompt("OpenRouter is ready to connect. Enter the model id you want this agent to use (you can edit it later):","")||"").trim();
+    const model=(await appPrompt("OpenRouter is ready to connect. Enter the model id you want this agent to use (you can edit it later):","")||"").trim();
     const fresh=await sb.auth.getSession(),freshSession=fresh.data&&fresh.data.session;
     if(!freshSession||freshSession.user.id!==initiatingUid||session?.user?.id!==initiatingUid||authLoadGeneration!==initiatingGeneration){toast("The signed-in account changed. Start OpenRouter again; no key was requested.");return}
     exchangeStarted=true;
@@ -6464,7 +6542,7 @@ function ownerDraftImageFieldLabel(d,field,label){
 async function ownerDraftGenerateImageText(id,field){
   const draft=myDrafts.find(row=>row.id===id),inputIds={title:"deTitle",body:"deBody",tags:"deTags"},input=document.getElementById(inputIds[field]),mediaInput=document.getElementById("deMedia"),button=document.getElementById(`deGenerate_${field}_${id}`);if(!draft||!input||!mediaInput||!button||!PUBLIC_PERSONA_UUID.test(String(draft.media_asset_id||"")))return;
   const savedMedia=String(draft.media_url||"");if(mediaInput.value!==savedMedia){toast("Save or import the changed image first, then reopen this draft to generate from it");return}
-  const originalValue=input.value,originalMedia=mediaInput.value,originalAsset=String(draft.media_asset_id||"");if(originalValue.trim()&&!confirm("Replace the current text with a new AI suggestion based on this image?"))return;
+  const originalValue=input.value,originalMedia=mediaInput.value,originalAsset=String(draft.media_asset_id||"");if(originalValue.trim()&&!await appConfirm("Replace the current text with a new AI suggestion based on this image?"))return;
   const original=button.textContent;button.disabled=true;button.textContent="Generating…";
   try{const generated=await requestRegisteredImageText({sourceType:"owner_draft",sourceId:id,field,expectedImageAssetId:originalAsset,expectedRevision:String(draft.updated_at||""),expectedMediaUrl:originalMedia});if(myDrafts.find(row=>row.id===id)!==draft||!document.contains(input)||input.value!==originalValue||mediaInput.value!==originalMedia||String(draft.media_asset_id||"")!==originalAsset)throw new Error("The Queue draft changed while the image was being analyzed");if(generated.imageAssetId!==originalAsset)throw new Error("The registered image changed while the Queue draft was being analyzed");input.value=generated.text;toast("Image-based suggestion inserted. Review and save the draft; nothing was approved or published.")}
   catch(error){toast(error?.message||"The image description could not be generated")}
@@ -6484,7 +6562,7 @@ function composerBriefGenerateState(){
 }
 async function composerGenerateBriefFromImage(){
   const input=document.getElementById("cmpBrief"),image=document.getElementById("cmpImg"),button=document.getElementById("cmpGenerateBrief"),assetId=String(image?.dataset.assetId||""),personaId=val("cmpPersona");if(!input||!image||!button||!PUBLIC_PERSONA_UUID.test(assetId)||image.dataset.personaId!==personaId){toast("Choose and prepare a registered image for this persona first");return}
-  const originalValue=input.value,originalImage=String(image.value||"");if(originalValue.trim()&&!confirm("Replace the current brief with a new AI suggestion based on this image?"))return;
+  const originalValue=input.value,originalImage=String(image.value||"");if(originalValue.trim()&&!await appConfirm("Replace the current brief with a new AI suggestion based on this image?"))return;
   const original=button.textContent;button.disabled=true;button.textContent="Generating…";
   try{const generated=await requestRegisteredImageText({sourceType:"persona_media_asset",sourceId:assetId,field:"brief",expectedImageAssetId:assetId,expectedMediaUrl:originalImage});if(!document.contains(input)||input.value!==originalValue||String(image.dataset.assetId||"")!==assetId||String(image.value||"")!==originalImage||val("cmpPersona")!==personaId)throw new Error("The selected image or persona changed while the image was being analyzed");if(generated.imageAssetId!==assetId)throw new Error("The server analyzed a different registered image; the suggestion was discarded");input.value=generated.text;toast("Image-based brief inserted. Review it before staging; nothing was saved or published.")}
   catch(error){toast(error?.message||"The image brief could not be generated")}
@@ -6492,7 +6570,7 @@ async function composerGenerateBriefFromImage(){
 }
 async function composerGenerateImageText(id,field){
   const d=composerDraftRows.get(id),inputId=field==="fb_caption"?"cmpFb_"+id:field==="ig_caption"?"cmpIg_"+id:"cmpX_"+id,input=document.getElementById(inputId),button=document.getElementById("cmpGenerate_"+field+"_"+id),platform=field==="fb_caption"?"facebook":field==="ig_caption"?"instagram":"twitter",assetId=composerMediaAssetId(d,platform);if(!d||!input||!button||!PUBLIC_PERSONA_UUID.test(assetId))return;
-  const originalValue=input.value,originalImage=composerMediaUrl(d,platform);if(originalValue.trim()&&!confirm("Replace the current text with a new AI suggestion based on this image?"))return;
+  const originalValue=input.value,originalImage=composerMediaUrl(d,platform);if(originalValue.trim()&&!await appConfirm("Replace the current text with a new AI suggestion based on this image?"))return;
   const original=button.textContent;button.disabled=true;button.textContent="Generating…";
   try{const generated=await requestRegisteredImageText({sourceType:"post_draft",sourceId:id,field,expectedImageAssetId:assetId,expectedRevision:String(d.updated_at||""),expectedMediaUrl:originalImage});if(composerDraftRows.get(id)!==d||!document.contains(input)||input.value!==originalValue||composerMediaUrl(d,platform)!==originalImage||composerMediaAssetId(d,platform)!==assetId)throw new Error("The draft changed while the image was being analyzed");if(generated.imageAssetId!==assetId)throw new Error("The server analyzed a different registered image; the suggestion was discarded");input.value=generated.text;composerPreviewProofs.delete(id);if(field==="x_caption")composerXCount(id);toast("Image-based draft inserted. Review it and save edits before approval.")}
   catch(error){toast(error?.message||"The image description could not be generated")}
@@ -6650,7 +6728,7 @@ async function composerCommitSchedule(id,receiptId){
   try{const{data:{session:active}}=await sb.auth.getSession();if(!active||active.user.id!==owner){toast("Your signed-in account changed; nothing was scheduled");return}const response=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/approve-post-draft",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+active.access_token},body:JSON.stringify({action:"commit-schedule",draftId:id,receiptId})}),result=await response.json().catch(()=>({}));if(session?.user?.id!==owner)return;if(!response.ok||!result.draft){toast(result.error||`The acknowledged schedule could not be committed (HTTP ${response.status})`);return}toast("Exact preview receipt consumed; scheduled while the background publisher remains dormant")}catch(error){toast("The commit response was lost. Reload before attempting anything else; the one-shot receipt prevents a duplicate commit.")}finally{if(session?.user?.id===owner)composerRefresh()}
 }
 async function composerUnschedule(id){
-  composerPreviewProofs.delete(id);if(!confirm("Unschedule this draft and clear its approval?"))return;const{data,error}=await sb.rpc("unschedule_post_draft",{p_draft_id:id});toast(error?error.message:data?"Unscheduled; edit and approve it again":"The draft changed; reloading");composerRefresh();
+  composerPreviewProofs.delete(id);if(!await appConfirm("Unschedule this draft and clear its approval?"))return;const{data,error}=await sb.rpc("unschedule_post_draft",{p_draft_id:id});toast(error?error.message:data?"Unscheduled; edit and approve it again":"The draft changed; reloading");composerRefresh();
 }
 async function composerPublish(id){
   const d=composerDraftRows.get(id),edits=composerEdits(id),proof=composerPreviewProofs.get(id);if(!d||!edits)return;const targets=edits.targets;if(targets.includes("twitter")){toast("X publishing is not wired yet. Uncheck X before publishing the Meta variants; its caption remains saved.");return}if(!targets.some(t=>t==="facebook"||t==="instagram")){toast("Choose Facebook or Instagram");return}let binding;try{binding=await composerPreviewBinding(d,targets)}catch(error){toast(error.message);return}const currentKey=composerPreviewKey(id,d,edits,"",autoTz(),binding,"Publish immediately");if(!proof||proof.mode!=="publish"||proof.key!==currentKey){composerPreviewProofs.delete(id);toast("Open and approve the current platform previews before publishing.");return}composerPreviewProofs.delete(id);
@@ -6666,7 +6744,7 @@ async function composerExecutePreparedPublish(id,receiptId){
   try{const sent=await providerPostAction("meta-post",{action:"publish-draft",draftId:id,receiptId});if(session?.user?.id!==owner)return;if(sent.error){toast(sent.details?.reconciliationRequired?"A provider result is uncertain. Reconcile this locked draft before retrying.":sent.error);return}toast(sent.data?.status==="posted"?"Published and provider results saved":"Publish incomplete: "+(sent.data?.errors||[]).join(" | "))}catch(error){toast("The publish service could not be reached. Reload before deciding whether to retry.")}finally{composerRefresh()}
 }
 async function composerDelete(id){
-  if(!confirm("Delete this unpublished draft?"))return;const{data,error}=await sb.rpc("delete_post_draft",{p_draft_id:id});toast(error?error.message:data?"Deleted":"The draft changed; reloading");composerRefresh();
+  if(!await appConfirm("Delete this unpublished draft?"))return;const{data,error}=await sb.rpc("delete_post_draft",{p_draft_id:id});toast(error?error.message:data?"Deleted":"The draft changed; reloading");composerRefresh();
 }
 function siteGo(h){closeSiteMenu();go(h);}
 function goAccount(){closeSiteMenu();go('studio');setTimeout(()=>{const el=document.getElementById('acctTabs');if(el){if(window.switchAcctTab)switchAcctTab('profile');el.scrollIntoView({behavior:'smooth',block:'start'});}},90);}
@@ -6689,6 +6767,6 @@ async function renderTag(tag,epoch=++renderEpoch){
 }
 
 </script>
-<script src="./cms-connector-ui.js?v=20260830-1"></script>
+<script src="./cms-connector-ui.js?v=20261011-1"></script>
 </body>
 </html>

@@ -110,7 +110,7 @@ function restoreGuardCore(html) {
   const source = html.slice(start, end);
   return new Function("initialSession", "initialGeneration", `
     let session=initialSession,authLoadGeneration=initialGeneration;
-    const toast=()=>{},confirm=()=>false;
+    const toast=()=>{},appConfirm=async()=>false;
     ${source}
     return {
       RESTORE_MAX_FILE_BYTES,RESTORE_MAX_TOTAL_ROWS,RESTORE_SECTION_LIMITS,
@@ -149,7 +149,7 @@ test("restore guards reject oversized and over-row backups before mutation", asy
   );
   const fromFile = html.slice(html.indexOf("function restoreFromFile"), html.indexOf("async function restoreImport"));
   assert.match(fromFile, /f\.size>RESTORE_MAX_FILE_BYTES[\s\S]*?new FileReader\(\)/);
-  assert.match(fromFile, /validateRestoreImport\(data,f\.size\)[\s\S]*?confirm\(/);
+  assert.match(fromFile, /validateRestoreImport\(data,f\.size\)[\s\S]*?appConfirm\(/);
 });
 
 test("restore await guard stops before or immediately after logout and account switch", async () => {

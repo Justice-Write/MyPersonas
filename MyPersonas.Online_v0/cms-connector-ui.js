@@ -216,7 +216,7 @@
   ) {
     if (!CMS_PROVIDERS.has(provider)) return;
     const warning = provider === "wix" ? "Remove MyPersonas' local Wix instance credential? You must then uninstall the app in Wix to revoke provider access. Existing Wix drafts remain." : "Remove MyPersonas' local WordPress credential? You must then revoke the connected app or Application Password at WordPress. Existing drafts remain.";
-    if (!confirm(warning)) return;
+    if (!await appConfirm(warning)) return;
     if (
       !await requireAal2ForSensitiveAction(
         `disconnect ${providerName(provider)}`,
@@ -544,7 +544,7 @@
     providerDraftId,
     exactTargetId,
   ) {
-    const typedDraft = (prompt(
+    const typedDraft = (await appPrompt(
       `To move this provider draft to Trash, type its exact ${providerName(provider)} draft ID:\n${providerDraftId}`,
       "",
     ) || "").trim();
@@ -552,7 +552,7 @@
       toast("Provider draft ID did not match. Nothing was changed.");
       return;
     }
-    const typedTarget = (prompt(
+    const typedTarget = (await appPrompt(
       `Now type the exact bound site/author target:\n${exactTargetId}`,
       "",
     ) || "").trim();
@@ -600,7 +600,7 @@
     providerDraftId,
     exactTargetId,
   ) {
-    const typedDraft = (prompt(
+    const typedDraft = (await appPrompt(
       `After confirming this item is visibly in provider Trash, type its exact ${providerName(provider)} draft ID:\n${providerDraftId}`,
       "",
     ) || "").trim();
@@ -610,7 +610,7 @@
       );
       return;
     }
-    const typedTarget = (prompt(
+    const typedTarget = (await appPrompt(
       `Type the exact bound site/author target:\n${exactTargetId}`,
       "",
     ) || "").trim();
