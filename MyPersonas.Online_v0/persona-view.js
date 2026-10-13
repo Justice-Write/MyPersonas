@@ -3,7 +3,7 @@
 // Persona view never changes authentication. It freezes one exact owned persona
 // as the social actor, while server projections decide what that actor may see.
 const PERSONA_VIEW_OWNER_ROUTES = new Set([
-  "studio", "edit", "review", "persona-settings", "business-settings",
+  "create", "library", "studio", "edit", "review", "persona-settings", "business-settings",
   "agent-board", "platform-queue", "briefs", "schedule", "fan-inbox",
   "activity", "notifications", "discovery", "onboard",
 ]);

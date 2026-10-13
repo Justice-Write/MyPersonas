@@ -1,5 +1,7 @@
 # Persona Studio — Local Architecture & Build Plan
 
+> October 13: the existing Soul Concept Persona Studio was inspected before building the website creative workspace. See docs/CREATIVE-WORKSPACE-2026-10-13.md for implemented website/library/OpenArt scope, tests, and release boundaries. Do not build a duplicate desktop studio from this document.
+
 > Scope locked: **image + video generation + audio/voice/song attachment to video.**
 > Out of scope for this pass: song/voice/3D *generation* engines (those are separate
 > modules you already have elsewhere). 3D *conversion* (meshy-style) is an export

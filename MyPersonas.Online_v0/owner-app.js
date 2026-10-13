@@ -70,6 +70,7 @@ const ownerAppState = {
 };
 
 function ownerAppReset() {
+  if(typeof creativeReset === "function")creativeReset();
   if (typeof ownerAppFanTimer !== "undefined" && ownerAppFanTimer) { clearInterval(ownerAppFanTimer); ownerAppFanTimer = null; }
   document.getElementById("ownerFanModal")?.remove();
   ownerAppState.uid = "";
@@ -966,7 +967,8 @@ function ownerAppRenderHome() {
   const plan = (myContentPlans || []).find((row) => row.persona_id === persona.id);
   const route = ownerAppState.modelRoutes.find((row) => row.persona_id === persona.id && row.route_key === "persona_chat" && row.route_role === "primary" && row.enabled !== false);
   app.innerHTML = `<div class="oa-shell">
-    ${ownerAppTopbar("Today")}${ownerAppPickerHtml("owner")}
+    ${ownerAppTopbar("Your creative home", "MyPersonas · Owner workspace")}${ownerAppPickerHtml("owner")}
+    <div class="cw-dashboard"><a href="#/create"><b>Create</b><small>Shape a brief with OpenArt</small></a><a href="#/library"><b>Media library</b><small>Bring your work together</small></a><a href="#/schedule"><b>Review drafts</b><small>Check the exact kit before approval</small></a></div>
     <section class="oa-hero"><div class="oa-hero-grid"><div><span class="oa-eyebrow" style="color:#d9e8ff">Private owner view</span>
       <h2>${esc(persona.name)}</h2><p>${esc(persona.tagline || persona.purpose || "Give this persona a clear purpose, voice, and area of focus.")}</p></div>
       <span class="oa-hero-avatar" style="${safeBgStyle(persona.avatar_url)}"></span></div>

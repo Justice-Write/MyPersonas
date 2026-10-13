@@ -1,5 +1,7 @@
 # MyPersonas automation control plane — Roadmap
 
+> October 13: the existing Soul Concept Persona Studio was inspected before building the website creative workspace. See ../docs/CREATIVE-WORKSPACE-2026-10-13.md for implemented website/library/OpenArt scope, tests, and release boundaries. Do not build a duplicate desktop studio from this document.
+
 > September 27 update: see ../docs/IDENTITY-EXECUTION-2026-09-27.md for current local implementation, tests, source recovery, and remaining engineering/owner dependencies. Earlier dated live-state counts below are historical.
 
 **Vision:** the private owner control plane for every persona a person carries:

@@ -4,19 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
-<title>AliaSpaces — every persona, one home</title>
-<meta name="description" content="A home page for every side of you. Create anonymous persona pages with feeds, albums, music, Top 8 friends and every account you live on — never linked to your identity.">
+<title>MyPersonas — your private creative workspace</title>
+<meta name="description" content="Organize your personas, selected creative media, and private drafts in one owner workspace. Review exact previews before approval.">
 <meta name="keywords" content="personas, anonymous social network, creator page, link in bio, virtual influencer, persona pages, AI personas, creator hub">
+<link rel="stylesheet" href="./creative-workspace.css?v=20261013-1">
 <link rel="canonical" href="https://mypersonas.online/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="AliaSpaces">
-<meta property="og:title" content="AliaSpaces — every persona, one home">
-<meta property="og:description" content="A home page for every side of you. Anonymous persona pages with feeds, albums, music, Top 8 and all your links.">
+<meta property="og:site_name" content="MyPersonas">
+<meta property="og:title" content="MyPersonas — your private creative workspace">
+<meta property="og:description" content="Your personas, creative media and private drafts, together in one owner workspace.">
 <meta property="og:image" content="https://mypersonas.online/assets/hero.png">
 <meta property="og:url" content="https://mypersonas.online/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AliaSpaces — every persona, one home">
-<meta name="twitter:description" content="A home page for every side of you. Anonymous persona pages with feeds, albums, music, Top 8 and all your links.">
+<meta name="twitter:title" content="MyPersonas — your private creative workspace">
+<meta name="twitter:description" content="Your personas, creative media and private drafts, together in one owner workspace.">
 <meta name="twitter:image" content="https://mypersonas.online/assets/hero.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"AliaSpaces","url":"https://mypersonas.online/","description":"A home page for every side of you — anonymous persona pages with feeds, albums, music and links."}</script>
 <link rel="icon" type="image/x-icon" href="./favicon.ico" sizes="any">
@@ -383,7 +384,7 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.6A8 8 0 1 1 9.4 4 6.5 6.5 0 0 0 20 14.6Z"/></symbol>
   <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol></svg>
 <header>
-  <h1 onclick="go('')">AliaSpaces</h1>
+  <h1 id="siteIdentity" onclick="go('')">MyPersonas</h1>
   <input id="gsearch" placeholder="find personas..." onkeydown="if(event.key==='Enter')go('search/'+encodeURIComponent(this.value))">
   <div id="personaViewSwitcher" class="persona-view-switcher" hidden aria-label="MyPersonas view">
     <button id="overviewModeBtn" type="button" aria-pressed="true" onclick="ownerAppSetViewMode('overview')">Overview</button>
@@ -392,7 +393,10 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
   </div>
   <nav>
     <button data-persona-nav onclick="go('')">Entangle</button>
-    <button id="primaryHomeBtn" onclick="go('owner')">Home</button>
+    <button id="primaryHomeBtn" onclick="go('owner')">Personas</button>
+    <button data-overview-nav onclick="go('create')">Create</button>
+    <button data-overview-nav onclick="go('library')">Library</button>
+    <button data-overview-nav onclick="go('schedule')">Review</button>
     <button data-overview-nav onclick="go('studio')">Matrix<span id="reqBadge" class="badge" style="display:none"></span></button>
     <button data-overview-nav onclick="go('briefs')">Briefings<span id="discBadge" class="badge" style="display:none"></span></button>
     <button data-persona-nav id="personaMyPageBtn" hidden onclick="openActingPersonaPage()">My page</button>
@@ -401,7 +405,9 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
       <div id="siteMenu">
         <button onclick="siteGo('')">Discover (Entangle)</button>
         <button onclick="siteGo('owner')">Owner home</button>
-        <button onclick="siteGo('studio')">Your studio (Matrix)</button>
+        <button onclick="siteGo('create')">Create with OpenArt</button>
+        <button onclick="siteGo('library')">Private media library</button>
+        <button onclick="siteGo('studio')">Accounts &amp; tools (Matrix)</button>
         <button onclick="siteGo('briefs')">Briefings &amp; research</button>
         <button onclick="siteGo('schedule')">Four-channel post schedule</button>
         <button onclick="siteGo('activity')">Persona activity</button>
@@ -437,6 +443,8 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
   <section class="oa-mobile-more-panel">
     <div class="oa-mobile-more-head"><div><span class="oa-eyebrow">Owner tools</span><h2 id="ownerMobileMoreTitle">More</h2></div><button type="button" class="oa-close" aria-label="Close owner tools" onclick="ownerAppToggleMore(false)">×</button></div>
     <div class="oa-mobile-more-grid">
+      <button type="button" onclick="ownerAppMobileGo('create')"><span>✦</span><b>Create</b><small>OpenArt &amp; creative references</small></button>
+      <button type="button" onclick="ownerAppMobileGo('library')"><span>▧</span><b>Library</b><small>Your private media collection</small></button>
       <button type="button" onclick="ownerAppMobilePrivateDraft()"><span>✎</span><b>Private draft</b><small>Owner-only kit · never publishes</small></button>
       <button type="button" onclick="ownerAppMobileGo('activity')"><span>◷</span><b>Activity</b><small>Persona operations trail</small></button>
       <button type="button" onclick="ownerAppMobileGo('notifications')"><span>◉</span><b>Notifications</b><small id="ownerMobileNoticeSummary">All caught up</small></button>
@@ -468,6 +476,8 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
   </aside>
 </div>
 <script src="./mobile-owner-workflow.js?v=20260920-2"></script>
+<script src="./creative-media.js?v=20261013-1"></script>
+<script src="./creative-workspace.js?v=20261013-1"></script>
 <script src="./owner-app.js?v=20260920-2"></script>
 <script src="./persona-view.js?v=20260828-1"></script>
 <script src="./platform-governance.js?v=20260830-1"></script>
@@ -1189,11 +1199,15 @@ async function route(){
   if(document.getElementById("pageBuilderOv"))closePageBuilder(false);
   setMeta("AliaSpaces — every persona, one home","A home page for every side of you. Create anonymous persona pages with feeds, albums, music, Top 8 friends and every account you live on — never linked to your identity.");
   const myEpoch=++renderEpoch;
+  if(typeof creativeReset==="function")creativeReset();
   if(typeof ownerAppToggleMore==="function")ownerAppToggleMore(false,false);
   const h=location.hash.replace(/^#\//,"");
   document.body.classList.remove("custom-bg");document.body.style.backgroundImage="";
   document.body.classList.toggle("app-bg",!!session);
   const view=h.split("/")[0],arg=decodeURIComponent(h.split("/").slice(1).join("/")||"");
+  const ownerSurface=["owner","create","library","schedule","briefs","activity","notifications","studio"].includes(view)||!view;
+  document.getElementById("siteIdentity").textContent=ownerSurface?"MyPersonas":"AliaSpaces";
+  if(ownerSurface)setMeta("MyPersonas — your private creative workspace","Organize your personas, selected creative media, and private drafts in one owner workspace. Review exact previews before approval.");
   if(typeof personaViewRouteGuard==="function"&&personaViewRouteGuard(view))return;
   if(typeof ownerAppSelectRoutePersona==="function")ownerAppSelectRoutePersona(view,arg);
   document.body.classList.toggle("owner-authenticated",!!session&&privateSessionReady);
@@ -1201,6 +1215,7 @@ async function route(){
   if(typeof syncPersonaViewChrome==="function")syncPersonaViewChrome();
   if(typeof ownerAppMobileNav==="function")ownerAppMobileNav();
   if(session&&!privateSessionReady){if(mfaLoginGate.active)renderMfaLoginGate();else app.innerHTML='<div class="empty">Checking sign-in security…</div>';return}
+  if(!session&&!view)return renderCreativeLanding();
   if(view==="p")return renderPersonaPage(arg,false,myEpoch);
   if(view==="review")return renderPublicationReview(arg);
   if(view==="persona-settings")return renderPersonaSettings(arg);
@@ -1210,6 +1225,7 @@ async function route(){
   if(view==="friend-invite")return renderFriendInvite(arg);
   if(view==="b")return renderBusinessPage(arg);
   if(view==="owner"&&typeof ownerAppIsPersonaMode==="function"&&ownerAppIsPersonaMode())return renderPersonaViewHome(myEpoch);
+  if(view==="create"||view==="library")return renderCreativeWorkspace(view);
   if(view==="owner")return renderOwnerCommandCenter();
   if(view==="briefs")return renderOwnerBriefs(arg);
   if(view==="schedule")return renderOwnerSchedule(arg);

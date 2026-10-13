@@ -345,6 +345,7 @@ async function eraseOwnedStorage(admin: SupabaseClient, uid: string) {
     { bucket: "persona-media", prefix: normalizedOwner },
     { bucket: "persona-docs", prefix: normalizedOwner },
     { bucket: "speech-private", prefix: normalizedOwner },
+    { bucket: "creative-private", prefix: normalizedOwner },
     {
       bucket: "post-approved-media",
       prefix: `owners/${normalizedOwner}`,
