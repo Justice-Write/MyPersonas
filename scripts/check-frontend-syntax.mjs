@@ -39,5 +39,9 @@ if (checked === 0) {
   console.error(`No inline scripts found in ${HTML} — check the extractor.`);
   process.exit(2);
 }
+for (const file of ["creative-media.js", "creative-workspace.js"]) {
+  try { new vm.Script(readFileSync("MyPersonas.Online_v0/" + file, "utf8"), { filename: file }); }
+  catch (err) { failures++; console.error(file + ": " + err.message); }
+}
 console.log(`Checked ${checked} inline script block(s) in ${HTML}.`);
 process.exit(failures > 0 ? 1 : 0);

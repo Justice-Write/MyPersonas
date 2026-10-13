@@ -96,6 +96,9 @@ jobs:
           rsync -a --delete \
             --prune-empty-dirs \
             --include '/index.html' \
+            --include '/creative-workspace.css' \
+            --include '/creative-workspace.js' \
+            --include '/creative-media.js' \
             --include '/owner-app.css' \
             --include '/owner-app.js' \
             --include '/image-caption-drafting.js' \

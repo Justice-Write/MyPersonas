@@ -1,5 +1,8 @@
 # MyPersonas automation control plane — Roadmap
 
+
+> October 13: the existing Soul Concept Persona Studio was inspected before building the website creative workspace. See ../docs/CREATIVE-WORKSPACE-2026-10-13.md for implemented website/library/OpenArt scope, tests, and release boundaries. Do not build a duplicate desktop studio from this document.
+
 **Vision:** the private owner control plane for every persona a person carries:
 AI/model routing, research, source libraries, approvals, provider automation,
 billing operations, staff operations, and auditable safety controls. AliaSpaces
