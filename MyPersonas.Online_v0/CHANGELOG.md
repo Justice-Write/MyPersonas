@@ -3,6 +3,29 @@
 Versioning per VERSIONING.md: majors are milestones, `.x` are roadmap items,
 trailing letters are hotfixes. Releases are git tags.
 
+## Content reports and staff moderation queue (local source) (2026-10-16)
+
+Status: **Implemented and tested locally; not applied to the linked database, not
+deployed.** Apply `sql-updates/080-content-reports-moderation-queue.sql` in the SQL
+Editor, then run `supabase/snippets/verify_080_content_reports.sql`.
+
+- `report_content(target_kind, target_id, reason, details, reporter_persona_id)`:
+  persona/post/comment targets; reasons spam, harassment, impersonation, illegal and
+  other; details up to 400 chars. Fails closed through `persona_visible` with one
+  generic error, so unknown, private, draft, blocked and muted targets are
+  indistinguishable. Own content can't be reported. A repeat active report returns the
+  same id. 20 per account per hour.
+- `staff_list_content_reports` and `staff_resolve_content_report`: global_administrator
+  or technician plus AAL2. Every status change appends to `content_report_events`.
+  Resolving records a decision only; it never unpublishes or deletes.
+- Tables have RLS with no policies and no client grants; anon can't execute.
+- Finding: symmetric blocking was already enforced server-side (migration 051's
+  `persona_visible` / `can_request` / `persona_mode_can_view`). The AliaSpaces roadmap
+  line that called blocking client-only was stale.
+- Tests: `tests/content-reports-moderation.test.mjs` (static); `npm run
+  test:content-reports-sql` or `scripts/test-content-reports-sql.sh` (disposable PG16,
+  migration applied twice). Full suite 533/533.
+
 ## Owner mobile workflow completion pass (local source) (2026-09-20)
 
 Status: **Implemented and tested locally; not pushed to production, not applied to

@@ -86,3 +86,12 @@ jobs:
       - name: Apply twice and test unrelated owners and storage policies
         shell: pwsh
         run: ./scripts/test-creative-library-sql.ps1
+
+  content-reports-moderation:
+    name: Content reports moderation SQL
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Apply twice and test reporting, block symmetry, staff AAL2 and audit
+        shell: pwsh
+        run: ./scripts/test-content-reports-sql.ps1
