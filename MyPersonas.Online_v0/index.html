@@ -1874,7 +1874,7 @@ const AUTO_LEVELS=[
 ];
 const AUTO_DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const HOSTED_TEXT_UNSUPPORTED=new Set(["elevenlabs","ollama","lmstudio"]);
-const BUILTIN_AUTOMATION_AI_HOSTS=new Set(["api.openai.com","openrouter.ai","api.anthropic.com","api.x.ai","generativelanguage.googleapis.com","api.groq.com","api.mistral.ai","api.deepseek.com","api.together.xyz","api.fireworks.ai","api.perplexity.ai","api.cohere.ai"]);
+const BUILTIN_AUTOMATION_AI_HOSTS=new Set(["api.openai.com","openrouter.ai","api.anthropic.com","api.x.ai","generativelanguage.googleapis.com","api.groq.com","api.mistral.ai","api.deepseek.com","api.together.ai","api.together.xyz","api.fireworks.ai","api.perplexity.ai","api.cohere.ai"]);
 function backendProvider(b){return String(b?.provider||"").trim().toLowerCase()}
 function backendAgentReady(b){
   if(!b||!myBackendCredentialIds.has(b.id)||HOSTED_TEXT_UNSUPPORTED.has(backendProvider(b))||!String(b.model||"").trim())return false;
@@ -2391,7 +2391,7 @@ function renderStudio(){
     </div>
     <div class="row" style="margin-top:6px">
       <div><label>API key <span id="nbKeyLink"><a href="${AI_PROVIDERS.openrouter.keyUrl}" target="_blank" rel="noopener">get your key ↗</a></span> ${fieldHelp("aiModel","API key and personality")}</label><input id="nbKey" type="password" placeholder="paste your key" autocomplete="off"></div>
-      <div><label>Model id <span id="nbModelHint" class="muted">${esc(AI_PROVIDERS.openrouter.modelHint||"")}</span> ${fieldHelp("aiModel","AI model selection")}</label><input id="nbModel" placeholder="${esc(AI_PROVIDERS.openrouter.modelHint||"model id")}"></div>
+      <div><label>Model id <span id="nbModelHint" class="muted">${esc(AI_PROVIDERS.openrouter.modelHint||"")}</span> ${fieldHelp("aiModel","AI model selection")}</label><input id="nbModel" list="nbModelList" placeholder="${esc(AI_PROVIDERS.openrouter.modelHint||"model id")}" autocomplete="off"><datalist id="nbModelList"></datalist><button type="button" class="btn sec sm" style="margin-top:4px" onclick="loadProviderModels()">Load models from provider</button> <span id="nbModelStatus" class="muted"></span></div>
     </div>
     <div id="nbExtra"></div>
     <div id="nbOAuth" style="margin-top:6px"><button class="btn sm sec" onclick="connectOpenRouter()">Connect with OpenRouter (OAuth)</button> <span class="muted">or paste a key above</span></div>
@@ -6285,18 +6285,18 @@ async function deleteComment(id,postId){
 
 // ----- AI provider picker (dropdown + autofill + per-provider fields + OAuth) -----
 const AI_PROVIDERS={
-  openrouter:{name:"OpenRouter",base:"https://openrouter.ai/api/v1",keyUrl:"https://openrouter.ai/keys",oauth:"openrouter",modelHint:"e.g. anthropic/claude-3.5-sonnet"},
-  openai:{name:"OpenAI",base:"https://api.openai.com/v1",keyUrl:"https://platform.openai.com/api-keys",modelHint:"e.g. gpt-4o"},
-  anthropic:{name:"Anthropic (Claude)",base:"https://api.anthropic.com/v1",keyUrl:"https://console.anthropic.com/settings/keys",modelHint:"e.g. claude-3-5-sonnet-latest"},
-  xai:{name:"xAI (Grok)",base:"https://api.x.ai/v1",keyUrl:"https://console.x.ai",modelHint:"e.g. grok-2-latest"},
-  google:{name:"Google Gemini",base:"https://generativelanguage.googleapis.com/v1beta/openai",keyUrl:"https://aistudio.google.com/apikey",modelHint:"e.g. gemini-1.5-pro"},
-  groq:{name:"Groq",base:"https://api.groq.com/openai/v1",keyUrl:"https://console.groq.com/keys",modelHint:"e.g. llama-3.3-70b-versatile"},
-  mistral:{name:"Mistral",base:"https://api.mistral.ai/v1",keyUrl:"https://console.mistral.ai/api-keys",modelHint:"e.g. mistral-large-latest"},
-  deepseek:{name:"DeepSeek",base:"https://api.deepseek.com/v1",keyUrl:"https://platform.deepseek.com/api_keys",modelHint:"e.g. deepseek-chat"},
-  together:{name:"Together AI",base:"https://api.together.xyz/v1",keyUrl:"https://api.together.ai/settings/api-keys",modelHint:"e.g. meta-llama/Llama-3.3-70B-Instruct-Turbo"},
-  fireworks:{name:"Fireworks AI",base:"https://api.fireworks.ai/inference/v1",keyUrl:"https://fireworks.ai/account/api-keys",modelHint:"e.g. accounts/fireworks/models/llama-v3p3-70b-instruct"},
+  openrouter:{name:"OpenRouter",base:"https://openrouter.ai/api/v1",keyUrl:"https://openrouter.ai/keys",oauth:"openrouter",modelHint:"e.g. anthropic/claude-sonnet-5-5 — or load the live list"},
+  openai:{name:"OpenAI",base:"https://api.openai.com/v1",keyUrl:"https://platform.openai.com/api-keys",modelHint:"e.g. gpt-6.1-sol or gpt-5.6-terra"},
+  anthropic:{name:"Anthropic (Claude)",base:"https://api.anthropic.com/v1",keyUrl:"https://console.anthropic.com/settings/keys",modelHint:"e.g. claude-sonnet-5-5 (no -latest aliases on 4.6+)"},
+  xai:{name:"xAI (Grok)",base:"https://api.x.ai/v1",keyUrl:"https://console.x.ai",modelHint:"e.g. grok-4.7"},
+  google:{name:"Google Gemini",base:"https://generativelanguage.googleapis.com/v1beta/openai",keyUrl:"https://aistudio.google.com/apikey",modelHint:"e.g. gemini-3.8-flash"},
+  groq:{name:"Groq",base:"https://api.groq.com/openai/v1",keyUrl:"https://console.groq.com/keys",modelHint:"load the live list"},
+  mistral:{name:"Mistral",base:"https://api.mistral.ai/v1",keyUrl:"https://console.mistral.ai/api-keys",modelHint:"load the live list"},
+  deepseek:{name:"DeepSeek",base:"https://api.deepseek.com",keyUrl:"https://platform.deepseek.com/api_keys",modelHint:"e.g. deepseek-chat"},
+  together:{name:"Together AI",base:"https://api.together.ai/v1",keyUrl:"https://api.together.ai/settings/api-keys",modelHint:"load the live list"},
+  fireworks:{name:"Fireworks AI",base:"https://api.fireworks.ai/inference/v1",keyUrl:"https://fireworks.ai/account/api-keys",modelHint:"load the live list"},
   perplexity:{name:"Perplexity",base:"https://api.perplexity.ai",keyUrl:"https://www.perplexity.ai/settings/api",modelHint:"e.g. sonar"},
-  cohere:{name:"Cohere",base:"https://api.cohere.ai/compatibility/v1",keyUrl:"https://dashboard.cohere.com/api-keys",modelHint:"e.g. command-r-plus"},
+  cohere:{name:"Cohere",base:"https://api.cohere.ai/compatibility/v1",keyUrl:"https://dashboard.cohere.com/api-keys",modelHint:"load the live list"},
   azure:{name:"Azure OpenAI",base:"https://YOUR-RESOURCE.openai.azure.com/openai/deployments/YOUR-DEPLOYMENT",keyUrl:"https://portal.azure.com",modelHint:"your deployment name",extra:[{key:"api_version",label:"API version",hint:"e.g. 2024-06-01",ph:"2024-06-01"}]},
   elevenlabs:{name:"ElevenLabs voice (not text automation)",base:"https://api.elevenlabs.io/v1",keyUrl:"https://elevenlabs.io/app/settings/api-keys",unsupported:true,modelHint:"Voice providers will be connected separately",extra:[{key:"voice_id",label:"Voice ID",hint:"from your ElevenLabs Voices page",ph:"e.g. 21m00Tcm4TlvDq8ikWAM"}]},
   ollama:{name:"Ollama local (not hosted automation)",base:"http://localhost:11434/v1",keyUrl:"",noKey:true,unsupported:true,modelHint:"Local device models cannot be reached by hosted agents"},
@@ -6315,6 +6315,26 @@ function onProviderPick(){
   set("nbModel",el=>el.placeholder=v.modelHint||"model id");
   set("nbExtra",el=>el.innerHTML=(v.extra||[]).map(f=>`<label>${esc(f.label)} ${f.hint?`<span class="muted">${esc(f.hint)}</span>`:""}</label><input id="nbx_${f.key}" placeholder="${esc(f.ph||"")}">`).join(""));
   set("nbOAuth",el=>el.innerHTML=v.oauth==="openrouter"?`<button class="btn sm sec" onclick="connectOpenRouter()">Connect with OpenRouter (OAuth)</button> <span class="muted">or paste a key above</span>`:(v.unsupported?'<span class="muted">This provider is shown for planning, but cannot be saved as a hosted text agent.</span>':""));
+}
+async function loadProviderModels(){
+  const sel=document.getElementById("nbProvider"),provider=sel?sel.value:"custom",pdef=AI_PROVIDERS[provider]||{};
+  const status=document.getElementById("nbModelStatus"),listEl=document.getElementById("nbModelList");if(!status||!listEl)return;
+  if(pdef.unsupported){status.textContent="Local and voice providers have no hosted model list.";return}
+  const baseUrl=document.getElementById("nbUrl").value.trim(),apiKey=document.getElementById("nbKey").value.trim();
+  if(!/^https:\/\//i.test(baseUrl)){status.textContent="Enter the HTTPS base URL first.";return}
+  if(!apiKey){status.textContent="Paste the API key first. It is sent once to list models and is not stored until you save.";return}
+  const extra={};(pdef.extra||[]).forEach(f=>{const el=document.getElementById("nbx_"+f.key);if(el&&el.value.trim())extra[f.key]=el.value.trim();});
+  const{data}=await sb.auth.getSession(),sess=data&&data.session;if(!sess){status.textContent="Sign in first.";return}
+  let burl=CONFIG.SUPABASE_URL||"";if(burl.endsWith("/"))burl=burl.slice(0,-1);
+  status.textContent="Loading…";
+  try{
+    const r=await fetch(burl+"/functions/v1/ai-models",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+sess.access_token},body:JSON.stringify({provider,baseUrl,apiKey,extra})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok){status.textContent=j.error||"The provider list could not be loaded.";return}
+    if(!j.listable){status.textContent="This provider has no model list API — type the model id.";listEl.innerHTML="";return}
+    listEl.innerHTML=(j.models||[]).map(m=>`<option value="${esc(m.id)}">${esc(m.label&&m.label!==m.id?m.label:"")}</option>`).join("");
+    status.textContent=(j.models||[]).length+" models — pick from the list or keep typing.";
+  }catch(e){status.textContent="The provider list could not be loaded.";}
 }
 async function connectOpenRouter(){
   if(!await requireAal2ForSensitiveAction("connect OpenRouter"))return;

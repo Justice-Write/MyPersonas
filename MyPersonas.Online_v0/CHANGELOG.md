@@ -3,6 +3,21 @@
 Versioning per VERSIONING.md: majors are milestones, `.x` are roadmap items,
 trailing letters are hotfixes. Releases are git tags.
 
+## AI connector refresh + live model lists (local source) (2026-10-16)
+
+Status: **Implemented and tested locally; not deployed.** Deploy `ai-models` before the
+"Load models from provider" button works.
+
+- Model hints updated to current vendor IDs (grok-4.7, gpt-6.1-sol, claude-sonnet-5-5,
+  gemini-3.8-flash); retired hints removed. Anthropic hint notes there are no `-latest`
+  aliases for 4.6+.
+- New `ai-models` edge function lists a provider's models through the same reviewed host
+  policy as the persona text proxy; owner form gains a model picker.
+- Together default moved to `api.together.ai`, DeepSeek default to the root URL; legacy
+  saved URLs keep resolving.
+- Drift guard `tests/ai-provider-catalog-drift.test.mjs` ties the UI catalog to the server
+  policy. Audit: `docs/CONNECTOR-AUDIT-2026-10-16.md`.
+
 ## Owner mobile workflow completion pass (local source) (2026-09-20)
 
 Status: **Implemented and tested locally; not pushed to production, not applied to

@@ -18,6 +18,8 @@ type FixedProviderPolicy = {
   hosts: string[];
   kind: Exclude<AiProviderEndpointKind, "azure">;
   paths: Record<string, string>;
+  /** Provider model-list path, or null when the provider has no list API. */
+  modelsPath: string | null;
 };
 
 const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
@@ -26,6 +28,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     aliases: ["openrouter"],
     hosts: ["openrouter.ai"],
     kind: "openai",
+    modelsPath: "/api/v1/models",
     paths: {
       "/api/v1": "/api/v1/chat/completions",
       "/api/v1/chat/completions": "/api/v1/chat/completions",
@@ -36,6 +39,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     aliases: ["openai"],
     hosts: ["api.openai.com"],
     kind: "openai",
+    modelsPath: "/v1/models",
     paths: {
       "/v1": "/v1/chat/completions",
       "/v1/chat/completions": "/v1/chat/completions",
@@ -46,6 +50,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     aliases: ["anthropic", "claude"],
     hosts: ["api.anthropic.com"],
     kind: "anthropic",
+    modelsPath: "/v1/models",
     paths: {
       "/v1": "/v1/messages",
       "/v1/messages": "/v1/messages",
@@ -56,6 +61,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     aliases: ["google", "googleai", "gemini"],
     hosts: ["generativelanguage.googleapis.com"],
     kind: "openai",
+    modelsPath: "/v1beta/openai/models",
     paths: {
       "/v1beta/openai": "/v1beta/openai/chat/completions",
       "/v1beta/openai/chat/completions":
@@ -67,6 +73,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     aliases: ["xai", "grok"],
     hosts: ["api.x.ai"],
     kind: "openai",
+    modelsPath: "/v1/models",
     paths: {
       "/v1": "/v1/chat/completions",
       "/v1/chat/completions": "/v1/chat/completions",
@@ -77,6 +84,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     aliases: ["groq"],
     hosts: ["api.groq.com"],
     kind: "openai",
+    modelsPath: "/openai/v1/models",
     paths: {
       "/openai/v1": "/openai/v1/chat/completions",
       "/openai/v1/chat/completions": "/openai/v1/chat/completions",
@@ -87,6 +95,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     aliases: ["mistral", "mistralai"],
     hosts: ["api.mistral.ai"],
     kind: "openai",
+    modelsPath: "/v1/models",
     paths: {
       "/v1": "/v1/chat/completions",
       "/v1/chat/completions": "/v1/chat/completions",
@@ -97,6 +106,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     aliases: ["deepseek"],
     hosts: ["api.deepseek.com"],
     kind: "openai",
+    modelsPath: "/models",
     paths: {
       "": "/chat/completions",
       "/chat/completions": "/chat/completions",
@@ -113,6 +123,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     // connections use the provider's current .ai hostname.
     hosts: ["api.together.ai", "api.together.xyz"],
     kind: "openai",
+    modelsPath: "/v1/models",
     paths: {
       "/v1": "/v1/chat/completions",
       "/v1/chat/completions": "/v1/chat/completions",
@@ -123,6 +134,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     aliases: ["fireworks", "fireworksai"],
     hosts: ["api.fireworks.ai"],
     kind: "openai",
+    modelsPath: "/inference/v1/models",
     paths: {
       "/inference/v1": "/inference/v1/chat/completions",
       "/inference/v1/chat/completions":
@@ -134,6 +146,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     aliases: ["perplexity", "perplexityai"],
     hosts: ["api.perplexity.ai"],
     kind: "openai",
+    modelsPath: null,
     paths: {
       "": "/chat/completions",
       "/chat/completions": "/chat/completions",
@@ -144,6 +157,7 @@ const FIXED_PROVIDER_POLICIES: FixedProviderPolicy[] = [
     aliases: ["cohere", "cohereai"],
     hosts: ["api.cohere.ai"],
     kind: "openai",
+    modelsPath: "/compatibility/v1/models",
     paths: {
       "/compatibility/v1": "/compatibility/v1/chat/completions",
       "/compatibility/v1/chat/completions":
@@ -340,4 +354,43 @@ export function resolveAiProviderEndpoint(input: {
     kind: policy.kind,
     provider: policy.id,
   };
+}
+
+export type AiProviderModelsEndpoint = {
+  url: URL;
+  host: string;
+  kind: AiProviderEndpointKind;
+  provider: string;
+  /** False when the provider exposes no model list; callers fall back to free text. */
+  listable: boolean;
+};
+
+/**
+ * Resolve the provider's model-list endpoint from the same reviewed policy
+ * that governs chat requests. Never widens the host allowlist.
+ */
+export function resolveAiProviderModelsEndpoint(input: {
+  provider: unknown;
+  baseUrl: unknown;
+  extra?: Record<string, unknown> | null;
+}): AiProviderModelsEndpoint | AiProviderEndpointError {
+  const chat = resolveAiProviderEndpoint(input);
+  if ("error" in chat) return chat;
+  const url = new URL(chat.url.toString());
+  if (chat.kind === "azure") {
+    // Azure lists deployments at the resource root; keep the validated api-version.
+    const apiVersion = url.searchParams.get("api-version") || "";
+    url.pathname = "/openai/models";
+    url.search = "";
+    url.searchParams.set("api-version", apiVersion);
+    return { url, host: chat.host, kind: "azure", provider: "azure", listable: true };
+  }
+  const policy = PROVIDER_BY_ALIAS.get(chat.provider);
+  const modelsPath = policy?.modelsPath ?? null;
+  if (!modelsPath) {
+    return { url, host: chat.host, kind: chat.kind, provider: chat.provider, listable: false };
+  }
+  url.pathname = modelsPath;
+  url.search = "";
+  return { url, host: chat.host, kind: chat.kind, provider: chat.provider, listable: true };
 }
