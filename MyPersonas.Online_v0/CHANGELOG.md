@@ -3,6 +3,19 @@
 Versioning per VERSIONING.md: majors are milestones, `.x` are roadmap items,
 trailing letters are hotfixes. Releases are git tags.
 
+## Local model test bench, browser-direct (local source) (2026-10-16)
+
+Status: **Implemented and tested locally; static site only — no backend change.**
+
+- Choosing Ollama or LM Studio in the add-model form now opens a test bench that calls
+  the server on the owner's own machine straight from the browser: detect models, stream a
+  reply, see TTFT and tok/s. Loopback hosts only; nothing is saved to Supabase and hosted
+  agents still refuse local providers.
+- Setup: LM Studio → enable CORS, keep "Serve on Local Network" off. Ollama →
+  `setx OLLAMA_ORIGINS "https://mypersonas.online"` and restart; never bind to 0.0.0.0.
+- Tests: `tests/local-models-bench.test.mjs`; Chromium e2e against a mock SSE server.
+- Hosted automation on local models is the separate local-fleet gateway lane.
+
 ## AI connector refresh + live model lists (local source) (2026-10-16)
 
 Status: **Implemented and tested locally; not deployed.** Deploy `ai-models` before the

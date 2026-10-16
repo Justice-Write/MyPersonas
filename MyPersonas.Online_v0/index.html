@@ -480,6 +480,7 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
 <script src="./creative-workspace.js?v=20261013-1"></script>
 <script src="./owner-app.js?v=20261013-1"></script>
 <script src="./persona-view.js?v=20261013-1"></script>
+<script src="./local-models.js?v=20261016-1"></script>
 <script src="./platform-governance.js?v=20260830-1"></script>
 <script src="./agent-board.js?v=20260822-4"></script>
 <script src="./ai-content-provenance.js?v=20260823-2"></script>
@@ -2395,7 +2396,7 @@ function renderStudio(){
     </div>
     <div id="nbExtra"></div>
     <div id="nbOAuth" style="margin-top:6px"><button class="btn sm sec" onclick="connectOpenRouter()">Connect with OpenRouter (OAuth)</button> <span class="muted">or paste a key above</span></div>
-    <button class="btn sm" style="margin-top:10px" onclick="addBackend()">+ Save model</button></div>`;
+    <button class="btn sm" style="margin-top:10px" onclick="addBackend()">+ Save model</button><div id="localBenchHost"></div></div>`;
   app.innerHTML=`<div class="matrix-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
     <h3 class="secthead" style="margin:0">Matrix</h3>
     <div class="matrix-actions" style="display:flex;gap:8px">
@@ -6299,8 +6300,8 @@ const AI_PROVIDERS={
   cohere:{name:"Cohere",base:"https://api.cohere.ai/compatibility/v1",keyUrl:"https://dashboard.cohere.com/api-keys",modelHint:"load the live list"},
   azure:{name:"Azure OpenAI",base:"https://YOUR-RESOURCE.openai.azure.com/openai/deployments/YOUR-DEPLOYMENT",keyUrl:"https://portal.azure.com",modelHint:"your deployment name",extra:[{key:"api_version",label:"API version",hint:"e.g. 2024-06-01",ph:"2024-06-01"}]},
   elevenlabs:{name:"ElevenLabs voice (not text automation)",base:"https://api.elevenlabs.io/v1",keyUrl:"https://elevenlabs.io/app/settings/api-keys",unsupported:true,modelHint:"Voice providers will be connected separately",extra:[{key:"voice_id",label:"Voice ID",hint:"from your ElevenLabs Voices page",ph:"e.g. 21m00Tcm4TlvDq8ikWAM"}]},
-  ollama:{name:"Ollama local (not hosted automation)",base:"http://localhost:11434/v1",keyUrl:"",noKey:true,unsupported:true,modelHint:"Local device models cannot be reached by hosted agents"},
-  lmstudio:{name:"LM Studio local (not hosted automation)",base:"http://localhost:1234/v1",keyUrl:"",noKey:true,unsupported:true,modelHint:"Local device models cannot be reached by hosted agents"},
+  ollama:{name:"Ollama local (this device only — test bench)",base:"http://localhost:11434/v1",keyUrl:"",noKey:true,unsupported:true,local:true,modelHint:"Runs in your browser against your own machine; hosted agents never use it"},
+  lmstudio:{name:"LM Studio local (this device only — test bench)",base:"http://localhost:1234/v1",keyUrl:"",noKey:true,unsupported:true,local:true,modelHint:"Runs in your browser against your own machine; hosted agents never use it"},
   custom:{name:"Custom / other (OpenAI-compatible)",base:"",keyUrl:"",modelHint:"any model id"}
 };
 function onProviderPick(){
@@ -6314,7 +6315,12 @@ function onProviderPick(){
   set("nbModelHint",el=>el.textContent=v.modelHint||"");
   set("nbModel",el=>el.placeholder=v.modelHint||"model id");
   set("nbExtra",el=>el.innerHTML=(v.extra||[]).map(f=>`<label>${esc(f.label)} ${f.hint?`<span class="muted">${esc(f.hint)}</span>`:""}</label><input id="nbx_${f.key}" placeholder="${esc(f.ph||"")}">`).join(""));
-  set("nbOAuth",el=>el.innerHTML=v.oauth==="openrouter"?`<button class="btn sm sec" onclick="connectOpenRouter()">Connect with OpenRouter (OAuth)</button> <span class="muted">or paste a key above</span>`:(v.unsupported?'<span class="muted">This provider is shown for planning, but cannot be saved as a hosted text agent.</span>':""));
+  set("nbOAuth",el=>el.innerHTML=v.oauth==="openrouter"?`<button class="btn sm sec" onclick="connectOpenRouter()">Connect with OpenRouter (OAuth)</button> <span class="muted">or paste a key above</span>`:(v.local?`<button class="btn sm sec" onclick="openLocalBench('${sel.value}')">Open local test bench</button> <span class="muted">Local servers are tested here, not saved as hosted agents.</span>`:(v.unsupported?'<span class="muted">This provider is shown for planning, but cannot be saved as a hosted text agent.</span>':"")));
+}
+function openLocalBench(kind){
+  try{const k="mp.localModels.v1",st=JSON.parse(localStorage.getItem(k)||"{}");if(st.kind!==kind){st.kind=kind;delete st.base;localStorage.setItem(k,JSON.stringify(st))}}catch(e){}
+  if(typeof window.mountLocalModelBench==="function")window.mountLocalModelBench("localBenchHost");
+  const el=document.getElementById("localBench");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function loadProviderModels(){
   const sel=document.getElementById("nbProvider"),provider=sel?sel.value:"custom",pdef=AI_PROVIDERS[provider]||{};
