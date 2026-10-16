@@ -472,7 +472,10 @@ larger product phase remains.
       pull renditions into the image picker and SD panel, opt-in per-asset training-set
       flag for Concept LoRA sets (verify Adobe ToS on ML use of API-pulled assets)
 - [ ] Discovery: trending personas/tags, better ranking than recency
-- [ ] Moderation pipeline: user reports on content/personas, review queue
+- [~] Moderation pipeline: user reports on content/personas, review queue. Migration 080
+      (`report_content`, staff queue + resolve with AAL2 and an audit trail) is implemented
+      and tested locally (disposable PG16, 9/9 mutants killed). Remaining: owner applies 080
+      in the SQL Editor, then a staff queue screen; resolving never takes content actions.
 - [~] PWA: install/offline shell complete locally; real-device release verification and
       a separate push-notification permission/subscription/delivery phase remain
 - [ ] Custom auth domain (auth.aliaspaces.com) for branded OAuth consent
