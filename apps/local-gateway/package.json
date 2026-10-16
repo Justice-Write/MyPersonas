@@ -1,0 +1,11 @@
+{
+  "name": "aliaspaces-local-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Loopback gateway between a Cloudflare Access tunnel and a local LM Studio / Ollama server for the MyPersonas local fleet lane.",
+  "type": "module",
+  "engines": { "node": ">=20.6" },
+  "scripts": {
+    "start": "node --env-file=local-gateway.env gateway.mjs"
+  }
+}

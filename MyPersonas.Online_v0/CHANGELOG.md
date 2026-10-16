@@ -3,6 +3,19 @@
 Versioning per VERSIONING.md: majors are milestones, `.x` are roadmap items,
 trailing letters are hotfixes. Releases are git tags.
 
+## Local fleet gateway (local source) (2026-10-16)
+
+Status: **Implemented and tested locally; not installed on sophia, no secrets set.**
+
+- `apps/local-gateway/`: zero-dependency Node gateway between a Cloudflare Access tunnel
+  and LM Studio/Ollama on loopback. Bearer token (constant-time), model allowlist, tool
+  refusal, size caps, one-at-a-time GPU, and a normalised stream that the edge
+  `fleet-protocol.ts` parser accepts. This was the missing piece of the existing
+  `local_fleet` lane in `ai-proxy`.
+- `install-sophia.ps1` (logon task + locked env file + fresh token) and a README with
+  current Cloudflare Tunnel / Access steps and the five Supabase secrets.
+- Contract test `tests/local-gateway.test.mjs` runs gateway output through `chatDeltas`.
+
 ## Owner mobile workflow completion pass (local source) (2026-09-20)
 
 Status: **Implemented and tested locally; not pushed to production, not applied to
