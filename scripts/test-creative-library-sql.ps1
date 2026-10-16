@@ -16,7 +16,7 @@ try {
   $taskCreated = $true
   $taskReady = $false
   for ($taskAttempt = 0; $taskAttempt -lt 30; $taskAttempt += 1) {
-    & docker exec $taskContainer pg_isready -U postgres | Out-Null
+    & docker exec $taskContainer pg_isready -h 127.0.0.1 -U postgres | Out-Null
     if ($LASTEXITCODE -eq 0) { $taskReady = $true; break }
     Start-Sleep -Milliseconds 500
   }
