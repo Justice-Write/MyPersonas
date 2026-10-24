@@ -539,3 +539,7 @@ larger product phase remains.
     until server-verifiable age assurance exists.
 17. **Google consent screen shows the Supabase domain** — cosmetic; fixed by the
     paid Supabase custom domain when it matters.
+
+## Surface documentation reconciliation — 2026-10-24
+
+- [x] Added versioned [surface/manual index](../docs/SURFACE-RELEASE-AND-MANUAL-INDEX.md) and practical credentials, sign-out, recovery and cross-account acceptance limits. Documentation completion is not activation, three-way memory implementation or installed-user remediation.
