@@ -2,6 +2,8 @@
 #
 # Run from anywhere in PowerShell:
 #   & "$HOME\Documents\GitHub\MyPersonas\_ops\deploy-nooyouniverse.ps1"
+# Worktree preview with explicit locations:
+#   & .\_ops\deploy-nooyouniverse.ps1 -DryRun -SourceDirectory .\nooyouniverse.com -DeployRepository "$HOME\Documents\GitHub\nooyouniverse"
 # The default is a read-only preview. Add -Publish only after the release scope
 # has been reviewed and approved.
 #
@@ -17,6 +19,8 @@
 
 param(
   [string]$Message = "nooyouniverse.com: content update",
+  [string]$SourceDirectory,
+  [string]$DeployRepository,
   [switch]$Publish,
   [switch]$DryRun
 )
@@ -26,8 +30,8 @@ $Preview = -not $Publish
 if ($Publish -and $DryRun) { throw "Choose either -Publish or -DryRun, not both." }
 if ($DryRun) { $Preview = $true }
 $root   = Split-Path -Parent $PSScriptRoot                        # ...\GitHub\MyPersonas
-$src    = Join-Path $root "nooyouniverse.com"                     # source of truth
-$deploy = Join-Path (Split-Path -Parent $root) "nooyouniverse"    # deploy repo
+$src    = if ($SourceDirectory) { $SourceDirectory } else { Join-Path $root "nooyouniverse.com" }
+$deploy = if ($DeployRepository) { $DeployRepository } else { Join-Path (Split-Path -Parent $root) "nooyouniverse" }
 $pub    = Join-Path $deploy "public"
 
 function Clear-StaleLocks($repo) {
@@ -77,7 +81,7 @@ if (-not $resolvedPub.StartsWith($resolvedDeploy + '\', [System.StringComparison
 
 # Everything published lives in public\. Docs (SITE-ROADMAP.md) stay out.
 $pages = @("index.html","log.html","sources.html","corrections.html",
-           "404.html","robots.txt","sitemap.xml","CNAME",
+           "404.html","robots.txt","sitemap.xml","CNAME","_headers",
            # PWA — added 2026-09-25. All five pages had referenced
            # /manifest.webmanifest and registered /sw.js since the favicon
            # release, but neither file existed and this fixed list would not
