@@ -4,9 +4,10 @@
 // worker is allowed to finish its session; the new worker activates after all
 // AliaSpaces tabs using the old version are closed.
 const CACHE_PREFIX = "aliaspaces-public-shell-";
-const CACHE_NAME = `${CACHE_PREFIX}2026-09-23-1`;
+const CACHE_NAME = `${CACHE_PREFIX}2026-10-30-1`;
 const PUBLIC_SHELL_PATHS = Object.freeze([
   "./offline.html",
+  "./sites.html",
   "./manifest.webmanifest",
   "./pwa.js",
   "./favicon.ico",
@@ -47,8 +48,9 @@ self.addEventListener("fetch", (event) => {
   const requestUrl = new URL(request.url);
   if (requestUrl.origin !== SCOPE_URL.origin) return;
 
-  // Documents are always network-first and are never written to Cache Storage.
-  // Offline navigation receives the public fallback, never a stored signed-in page.
+  // Navigations are always network-first and are never added to Cache Storage at
+  // runtime. Offline navigation receives the public fallback, never a stored
+  // signed-in page. The separately precached sites checklist is public-only.
   if (request.mode === "navigate") {
     event.respondWith((async () => {
       try {

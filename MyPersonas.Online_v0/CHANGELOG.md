@@ -1,5 +1,21 @@
 # Changelog — AliaSpaces / MyPersonas
 
+## Public availability checklist and mobile browser install help (2026-10-30)
+
+Status: **Implemented and tested in source; not deployed or installed.** A production
+release still requires the existing exact-revision backend evidence, private canary,
+manual Pages dispatch and live readback. This change does not submit or install a native
+application, change an account, apply a migration, or activate provider publishing.
+
+- Added a public, no-index `sites.html` checklist with current web surfaces, policy/setup
+  references, companion-app boundaries and explicit source/deploy/install distinctions.
+- Added Android browser-menu install help while retaining the real browser-provided install
+  prompt and the existing iPhone/iPad Add to Home Screen guidance. Android WebView user
+  agents are excluded so the installed native companion does not show browser-install UI.
+- Added the checklist to the manifest shortcut, public-shell allowlist and exact Pages
+  package allowlist. Private owner pages and API responses remain outside offline storage.
+- Push permission, subscription and delivery remain a separate unimplemented phase.
+
 ## Release package verification (2026-10-29)
 
 - Verify Pages artifact membership and exact source bytes before upload; reject symlinks and known private filenames even under public asset directories.

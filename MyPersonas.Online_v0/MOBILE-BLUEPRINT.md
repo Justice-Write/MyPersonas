@@ -13,6 +13,14 @@ authorization tests. Android debug WebView wraps `#/owner` and documents
 disconnected limits. Migration 077 is unapplied. This is not a store submission
 and not a local fake publisher. `publishing_enabled` remains false.
 
+Public browser-install slice (2026-10-30, source only): Android browsers now receive
+the same visible **Install help** entry point as iPhone/iPad when the app is not already
+standalone; Android WebView is excluded so the native companion does not present a
+browser-install action. `sites.html` lists only public surfaces and truthful companion-app
+availability; it does not expose repository paths or claim a native store release.
+Physical-device install and current live-release verification remain owner acceptance
+steps after the gated Pages release.
+
 ---
 
 ## 1. Responsive web (optimize phone + add tablet)

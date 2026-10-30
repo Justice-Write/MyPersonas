@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#1877f2">
+  <meta name="description" content="Public MyPersonas and AliaSpaces site and app availability checklist.">
+  <link rel="canonical" href="https://mypersonas.online/sites.html">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png">
+  <script src="./pwa.js" defer></script>
+  <title>Sites and apps to check · AliaSpaces</title>
+  <style>
+    :root{color-scheme:light;--ink:#10223d;--muted:#53657b;--blue:#1877f2;--line:#dbe6f2;--card:#fff;--wash:#f2f7fc;--warn:#fff7dd}
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(145deg,#edf5ff 0,#fff 48%,#f7fafd 100%);color:var(--ink);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{color:#0b5fc7}
+    header{background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}
+    header nav{max-width:1040px;margin:auto;padding:12px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:10px;margin-right:auto;color:var(--ink);font-weight:800;text-decoration:none}
+    .brand img{width:38px;height:38px}
+    .btn{appearance:none;border:1px solid #b9cee6;border-radius:10px;background:#fff;color:#164f91;cursor:pointer;font:inherit;font-weight:700;padding:8px 12px;text-decoration:none}
+    .btn:hover,.btn:focus-visible{border-color:var(--blue);outline:2px solid transparent;box-shadow:0 0 0 3px rgba(24,119,242,.16)}
+    .btn.sec{background:#f7fbff}.btn.sm{font-size:14px;padding:7px 10px}
+    main{max-width:1040px;margin:auto;padding:52px 20px 72px}
+    h1{font-size:clamp(2rem,6vw,3.7rem);line-height:1.02;margin:0 0 16px;letter-spacing:-.045em}
+    h2{font-size:1.45rem;margin:0 0 12px}h3{font-size:1.05rem;margin:0 0 6px}
+    .lede{max-width:760px;color:var(--muted);font-size:1.08rem;margin:0 0 28px}
+    .notice{background:var(--warn);border:1px solid #ead68d;border-radius:14px;padding:14px 16px;margin:0 0 26px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:0 0 34px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 28px rgba(16,34,61,.06)}
+    .card p{margin:6px 0 14px;color:var(--muted)}
+    .status{display:inline-block;border:1px solid #a9c9ee;border-radius:999px;background:#eff6ff;color:#164f91;font-size:.77rem;font-weight:800;letter-spacing:.035em;padding:3px 8px;text-transform:uppercase}
+    .muted{color:var(--muted)}
+    .steps{background:var(--wash);border:1px solid var(--line);border-radius:16px;padding:20px;margin:0 0 24px}
+    .steps ol{margin:8px 0 0;padding-left:22px}.steps li+li{margin-top:8px}
+    footer{max-width:1040px;margin:auto;padding:0 20px 34px;color:var(--muted);font-size:.9rem}
+    code{background:#e8f1fb;border-radius:5px;padding:1px 5px}
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Sites and apps controls">
+      <a class="brand" href="./" aria-label="Open AliaSpaces home">
+        <img src="./icon.svg" alt="" width="38" height="38">
+        <span>AliaSpaces</span>
+      </a>
+      <a class="btn sec sm" href="./">Home</a>
+      <a class="btn sec sm" href="./#/owner">Owner</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Sites and apps to check</h1>
+    <p class="lede">A public, read-only checklist for the MyPersonas and AliaSpaces surfaces that may be available. Opening this page does not sign in, publish, install software, request notification permission, or change owner data.</p>
+
+    <div class="notice" role="note">
+      <strong>Availability is evidence-based.</strong> Source-ready does not mean deployed, installed, store-approved, provider-accepted, or verified on this device. Use a surface only after its current release has been reviewed and read back.
+    </div>
+
+    <section aria-labelledby="public-sites-heading">
+      <h2 id="public-sites-heading">Public web surfaces</h2>
+      <div class="grid">
+        <article class="card">
+          <span class="status">Web app</span>
+          <h3>AliaSpaces / MyPersonas</h3>
+          <p>Public home and browser app. Signed-in owner features fetch private data from the service; they are not part of the offline cache.</p>
+          <a href="./">Open this site</a>
+        </article>
+        <article class="card">
+          <span class="status">Sign-in required</span>
+          <h3>Owner command center</h3>
+          <p>Owner-only persona and draft workflows. Approval remains a planning record and is not a provider send.</p>
+          <a href="./#/owner">Open owner route</a>
+        </article>
+        <article class="card">
+          <span class="status">Sign-in required</span>
+          <h3>Persona studio</h3>
+          <p>Build and review persona spaces after authenticating with the intended owner account.</p>
+          <a href="./#/studio">Open studio route</a>
+        </article>
+        <article class="card">
+          <span class="status">Independent site</span>
+          <h3>Noo YouNiverse</h3>
+          <p>A separate public brand site with its own release authority. Its source mirror here is not its deployment.</p>
+          <a href="https://nooyouniverse.com/" target="_blank" rel="noopener noreferrer">Open Noo YouNiverse</a>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="support-heading">
+      <h2 id="support-heading">Policies and setup references</h2>
+      <div class="grid">
+        <article class="card"><h3>Privacy</h3><p>Review the public privacy summary before signing in or connecting a provider.</p><a href="./privacy.html">Read privacy information</a></article>
+        <article class="card"><h3>Terms</h3><p>Review the public service terms and current limitations.</p><a href="./terms.html">Read terms</a></article>
+        <article class="card"><h3>Data deletion</h3><p>See the owner-controlled deletion and provider-revocation steps.</p><a href="./data-deletion.html">Read deletion guidance</a></article>
+        <article class="card"><h3>Provider setup</h3><p>Setup is owner-controlled. Never paste credentials or secrets into a public page, source file, or chat.</p><a href="./provider-setup.html">Read setup guidance</a></article>
+      </div>
+    </section>
+
+    <section class="steps" aria-labelledby="install-heading">
+      <h2 id="install-heading">Browser app install check</h2>
+      <ol>
+        <li>Open the reviewed live <code>https://mypersonas.online/</code> release in Chrome on Android or Safari on iPhone/iPad.</li>
+        <li>On Android, use <strong>Install app</strong> when the browser offers it, or open the browser menu and choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.</li>
+        <li>On iPhone or iPad, open <strong>Share</strong> and choose <strong>Add to Home Screen</strong>.</li>
+        <li>After installation, verify the app opens standalone and fetches signed-in data fresh. An icon alone is not proof that the current release is installed.</li>
+      </ol>
+      <p class="muted">The install helper never posts, requests notification permission, or subscribes to push. Push remains a separate, unimplemented release phase.</p>
+    </section>
+
+    <section class="steps" aria-labelledby="companion-heading">
+      <h2 id="companion-heading">Companion app boundary</h2>
+      <p>An owner-only Android companion has a separate reviewed release lane; this public page provides no download or store-install link. No public iOS App Store release or MyPersonas desktop installer is claimed here. Any future install or upgrade requires a supported backup/export, exact package and signer review, and launch/sign-in acceptance on the intended device.</p>
+    </section>
+  </main>
+
+  <footer>
+    Public checklist only. Deployment, installation, provider acceptance, private data migration, and signed-in acceptance require separate evidence.
+  </footer>
+</body>
+</html>
