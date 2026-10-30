@@ -13,6 +13,12 @@ function creativeContext() {
 }
 function creativeCurrent(ctx) { return session?.user?.id === ctx.owner && privateSessionReady && creativeState.generation === ctx.generation && location.hash === ctx.route; }
 function creativeAssert(ctx) { if (!creativeCurrent(ctx)) throw new Error("The workspace changed. Reopen it before continuing."); }
+async function creativeConfirm(ctx, message, options) {
+  creativeAssert(ctx); creativeContext();
+  if (!await appConfirm(message, options)) return false;
+  creativeAssert(ctx); creativeContext();
+  return true;
+}
 function creativeStatus(message) { const node = document.getElementById("creativeStatus"); if (node) node.textContent = message; }
 async function creativeAction(button, task) {
   let ctx;
@@ -122,12 +128,23 @@ async function creativeOpenAsset(id, ctx) {
   pane.appendChild(continuation);
   document.getElementById("creativeDraft").onclick = e => creativeContinueAsset(id, ctx, e.target, "draft");
   document.getElementById("creativePage").onclick = e => creativeContinueAsset(id, ctx, e.target, "page");
-  document.getElementById("creativeRemove").onclick = e => creativeAction(e.target, async ctx => {
-    if (!confirm("Remove this library entry" + (asset.storage_path ? " and its private file copy" : "") + "? Original files in your creative tool are unaffected.")) return;
-    if (asset.storage_path) { const r = await sb.storage.from("creative-private").remove([asset.storage_path]); creativeAssert(ctx); if (r.error) throw new Error("File removal failed. The library entry was retained."); }
-    const r = await sb.from("owner_media_library").delete().eq("id", id).eq("owner", ctx.owner).select("id"); creativeAssert(ctx);
-    if (r.error || r.data?.length !== 1) throw new Error("The entry could not be removed. Refresh and retry entry cleanup."); creativeState.page = 0; await creativeLoadLibrary(ctx); creativeStatus("Removed from your library.");
-  });
+  document.getElementById("creativeRemove").onclick = e => creativeAction(e.target, ctx => creativeRemoveAsset(id, ctx));
+}
+async function creativeRemoveAsset(id, ctx) {
+  const asset = creativeState.assets.find(row => row.id === id && row.owner === ctx.owner);
+  if (!asset || document.getElementById("creativeEdit")?.dataset.assetId !== id) throw new Error("Reopen the saved asset before removing it.");
+  const storagePath = asset.storage_path, title = asset.title;
+  if (!await creativeConfirm(ctx, "Remove this library entry" + (storagePath ? " and its private file copy" : "") + "? Original files in your creative tool are unaffected.", { title: "Remove library entry?", confirmLabel: "Remove entry", destructive: true })) return;
+  const current = creativeState.assets.find(row => row.id === id && row.owner === ctx.owner);
+  if (!current || current.storage_path !== storagePath || current.title !== title || document.getElementById("creativeEdit")?.dataset.assetId !== id) throw new Error("The library entry changed. Reopen it before removing it.");
+  if (storagePath) { const r = await sb.storage.from("creative-private").remove([storagePath]); creativeAssert(ctx); if (r.error) throw new Error("File removal failed. The library entry was retained."); }
+  const r = await sb.from("owner_media_library").delete().eq("id", id).eq("owner", ctx.owner).select("id"); creativeAssert(ctx);
+  if (r.error || r.data?.length !== 1) throw new Error("The entry could not be removed. Refresh and retry entry cleanup."); creativeState.page = 0; await creativeLoadLibrary(ctx); creativeStatus("Removed from your library.");
+}
+async function creativeDisconnect(ctx) {
+  if (!await creativeConfirm(ctx, "Disconnect MyPersonas from OpenArt? Existing files in OpenArt are retained.", { title: "Disconnect OpenArt?", confirmLabel: "Disconnect", destructive: true })) return;
+  await creativeInvoke("openart-connect", { action: "disconnect" }, ctx);
+  await renderCreativeWorkspace("create");
 }
 function creativeContinueAsset(id, openedContext, button, destination) {
   return creativeAction(button, async ctx => {
@@ -151,7 +168,7 @@ async function creativeLoadCreate(ctx) {
   document.getElementById("creativeContent").innerHTML = `<section class="cw-panel"><h3>OpenArt</h3><p class="cw-muted">Use your own OpenArt projects and credits. Connecting does not generate anything.</p><div id="creativeConnection">Checking connection…</div><div class="cw-actions"><button id="creativeConnect">Connect / reconnect OpenArt</button><button id="creativeRefresh">Refresh workspace</button><button id="creativeDisconnect">Disconnect</button></div></section><div id="creativeComposer"></div><section class="cw-panel"><h3>Recent generations</h3><div id="creativeJobs">Load your connection to see generation history.</div></section><section class="cw-panel"><h3>Bring your existing work</h3><p>Export a file from Soulular / Soul Concept, DaVinci, Foxy, Higgsfield, or Freebeat and import it into your library. Desktop projects and original files stay in their current home.</p><a href="#/library">Open media library →</a><p class="cw-muted">Higgsfield and Freebeat generation connectors are planned after this OpenArt workflow.</p></section>`;
   document.getElementById("creativeConnect").onclick = e => creativeAction(e.target, async ctx => { const r = await creativeInvoke("openart-connect", { action: "start" }, ctx); const u = new URL(r.url); if (u.protocol !== "https:" || u.hostname !== "openart.ai" || u.username || u.password || u.port) throw new Error("The authorization destination was not recognized."); location.assign(u.href); });
   document.getElementById("creativeRefresh").onclick = () => renderCreativeWorkspace("create");
-  document.getElementById("creativeDisconnect").onclick = e => creativeAction(e.target, async ctx => { if (!confirm("Disconnect MyPersonas from OpenArt? Existing files in OpenArt are retained.")) return; await creativeInvoke("openart-connect", { action: "disconnect" }, ctx); await renderCreativeWorkspace("create"); });
+  document.getElementById("creativeDisconnect").onclick = e => creativeAction(e.target, ctx => creativeDisconnect(ctx));
   try {
     const status = await creativeInvoke("openart-connect", { action: "status" }, ctx);
     document.getElementById("creativeConnection").textContent = status.connected ? "Connected · ready to load projects" : "Not connected. Connect your account to browse models and projects.";
@@ -235,8 +252,9 @@ async function creativeBrowse(ctx, cursor) {
   if (data.nextCursor) document.getElementById("creativeCreationNext").onclick = e => creativeAction(e.target, ctx => creativeBrowse(ctx, data.nextCursor));
 }
 async function creativeSaveReference(resource, ctx) {
+  resource = { ...resource };
   const source_url = CreativeMedia.providerUrl(resource.url); if (!source_url || !["image","video","audio"].includes(resource.mediaType)) throw new Error("This resource cannot be saved as a media reference.");
-  if (!confirm("Save this OpenArt reference in your private library? Confirm you have permission to retain this media and any depicted likeness. The file stays hosted by OpenArt; no training or publishing permission is granted.")) return;
+  if (!await creativeConfirm(ctx, "Save this OpenArt reference in your private library? Confirm you have permission to retain this media and any depicted likeness. The file stays hosted by OpenArt; no training or publishing permission is granted.", { title: "Save private reference?", confirmLabel: "Save reference", destructive: false })) return;
   const meta = CreativeMedia.metadata({ title: String(resource.title || "OpenArt result").slice(0,200), source_tool: "openart", persona_id: resource.persona_id || null, project: resource.project || "", rights_confirmed: true }, ctx.owner, myPersonas);
   const r = await sb.from("owner_media_library").insert({ ...meta, kind: resource.mediaType, source_url }); creativeAssert(ctx);
   if (r.error) throw new Error("Reference could not be saved. The private library migration must be available."); creativeStatus("Saved an unreviewed OpenArt reference. Open Library to describe it or import a downloaded copy.");

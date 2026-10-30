@@ -27,11 +27,11 @@ unqualified `alert`, `confirm` and `prompt` calls finds the following candidates
 | --- | ---: | --- |
 | `agent-board.js` | 7 | Exact packet hash, queue status, budget values and owner must still match after input. No spending approval may transfer to a changed request. |
 | `cms-connector-ui.js` | 5 | Preserve the exact draft and target confirmations separately. Revalidate connection, target and draft after each prompt and after MFA. |
-| `creative-workspace.js` | 3 | Recheck creative context before the first operation after input, including storage removal. Preserve media permission and original-file boundaries. |
+| `creative-workspace.js` | 0 | Converted in the creative-dialog follow-up below; device/browser acceptance remains open. |
 | `index.html` | 67 | Split page-builder/local edits from destructive, publishing, provider and automation actions. Synchronous helpers need their callers audited before becoming async. |
 | `platform-governance.js` | 20 | Revalidate persona/business, exact review packet, publication state and sensitive-action authority. Clipboard operations also need browser user-activation verification. |
 
-Total: 102 lexical candidates. This count is a triage aid, not an AST inventory or
+Total after the creative-dialog follow-up: 99 lexical candidates. This count is a triage aid, not an AST inventory or
 proof of runtime reachability. It excludes qualified calls and nested directories.
 `promptEvent.prompt()` in `pwa.js` is the browser install API and must not become an
 application text prompt. `persona-view.js` and `owner-app.js` have no remaining
@@ -54,3 +54,24 @@ unqualified native-dialog candidates in this scan.
 The previous exact-main package is preserved. This source change requires a new
 package and exact-revision backend/canary evidence before Pages release. No device
 installation, migration, provider send or live friendship operation occurred.
+
+## Creative-dialog follow-up
+
+The three creative workspace confirmations now await the shared dialog. A common
+confirmation guard validates owner, route, workspace generation and Overview mode
+before opening and again before any side effect. Removal additionally rechecks the
+currently displayed asset, its owner, title and storage path. Saved references use
+a captured resource rather than mutable caller data. Existing endpoint/action,
+private-file deletion order, unreviewed status and training-disabled defaults stay
+in place; the script cache version is bumped.
+
+Twenty-one executable regressions cover pending confirmation, cancellation,
+owner/route/generation/perspective switches, removed/replaced assets, changed detail
+panels, exact accepted operations and resource mutation while awaiting input.
+Focused creative suites pass 29/29; full suite passes 608/608; inline/external
+syntax and whitespace checks pass. The existing browser fixture's confirmation
+stub is now asynchronous. That browser fixture was not rerun; no foreground UI,
+provider, storage, database or installed-device operations occurred. Real browser,
+WebView and accessibility acceptance remain open. Source base is PR45 main
+`f513223b0e7627c06db8268c3fe3d11e5776cfe8`; its prior package remains historical once
+this follow-up is merged, and release requires a newly verified exact-source package.

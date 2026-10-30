@@ -50,7 +50,10 @@
 ## In progress
 
 
+
 ## Current state
+
+- Creative workspace's three confirmations now use guarded async dialogs. Owner/route/generation/perspective and destructive asset identity are rechecked before side effects. Focused29/full608 tests pass; remaining unqualified native-dialog candidates99. Browser/device acceptance and exact-source backend/canary release gates remain open.
 
 - Friendship invite proof now uses the shared asynchronous prompt and retains post-input actor validation. Seven new executable regressions pass; full suite 587/587. See docs/PR20-REMAINING-DIALOGS-20261030.md for the 102 remaining lexical dialog candidates and acceptance plan. Source only; browser/device and production acceptance remain open.
 The stocktake, family workflow receipt clarification, package/data boundaries, multi-model handoff updates, Android code-2 source reconciliation, owner/surface manual replacement, Being Tea host canon, bounded public sites/install-help port, native feed/push security design, PR20 glyph slice, PR22 moderation design and hardened owner-dialog slice are merged through PR42 / `1f0137e`. Merged-main CI run `41068633552` passed all five substantive jobs. Backend evidence and the signed-in private canary remain unverified. The live Pages revision is still `acadc5d` from September 24 (run `35981622035`), while the latest recorded backend release is `8131264` (run `38448350086`) with zero retained release artifacts. Current source is not current production.
@@ -101,6 +104,8 @@ Public-safe project/release/data boundaries are recorded in `docs/PROJECT-STOCKT
 - The historical workspace root is gone. Use the canonical repository through isolated worktrees and preserve the dirty owner checkout.
 - Preserve PR20 after the glyph and nine-call dialog slices. Remaining modal conversions and Reddit/provider compatibility are unresolved; the merged dialog slice does not authorize provider behavior.
 ## Work log
+
+- 2026-10-30 UTC · Codex CREATIVE-DIALOGS completed: shared async guard, exact asset revalidation, captured reference input, script version and synthetic fixture update;21 new executable tests. Focused29/full608 pass, frontend/external syntax and diff check pass. Docs/PR20-REMAINING-DIALOGS-20261030.md records remaining99 candidates. Browser fixture not rerun; no provider/DB/device/deployment actions. Existing production PWA installation remains a separate lane.
 
 - 2026-10-30 UTC · Codex PR20-REMAINDER-AUDIT completed: converted the persona invite prompt, bumped persona-view cache version, added seven delayed-input/cancel/stale-actor tests and documented remaining conversion groups. Focused 16/16, full 587/587, frontend syntax and git diff --check passed. No provider, migration, deployment, installed-app or private-data changes. PR20 remains open; rebuild the private package for the eventual merged revision.
 - 2026-10-30 UTC · Codex PR20 hardened modal slice closeout: merged PR42 as `1f0137e`; hosted PR CI run `41068288823` and merged-main CI run `41068633552` passed all five substantive jobs. The bounded slice carries the dialog primitive plus only `owner-app.js`'s nine already-async native-dialog calls, with explicit destructive semantics, Cancel-first focus, exact background-state restoration, event containment, overlay-teardown settlement, queue recovery and state/entity revalidation. Full suite passed 580/580; independent focused rerun passed 16/16 with no blocker/high/medium finding. Reddit compatibility and remaining modal conversions stay in PR20. Authenticated browser/WebView/assistive-technology acceptance remains unverified. No deploy, install, provider, account, migration or production action occurred.
