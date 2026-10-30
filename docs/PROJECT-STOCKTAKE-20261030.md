@@ -41,7 +41,7 @@ pull over the owner checkout to make its status look current.
 | Remote source | Product source is reconciled through `1f0137e` (PR42); merged-main CI run `41068633552` passed all five substantive jobs. This documentation-only successor adds no runtime capability. PR39–PR42 are merged, PR14 is closed as superseded, and PR20/PR22 remain open for their unresolved unique scope. | A green merged revision is not deployed or accepted on a device. |
 | GitHub Pages | `https://mypersonas.online` responds over HTTPS. The last successful Pages deployment is revision `acadc5d` in run `35981622035` from September 24, 2026. | The live site is not current `main`. |
 | Backend release | The latest recorded successful backend workflow is revision `8131264` in run `38448350086`; the run retains zero release artifacts. | It cannot satisfy the current Pages workflow's exact-revision binding. |
-| Pages candidate | The private package rebuilt from exact final main `35ee29c` selects 125 exact-source members / 83,998,450 bytes. Both package verifiers report byte parity with zero failures; its ZIP SHA-256 is `3a9b7fca2f3e5e68361ea4f397dce93088ad714fd1bd9d9878f96df55719085a`. | Forty pre-existing media/archive members still require destination-specific review. Filename and byte checks do not certify media consent, archive contents, credentials hidden inside text, deployment or signed-in behavior. |
+| Pages candidate | The hardened candidate excludes the retired `brother_karunya` identity directory and the separate Personas desktop source ZIP. It selects 122 exact-source members / 79,613,797 bytes. Both package verifiers report byte parity with zero failures; its ZIP SHA-256 is `bde2f4951f0e7e2a469301def8a659dfcc8c360b2fa74fd8d4a3ab1d1fb2fcc1`. | Thirty-seven images still require destination-specific review. Filename and byte checks do not certify media consent, credentials hidden inside text, deployment or signed-in behavior. |
 | Phone applications | MyPersonas local code 2 and cloud code 1 are installed; the reconciled code-2 source baseline remains the protected upgrade reference. AliaSpaces production and acceptance shells are code 7. Separate Soul Concept and Persona Studio applications are also present. | Presence is not current-main deployment, provider acceptance or authorization to reinstall. Preserve app state and do not downgrade merely to create a new receipt. |
 | Windows applications | No MyPersonas or AliaSpaces native Windows install was found. Browser-profile inspection was intentionally excluded, so PWA installation is unconfirmed rather than disproved. Persona Studio and Soul Concept are separate installed applications. | Their presence is not a MyPersonas desktop release, and their private libraries are not installer inputs. |
 | Provider publishing | `publishing_enabled` remains false; saved approvals and manual plans are not provider sends. | No social post, queue or schedule is live merely because source or drafts exist. |
@@ -102,9 +102,9 @@ must never be promoted as release artifacts.
    hash is recorded. Keep the already-installed code-2 package and its state. Any
    future code-3+ upgrade still needs export/backup, manifest/signer checks and
    launch/sign-in acceptance. Never uninstall to solve a signer or version problem.
-4. **Package closeout completed for `35ee29c`:** the final-main private artifact has
-   125 exact-source members and zero parity failures. Retain earlier packages only
-   as superseded evidence and review the 40 flagged media/archive members before
+4. **Package closeout hardened after `35ee29c`:** the private artifact excludes the
+   retired identity directory and separate desktop-app ZIP, has 122 exact-source members and zero parity failures.
+   Retain earlier packages only as superseded evidence and review the 37 remaining images before
    any destination decision. Package parity still does not authorize a deployment.
 5. Confirm the authenticated production migration/provider ledger. Run the backend
    release for the exact intended main revision, retain its artifact and complete

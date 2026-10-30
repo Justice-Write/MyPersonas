@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { verifyPackage, includesFromWorkflow } from '../scripts/verify-pages-package.mjs';
 
-const workflow = "--include '/index.html' --include '/assets/' --include '/assets/***' --exclude '*'";
+const workflow = "--include '/index.html' --include '/assets/' --exclude '/assets/legacy.zip' --exclude '/assets/retired/***' --include '/assets/***' --exclude '*'";
 async function fixture(t) {
   const root = await mkdtemp(join(tmpdir(), 'mypersonas-package-'));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -25,6 +25,14 @@ test('accepts exact public payload and hashes every member; source handoff stays
   assert.ok(result.files.every(f => /^[a-f0-9]{64}$/.test(f.sha256)));
 });
 test('rejects missing deny-all', () => assert.throws(() => includesFromWorkflow("--include '/index.html'")));
+test('honors an ordered exclusion inside an included tree', async t => {
+  const {source, artifact} = await fixture(t);
+  await mkdir(join(source, 'assets', 'retired'), { recursive: true });
+  await writeFile(join(source, 'assets', 'retired', 'avatar.png'), 'retired');
+  await writeFile(join(source, 'assets', 'legacy.zip'), 'separate app');
+  const result = await verifyPackage(source, artifact, workflow);
+  assert.equal(result.count, 2);
+});
 test('rejects extra private handoff', async t => {
   const {source, artifact} = await fixture(t);
   await writeFile(join(artifact, 'status-handoff.md'), 'private');

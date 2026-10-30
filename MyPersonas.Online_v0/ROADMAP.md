@@ -7,8 +7,9 @@
 > other modal conversions and a separate Reddit contract; PR22 remains open with
 > migration 080 unapplied and no live moderation capability. The protected phone's
 > MyPersonas code-2 shell is backed by reconciled source and remains untouched.
-> The final-main `35ee29c` exact-source package is complete: 125 members /
-> 83,998,450 bytes, zero parity failures, with 40 media/archive items still requiring
+> The hardened final-main package candidate excludes the explicitly retired
+> `brother_karunya` identity directory and the separate Personas desktop source ZIP.
+> It contains 122 members / 79,613,797 bytes with zero parity failures. Thirty-seven images still require
 > destination-specific review. Complete the exact-main backend artifact and signed-in
 > private canary before dispatching the gated Pages release. Reusable code,
 > owner-approved content packs and private runtime data remain explicit separate

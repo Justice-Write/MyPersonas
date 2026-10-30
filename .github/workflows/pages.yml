@@ -115,6 +115,8 @@ jobs:
             --include '/agent-board.css' \
             --include '/agent-board.js' \
             --include '/assets/' \
+            --exclude '/assets/Downloads/Personas/Personas_v0.5.zip' \
+            --exclude '/assets/personas/brother_karunya/***' \
             --include '/assets/***' \
             --include '/src/' \
             --include '/src/assets/' \

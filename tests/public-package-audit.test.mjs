@@ -5,12 +5,14 @@ import os from 'node:os';
 import path from 'node:path';
 import { audit, parseIncludes, risks, selected } from '../scripts/audit-public-package.mjs';
 
-const workflow = `rsync -a --delete --include '/index.html' --include '/assets/' --include '/assets/***' --exclude '*' "\${SITE_DIR}/" .pages-artifact/`;
+const workflow = `rsync -a --delete --include '/index.html' --include '/assets/' --exclude '/assets/legacy.zip' --exclude '/assets/retired/***' --include '/assets/***' --exclude '*' "\${SITE_DIR}/" .pages-artifact/`;
 test('requires a recognized deny-default packaging block', () => {
   assert.throws(() => parseIncludes(workflow.replace("--exclude '*'", '')));
   assert.throws(() => parseIncludes(workflow.replace('/assets/***', '/**')));
   const rules = parseIncludes(workflow);
   assert.equal(selected('assets/image.png', rules), true);
+  assert.equal(selected('assets/retired/avatar.png', rules), false);
+  assert.equal(selected('assets/legacy.zip', rules), false);
   assert.equal(selected('outputs/private.json', rules), false);
   assert.equal(selected('status-handoff.md', rules), false);
 });
