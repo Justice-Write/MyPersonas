@@ -1,6 +1,8 @@
+> **Read `status-handoff.md` first.** It is the shared, current status and work-claim record for Codex, Claude, Cursor, Copilot, Gemini, Grok and local models. Claim work there before editing and close the entry when finished. This file defines durable engineering boundaries; the handoff defines current evidence.
+
 # Agent contract — MyPersonas / Personas mobile
 
-This checkout is the canonical **MyPersonas** platform (`castleism/MyPersonas`).
+This checkout is the canonical **MyPersonas** platform (`Justice-Write/MyPersonas`).
 Phone-test prototypes that live on the owner desktop are **not** here. Do not
 claim access to them. No attachment transfer should be assumed.
 
