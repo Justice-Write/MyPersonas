@@ -914,7 +914,8 @@ function ownerAppPortalUrl(account) {
 }
 
 function ownerAppPortalIcon(provider) {
-  return ({ twitter: "𝕏", instagram: "◎", facebook: "f", website: "⌂", gmail: "✉", youtube: "▶", reddit: "r", discord: "◈" })[provider] || "↗";
+  if (typeof platformGlyph === "function" && typeof PLATS === "object" && PLATS && Object.prototype.hasOwnProperty.call(PLATS, provider)) return platformGlyph(provider);
+  return "↗";
 }
 
 function ownerAppAccountsFor(personaId) {
