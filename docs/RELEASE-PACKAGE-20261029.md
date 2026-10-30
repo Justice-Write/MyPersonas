@@ -38,4 +38,3 @@ CI reconciliation: initial run41019471561 passed four checks and failed the pre-
 
 
 Dependency follow-up: PR24 provided Electron44.9.3 / undici7.30.1. The present release additionally pins Electron44.10.0 for the advisory range observed in current CI. Fresh lockfile audit reports zero vulnerabilities; no Electron binary was installed.
-

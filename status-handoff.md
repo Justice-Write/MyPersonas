@@ -46,7 +46,7 @@
 
 
 ## In progress
-- Release increment complete locally; committing/pushing review branch.
+- None. Release enforcement merged in PR27; audit and startup-test follow-through are committed in PR26.
 ## Current state
 Clean main-derived release candidate; backend evidence and private canary not yet verified; no connected phone.
 ## Work log
@@ -70,4 +70,4 @@ PR26 adds a standalone read-only inventory/parity command and a data-boundary gu
 
 The creative-library SQL test now waits for the final PostgreSQL TCP listener instead of the image's temporary initialization socket. A mocked lifecycle test reproduces the old failure without Docker; the real hosted SQL check passed at01ea421. Product SQL and production gates were not changed.
 
-Current integration: merged main35c6db9 into this branch, retaining its newer Electron/undici lockfile and workflow verifier. Combined checks are being verified; no production deployment or device installation is claimed. Older audit-branch dependency pins are superseded by current main.
+Current integration: merged main35c6db9 into this branch, retaining its newer Electron/undici lockfile and workflow verifier. Combined local checks pass:537Node tests, frontend syntax and package checks. Final hosted checks are recorded on PR26; no production deployment or device installation is claimed. Older audit-branch dependency pins are superseded by current main.
