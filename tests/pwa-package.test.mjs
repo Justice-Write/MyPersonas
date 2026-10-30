@@ -3,6 +3,7 @@ import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import vm from "node:vm";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const siteRoot = path.join(repoRoot, "MyPersonas.Online_v0");
@@ -79,13 +80,17 @@ test("manifest uses scoped relative routes and complete brand icons", async () =
 
   for (const shortcut of manifest.shortcuts) {
     assertRelativeSitePath(shortcut.url, `shortcut ${shortcut.name}`);
-    assert.match(shortcut.url, /^\.\/#\//);
+    assert.match(shortcut.url, /^\.\/(?:#\/|sites\.html$)/);
     assert.deepEqual(shortcut.icons, [{
       src: "./icon-192.png",
       sizes: "192x192",
       type: "image/png"
     }]);
   }
+  assert.ok(
+    manifest.shortcuts.some((shortcut) => shortcut.url === "./sites.html"),
+    "manifest must expose the public sites/apps checklist"
+  );
 });
 
 test("service worker precaches only existing public shell files", async () => {
@@ -95,6 +100,7 @@ test("service worker precaches only existing public shell files", async () => {
 
   const paths = [...list[1].matchAll(/"([^"]+)"/g)].map((match) => match[1]);
   assert.ok(paths.includes("./offline.html"));
+  assert.ok(paths.includes("./sites.html"));
   assert.ok(paths.includes("./manifest.webmanifest"));
   assert.ok(!paths.includes("./index.html"), "signed-in application HTML must not be precached");
 
@@ -126,7 +132,97 @@ test("install helper registers a path-relative worker without synthetic push sta
   assert.match(source, /updateViaCache: "none"/);
   assert.match(source, /beforeinstallprompt/);
   assert.match(source, /aria-live/);
+  assert.match(source, /const isAndroidWebView = \/\(\?:;\\s\*wv\\\)\|\\bwv\\b\)\/i/);
+  assert.match(source, /const isAndroidBrowser = \/Android\/i\.test\(navigator\.userAgent\) && !isAndroidWebView/);
+  assert.match(source, /Install app or Add to Home screen/);
+  assert.match(source, /does not post or request notification permission/);
   assert.doesNotMatch(source, /PushManager|pushManager|Notification\.requestPermission|subscribe\s*\(/);
+});
+
+test("Android install help appears in browsers but stays out of the native WebView", async () => {
+  const source = await readSiteFile("pwa.js");
+
+  function runInstallHelper(userAgent) {
+    const elements = new Map();
+    const windowListeners = new Map();
+    const mount = {
+      insertBefore(node) {
+        node.isConnected = true;
+        node.parentNode = this;
+        elements.set(node.id, node);
+      }
+    };
+    const navigator = {
+      userAgent,
+      platform: "Linux armv8l",
+      maxTouchPoints: 0
+    };
+    const window = {
+      navigator,
+      matchMedia: () => ({ matches: false }),
+      addEventListener(type, listener) {
+        const listeners = windowListeners.get(type) || [];
+        listeners.push(listener);
+        windowListeners.set(type, listeners);
+      },
+      clearTimeout() {},
+      setTimeout() { return 1; }
+    };
+    const document = {
+      baseURI: "https://example.test/",
+      body: mount,
+      querySelector(selector) {
+        return selector === "header nav" ? mount : null;
+      },
+      getElementById(id) {
+        return elements.get(id) || null;
+      },
+      createElement(tagName) {
+        const listeners = new Map();
+        return {
+          tagName: tagName.toUpperCase(),
+          hidden: false,
+          style: {},
+          isConnected: false,
+          setAttribute(name, value) { this[name] = value; },
+          addEventListener(type, listener) { listeners.set(type, listener); },
+          listeners
+        };
+      }
+    };
+
+    vm.runInNewContext(source, {
+      URL,
+      console,
+      document,
+      location: {
+        protocol: "https:",
+        hostname: "example.test",
+        origin: "https://example.test"
+      },
+      navigator,
+      window
+    });
+
+    return { elements, windowListeners };
+  }
+
+  const chrome = runInstallHelper(
+    "Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 Chrome/141.0 Mobile Safari/537.36"
+  );
+  assert.equal(chrome.elements.get("pwaInstallButton")?.textContent, "Install help");
+  assert.equal(chrome.elements.get("pwaInstallButton")?.hidden, false);
+
+  const webView = runInstallHelper(
+    "Mozilla/5.0 (Linux; Android 15; Pixel 9 Build/AP4A; wv) AppleWebKit/537.36 Version/4.0 Chrome/141.0 Mobile Safari/537.36"
+  );
+  assert.equal(webView.elements.has("pwaInstallButton"), false);
+  let prevented = false;
+  webView.windowListeners.get("beforeinstallprompt")?.[0]?.({
+    preventDefault() { prevented = true; }
+  });
+  assert.equal(prevented, false, "native WebView must ignore browser install prompts");
+  assert.equal(webView.elements.has("pwaInstallButton"), false);
 });
 
 test("the app head and Pages artifact include the complete PWA shell", async () => {
@@ -155,6 +251,7 @@ test("the app head and Pages artifact include the complete PWA shell", async () 
     "/service-worker.js",
     "/pwa.js",
     "/offline.html",
+    "/sites.html",
     "/mobile-owner-workflow.js"
   ]) {
     assert.ok(workflow.includes(`--include '${releasePath}'`), `Pages artifact must include ${releasePath}`);
@@ -165,4 +262,32 @@ test("the app head and Pages artifact include the complete PWA shell", async () 
     /--include '\/brand(?:\/|')/,
     "Pages must publish only the curated root icon mirrors, not brand concepts or previews"
   );
+});
+
+test("public sites checklist is packaged, relative, privacy-bounded, and non-mutating", async () => {
+  const html = await readSiteFile("sites.html");
+
+  assert.match(html, /<meta name="robots" content="noindex, nofollow">/);
+  assert.match(html, /<meta name="referrer" content="no-referrer">/);
+  assert.match(html, /href="\.\/manifest\.webmanifest"/);
+  assert.match(html, /<script src="\.\/pwa\.js" defer><\/script>/);
+  assert.match(html, /href="\.\/#\/owner"/);
+  assert.match(html, /href="\.\/#\/studio"/);
+  assert.match(html, /https:\/\/nooyouniverse\.com\//);
+  assert.match(html, /does not sign in, publish, install software, request notification permission, or change owner data/i);
+  assert.match(html, /Source-ready does not mean deployed, installed, store-approved, provider-accepted, or verified on this device/i);
+  assert.match(html, /Install app[\s\S]*Add to Home screen/);
+  assert.match(html, /provides no download or store-install link/i);
+  assert.match(html, /Deployment, installation, provider acceptance, private data migration, and signed-in acceptance require separate evidence/i);
+
+  assert.doesNotMatch(html, /apps\/personas-android|debug WebView|cloud agent/i);
+  assert.doesNotMatch(html, /github\.com\/Justice-Write|[A-Z]:\\|\/Users\//i);
+  assert.doesNotMatch(html, /Notification\.requestPermission|PushManager/i);
+
+  const localReferences = [...html.matchAll(/(?:href|src)="(\.\/[^"#?]*)[^\"]*"/g)]
+    .map((match) => match[1].slice(2))
+    .filter(Boolean);
+  for (const localReference of localReferences) {
+    await access(path.join(siteRoot, localReference));
+  }
 });

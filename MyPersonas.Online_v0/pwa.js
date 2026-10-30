@@ -8,6 +8,8 @@
     window.navigator.standalone === true;
   const isAppleMobile = /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isAndroidWebView = /(?:;\s*wv\)|\bwv\b)/i.test(navigator.userAgent);
+  const isAndroidBrowser = /Android/i.test(navigator.userAgent) && !isAndroidWebView;
 
   let deferredInstallPrompt = null;
   let installButton = null;
@@ -61,6 +63,8 @@
     if (!deferredInstallPrompt) {
       if (isAppleMobile && !isStandalone()) {
         showStatus("On iPhone or iPad, open Share, then choose Add to Home Screen.", true);
+      } else if (isAndroidBrowser && !isStandalone()) {
+        showStatus("On Android, open the browser menu, then choose Install app or Add to Home screen if the browser offers it. This installs the browser app only; it does not post or request notification permission.", true);
       }
       return;
     }
@@ -101,7 +105,7 @@
   }
 
   window.addEventListener("beforeinstallprompt", (event) => {
-    if (isStandalone()) return;
+    if (isStandalone() || isAndroidWebView) return;
     event.preventDefault();
     deferredInstallPrompt = event;
     ensureInstallUi();
@@ -117,7 +121,7 @@
     showStatus("AliaSpaces was installed.");
   });
 
-  if (isAppleMobile && !isStandalone()) {
+  if ((isAppleMobile || isAndroidBrowser) && !isStandalone()) {
     ensureInstallUi();
     installButton.textContent = "Install help";
     installButton.setAttribute("aria-label", "Show AliaSpaces installation instructions");
