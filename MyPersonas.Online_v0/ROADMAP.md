@@ -503,7 +503,12 @@ larger product phase remains.
       pull renditions into the image picker and SD panel, opt-in per-asset training-set
       flag for Concept LoRA sets (verify Adobe ToS on ML use of API-pulled assets)
 - [ ] Discovery: trending personas/tags, better ranking than recency
-- [ ] Moderation pipeline: user reports on content/personas, review queue
+- [ ] Moderation pipeline: user reports on content/personas and a staff review
+      queue require an owner-approved authority, reporter-privacy, immutable
+      evidence/event, retention/legal-hold, transition and cross-product contract.
+      PR22's migration 080 remains unapplied and must not be ported wholesale; use
+      the [current content-report/moderation security design](../docs/PR22-CONTENT-REPORTS-MODERATION-SECURITY-DESIGN.md)
+      before selecting a new forward migration or shipping either client.
 - [~] PWA: install/offline shell complete locally, including Android/iOS install help and
       the public `sites.html` availability checklist; exact-current deployment readback,
       real-device home-screen acceptance, and a separate push-notification

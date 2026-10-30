@@ -24,6 +24,7 @@ This index neither integrates candidates nor activates a feature.
 | Castleborn / CREATE and persona-brand sites | Separate consumer/site authorities; see the [stocktake map](PROJECT-STOCKTAKE-20261030.md) | Canon, brand workspaces and identity assets are owner-authorized content, not generic installer members. Each site retains its own deploy gate. |
 | Provider and review candidates | Current connector/roadmap source plus the root handoff and GitHub review record | Candidate code, fixtures, approvals and drafts are not provider acceptance. `publishing_enabled=false`; no social send is inferred. |
 | Feed, push and alternative native-client proposals | [PR14 extraction/security design](PR14-NATIVE-FEED-PUSH-SECURITY-DESIGN.md) | PR14 is an exploratory source, not a merge candidate. Feed retrieval, push capabilities and Expo/native choices require the documented redesign and release evidence. |
+| Content reports and moderation | [PR22 extraction/security design](PR22-CONTENT-REPORTS-MODERATION-SECURITY-DESIGN.md) | PR22 is preserved review source, not a merge candidate. Migration 080 remains unapplied; authority, privacy, evidence, retention, transitions and the MyPersonas/AliaSpaces interface require owner decisions and current release evidence. |
 
 ## Evidence vocabulary
 
