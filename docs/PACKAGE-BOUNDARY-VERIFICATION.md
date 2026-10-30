@@ -24,6 +24,26 @@ Copying an entire installed directory is not a valid packaging procedure. Likewi
 same bytes do not prove that a file is disposable: catalogs, hard links, backup
 manifests and recovery paths can still depend on it.
 
+## Generic package and content-pack target
+
+Use three independently versioned layers:
+
+- **Application:** code, manifests, reviewed dependencies, synthetic fixtures,
+  icons and the minimum public shell assets. It must start without owner content.
+- **Owner-authorized content pack:** persona definitions, canon, avatars, banners,
+  launch material and other identity-bearing assets approved for one destination.
+  Record provenance and approval per pack; do not silently bundle it into every
+  installer.
+- **Private runtime state:** accounts, sessions, drafts, receipts, chats, media,
+  models, exports, caches and backups. Preserve and migrate through supported
+  readers/exporters, never through an installer copy.
+
+The ignored repository `outputs/` tree and installed creative-app reference
+libraries are private working/runtime data. Tracked persona and launch media may be
+intentional public content, but that does not make them a generic program
+dependency. Negative-test or tampered packages are evidence only and must never be
+promoted as release artifacts.
+
 ## Repeatable read-only check
 
 Run from the repository root:

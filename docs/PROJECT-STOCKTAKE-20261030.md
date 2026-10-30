@@ -1,0 +1,107 @@
+# Project stocktake and continuation — October 30, 2026
+
+This is a public-safe coordination record for MyPersonas. It distinguishes source,
+CI, packages, deployments, installations and signed-in acceptance. It contains no
+credentials, private chat identifiers, device identifiers or owner-media paths.
+
+## Product and repository map
+
+| Product or project | Relationship to MyPersonas | Boundary |
+|---|---|---|
+| MyPersonas | Canonical private owner/control plane | Owns provider connections, private drafts and approvals, automation, entitlements, audit and the current production-migration authority. |
+| AliaSpaces | Separate first-party social product | Owns public persona presentation, discovery, feeds and social interaction. Shared contracts must remain narrow, versioned and owner-scoped. |
+| Personas | Companion desktop/mobile work | A separate application lineage. Preserve its state and migrate through explicit readers; do not treat it as the MyPersonas web package. |
+| Soulular / Soul Concept | Private creative and reference-media system | Models, reference libraries, training controls, generated media and creative history remain separate from MyPersonas packages. |
+| Soul Concept Engine | Consent/provenance infrastructure | Related contracts and tooling, but a separate repository and release track. |
+| Castleborn / CREATE and persona-brand sites | Consumers of persona/canon/content workflows | Private canon and brand workspaces are data, not generic installer members. Each site keeps its own deploy authority. |
+| Noo YouNiverse | Independently deployed brand site with a reviewed source mirror here | The canonical site repository remains its build/deploy authority. Mirroring source into MyPersonas is not a deployment. |
+
+The current MyPersonas v0 tree is transitional and still contains historical
+AliaSpaces/social UI. Source location does not change permanent product ownership;
+see [PROJECT-BOUNDARY.md](../PROJECT-BOUNDARY.md).
+
+## Chat and workspace reconciliation
+
+The project history spans the dedicated MyPersonas project, a related AliaSpaces
+project, the Soul Concept Engine project and recovered persona/site chats. Some
+current and recovered chats still point at a removed historical workspace root.
+Those chats are useful evidence, but their stale working directory or missing
+project membership is not proof that their changes landed. Exact chat identifiers
+and private transcripts remain in the private audit record, not this repository.
+
+The canonical owner checkout is dirty and intentionally preserved. Continuation
+work uses isolated worktrees from an exact remote revision. Never reset, clean or
+pull over the owner checkout to make its status look current.
+
+## Verified release truth at this checkpoint
+
+| Layer | Verified state | What it does not prove |
+|---|---|---|
+| Remote source | Main and recent pull requests are pushed; current-main CI is green. The family private-handoff review is reconciled separately and its complete local suite reports 556/556 passing. | A green branch is not merged, deployed or accepted on a device. |
+| GitHub Pages | `https://mypersonas.online` responds over HTTPS. The last successful Pages deployment is revision `acadc5decd4333b4258e86a91cc76c1836ef523c` from September 24, 2026. | The live site is not current `main`. |
+| Backend release | The latest recorded successful backend workflow is revision `813126414fa7554e78f38f6944014b011f5c84cc`; its run retains no exact-main release artifact. | It cannot satisfy the current Pages workflow's exact-revision binding. |
+| Pages candidate | The allowlist selects 81 exact-source members and the verifier rejects extras, changed bytes, links and common private filenames. | Filename and byte checks do not certify media consent, archive contents, credentials hidden inside text or signed-in behavior. |
+| MyPersonas Android | A newer owner debug shell is installed on the authorized phone than the APK reproducible from this repository. The installed package is version code 2 / `0.1.1-debug`; the reviewed source candidate is code 1 / `0.1.0-debug`. | Installed code 2 is not yet reproducible from the canonical source/signing record. Do not downgrade or uninstall it. |
+| Desktop | No MyPersonas or AliaSpaces Windows installer/PWA installation is evidenced. Personas and Soul Concept are separate installed applications. | Their presence is not a MyPersonas desktop release. |
+| Provider publishing | `publishing_enabled` remains false; saved approvals and manual plans are not provider sends. | No social post, queue or schedule is live merely because source or drafts exist. |
+
+The Pages workflow is manual by design. A release needs current migration/provider
+ledger evidence, a backend artifact from the exact main revision, owner sign-in/MFA,
+the signed-in private image-caption canary and the exact backend run ID. Do not type
+confirmation strings from an old run or an assumed ledger.
+
+## Reusable package, optional content and private state
+
+The installation model has three explicit layers:
+
+1. **Reusable application package:** reviewed application code, manifests, schema
+   and migration source, licensed dependencies, synthetic fixtures, icons and only
+   the public assets required for the shell.
+2. **Owner-authorized content pack:** persona definitions, real avatars/banners,
+   canon, launch content and other identity-bearing assets that the owner explicitly
+   approves for a named destination. A generic install must function without this
+   pack.
+3. **Private runtime state:** accounts, sessions, cookies, OAuth grants, credentials,
+   drafts, approvals, audit receipts, chats, reference photos, generated media,
+   exports, models/adapters, logs, caches, backups and device/app sandboxes. This is
+   never an installer payload.
+
+The repository contains a large ignored `outputs/` tree used for research, media,
+approvals and working evidence. It is not source and must remain excluded. The
+tracked persona/avatar/banner and launch assets are identity-bearing content even
+when intentionally public; move toward an owner-approved content sidecar instead of
+assuming they belong in every reusable build. Installed creative-application roots
+also contain large owner reference libraries, so copying an installed directory is
+not a valid packaging method.
+
+Secrets, signing inputs, local environment files and production credentials stay
+outside repositories and artifacts. A development debug keystore is never a
+production signing identity. Negative-test/tampered packages are evidence only and
+must never be promoted as release artifacts.
+
+## Roadmap continuation
+
+1. Reconcile the family handoff/private-draft review with exact current `main`, make
+   its historical receipt hashes reproducible, rerun the full suite and complete
+   review before merge.
+2. Preserve and triage older conflicting pull requests by unique change, not branch
+   age. Close only after equivalence/supersession is recorded.
+3. Reconcile MyPersonas Android version-code-2 source and signing provenance. Build
+   an equal-or-newer package, verify its manifest/hash/signer, then perform a
+   data-preserving upgrade and launch/sign-in acceptance. Never uninstall to solve a
+   signer or version problem.
+4. Confirm the authenticated production migration/provider ledger. Run the backend
+   release for the exact intended main revision, retain its artifact and complete
+   the signed-in private canary.
+5. Dispatch the gated Pages workflow only with those current facts. Read back live
+   hashes, routes and signed-in owner workflows after deployment.
+6. Continue the MyPersonas/AliaSpaces extraction with one deployment owner per
+   function/migration and complete unrelated-account privacy, real-phone MFA and
+   native save/restore acceptance in AliaSpaces' own release lane.
+7. Externalize owner content and creative libraries from reusable installers; add a
+   release manifest with source revision, artifact hash, signer, package/version,
+   data path, migration policy and post-update readback.
+
+No provider post, production migration, account change, owner-media move, training
+job, downgrade, uninstall or production deployment is authorized by this document.
+

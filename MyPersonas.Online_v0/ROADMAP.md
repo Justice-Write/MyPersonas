@@ -1,5 +1,14 @@
 # MyPersonas automation control plane — Roadmap
 
+> October 30 project stocktake: the remote source and CI are current, but the live
+> Pages site remains the September 24 deployment and the last backend release is not
+> bound to current main. The authorized phone has a newer MyPersonas debug shell than
+> canonical source can reproduce, so it must be preserved rather than downgraded.
+> Reconcile source/signing, complete exact-main backend artifact plus signed-in
+> private canary, and only then dispatch the gated Pages release. Generic packages,
+> owner-approved persona content and private runtime data are now explicit separate
+> layers. See `../docs/PROJECT-STOCKTAKE-20261030.md`.
+
 > October 29 release continuation: Pages package verification is implemented and tested (533 tests pass; 81 exact-source website members). Deployment still needs the workflow's current migration, backend-artifact and private-canary evidence. Android owner-shell packaging and physical-phone acceptance are separate from website release. See `../docs/RELEASE-PACKAGE-20261029.md`; AliaSpaces/Akasha is owned by the parallel release chat.
 
 **October 24 private owner documentation slice (source only):**

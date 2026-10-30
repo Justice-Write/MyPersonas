@@ -16,6 +16,10 @@ const [guide, contract, source, previewSql, creationSql] = await Promise.all([
   read("sql-updates/073-content-package-preview-gate.sql"),
   read("sql-updates/077-mobile-private-draft-workflow.sql"),
 ]);
+const historicalReceipt = JSON.parse(await readFile(
+  path.join(root, "verification", "OWNER-PRIVATE-DRAFT-MANUAL-20261024.json"),
+  "utf8",
+));
 const prose = guide.replace(/\*\*/g, "").replace(/\s+/g, " ");
 const ui = source.replace(/&amp;/g, "&").replace(/\s+/g, " ");
 const escaped = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -56,6 +60,23 @@ const request = (overrides = {}) => workflow.createPrivateDraftRequest({
   ownerId: owner, personaId, personas, accounts, variants: variants(),
   title: "Synthetic private draft", guidance: "Synthetic context only", timezone: "UTC",
   publishingEnabled: false, online: true, ...overrides,
+});
+
+test("historical receipt binds every seal to one revision and an explicit byte domain", () => {
+  assert.match(historicalReceipt.sealContext.revision, /^[0-9a-f]{40}$/);
+  assert.match(historicalReceipt.sealContext.purpose, /historical source-parity evidence only/i);
+  assert.match(historicalReceipt.sealContext.rawGitBlob, /exact LF-normalized bytes stored/i);
+  assert.match(historicalReceipt.sealContext.crlfCheckout, /CRLF line endings/i);
+  assert.equal(historicalReceipt.seals.length, 9);
+  assert.deepEqual(
+    new Set(historicalReceipt.seals.map((seal) => seal.ByteDomain)),
+    new Set(["rawGitBlob", "crlfCheckout"]),
+  );
+  for (const seal of historicalReceipt.seals) {
+    assert.match(seal.Path, /^(?:MyPersonas\.Online_v0|tests)\//);
+    assert.match(seal.SHA256, /^[0-9a-f]{64}$/);
+    assert.ok(["rawGitBlob", "crlfCheckout"].includes(seal.ByteDomain));
+  }
 });
 
 test("private-draft guide links resolve and distinguish source evidence from live acceptance", async () => {

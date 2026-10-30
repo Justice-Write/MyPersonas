@@ -14,6 +14,19 @@
 /supabase/.temp/
 .DS_Store
 Thumbs.db
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+*.jks
+*.keystore
+*.keystore.properties
+*.p12
+*.pfx
+*.pem
+*.key
 
 # Android debug companion — local SDK path and Gradle outputs only
 /apps/personas-android/local.properties

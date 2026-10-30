@@ -14,9 +14,9 @@ product ownership. See [PROJECT-BOUNDARY.md](PROJECT-BOUNDARY.md).
   line v0), including the live owner control plane and shared legacy UI.
   The folder is renamed only on major version changes; point releases and
   hotfixes are git tags. See `MyPersonas.Online_v0/VERSIONING.md`.
-- `.github/workflows/pages.yml` — deploys the current version folder to
-  GitHub Pages on every push to `main`. Bump `SITE_DIR` there on major
-  version changes.
+- `.github/workflows/pages.yml` — manually deploys the current version folder
+  to GitHub Pages only after exact-revision backend, migration and signed-in
+  canary confirmations. Bump `SITE_DIR` there on major version changes.
 - `supabase/functions/mailbox-manager/` and `run-mailbox-jobs/` — the
   owner-authenticated Inbox Concierge control endpoint and its cron-secret worker.
   Gmail is the first real adapter; provider tokens and message references remain
@@ -40,6 +40,10 @@ product ownership. See [PROJECT-BOUNDARY.md](PROJECT-BOUNDARY.md).
 - `MyPersonas.Online_v0/KEY-ROTATION.md` — migrating off deprecated Supabase keys.
 - `CI-CD-SETUP.md` — one-time CI/CD setup.
 - `MyPersonas.Online_v0/ROADMAP.md` / `CHANGELOG.md` — status of record.
+- `docs/PROJECT-STOCKTAKE-20261030.md` — current project/repository map,
+  release-state matrix, data separation and prioritized continuation.
+- `docs/PACKAGE-BOUNDARY-VERIFICATION.md` — repeatable package inventory and
+  application/content/runtime-state boundaries.
 
 ## Deployment
 

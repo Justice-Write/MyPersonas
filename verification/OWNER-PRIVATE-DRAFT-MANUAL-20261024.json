@@ -49,42 +49,57 @@
       "result": "No blocking ambiguity after refinements; document comprehension only"
     }
   },
+  "sealContext": {
+    "revision": "26c712e663511dd5139f0d0f601a3ff6c65fee38",
+    "purpose": "Historical source-parity evidence only; these are not hashes of the later public projection or a live runtime.",
+    "rawGitBlob": "SHA-256 of the exact LF-normalized bytes stored in the named Git blob at revision.",
+    "crlfCheckout": "SHA-256 of the same revision materialized with CRLF line endings in the historical Windows checkout. No other content transformation is applied."
+  },
   "seals": [
     {
       "Path": "MyPersonas.Online_v0/OWNER-PRIVATE-DRAFT-GUIDE.md",
-      "SHA256": "282ed6ede94c40b42f4613b4cd0c955fecc9c95e7e75044f67b66e3e857e8a6c"
+      "SHA256": "282ed6ede94c40b42f4613b4cd0c955fecc9c95e7e75044f67b66e3e857e8a6c",
+      "ByteDomain": "rawGitBlob"
     },
     {
       "Path": "MyPersonas.Online_v0/OWNER-MOBILE-COMMAND-CENTER.md",
-      "SHA256": "8426dfeee9b59049774cf7074534637824a2319c6e27517d8e910db0ba93d78b"
+      "SHA256": "8426dfeee9b59049774cf7074534637824a2319c6e27517d8e910db0ba93d78b",
+      "ByteDomain": "crlfCheckout"
     },
     {
       "Path": "MyPersonas.Online_v0/ROADMAP.md",
-      "SHA256": "761d8c63fe24c7b5749da939cb61391fbf9109b5f449dfeeb03ea5f66e78c6bc"
+      "SHA256": "761d8c63fe24c7b5749da939cb61391fbf9109b5f449dfeeb03ea5f66e78c6bc",
+      "ByteDomain": "crlfCheckout"
     },
     {
       "Path": "tests/owner-private-workflow-manual-parity.test.mjs",
-      "SHA256": "8b44e204404e28cf26d10a98e0c32acecd34e12f85cb62ed0ccaf7231f946a11"
+      "SHA256": "8b44e204404e28cf26d10a98e0c32acecd34e12f85cb62ed0ccaf7231f946a11",
+      "ByteDomain": "rawGitBlob"
     },
     {
       "Path": "MyPersonas.Online_v0/owner-app.js",
-      "SHA256": "4f4c07cb123a3dfb4a15030383448a7a1e477a4668e2670df7d35237677db881"
+      "SHA256": "4f4c07cb123a3dfb4a15030383448a7a1e477a4668e2670df7d35237677db881",
+      "ByteDomain": "crlfCheckout"
     },
     {
       "Path": "MyPersonas.Online_v0/mobile-owner-workflow.js",
-      "SHA256": "83fba1b969b4df1f2640c24eb539e3f0f25c45b0ae6c948302b03c99d68fdfa0"
+      "SHA256": "83fba1b969b4df1f2640c24eb539e3f0f25c45b0ae6c948302b03c99d68fdfa0",
+      "ByteDomain": "crlfCheckout"
     },
     {
       "Path": "MyPersonas.Online_v0/sql-updates/073-content-package-preview-gate.sql",
-      "SHA256": "547b9ab2816399ef67ba46a5cbeb01b9428a7386c467e515b453261cd3ca105c"
+      "SHA256": "547b9ab2816399ef67ba46a5cbeb01b9428a7386c467e515b453261cd3ca105c",
+      "ByteDomain": "crlfCheckout"
     },
     {
       "Path": "MyPersonas.Online_v0/sql-updates/077-mobile-private-draft-workflow.sql",
-      "SHA256": "9fa8fdd0f6a172823a0ff60b535d25dd583b36c462c4064efcbf465e9cdc972d"
+      "SHA256": "9fa8fdd0f6a172823a0ff60b535d25dd583b36c462c4064efcbf465e9cdc972d",
+      "ByteDomain": "crlfCheckout"
     },
     {
       "Path": "MyPersonas.Online_v0/index.html",
-      "SHA256": "9e56f8f885e4c96c0015142ce03dcc4dd461e0fd2b7a98a76f2946e4b00638c6"
+      "SHA256": "9e56f8f885e4c96c0015142ce03dcc4dd461e0fd2b7a98a76f2946e4b00638c6",
+      "ByteDomain": "crlfCheckout"
     }
   ],
   "localPreparationIssue": {
