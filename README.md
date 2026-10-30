@@ -1,5 +1,7 @@
 # MyPersonas
 
+Current cross-model status and release boundaries: [ROOT-HANDOFF.md](ROOT-HANDOFF.md).
+
 Private automation and owner-control plane for persona operations. The current
 public deployment is `https://mypersonas.online`.
 
@@ -40,6 +42,9 @@ product ownership. See [PROJECT-BOUNDARY.md](PROJECT-BOUNDARY.md).
 - `MyPersonas.Online_v0/KEY-ROTATION.md` — migrating off deprecated Supabase keys.
 - `CI-CD-SETUP.md` — one-time CI/CD setup.
 - `MyPersonas.Online_v0/ROADMAP.md` / `CHANGELOG.md` — status of record.
+- `ROOT-HANDOFF.md` — current project map, release truth, and next-model checklist.
+- `docs/INSTALL-PACKAGE-DATA-BOUNDARY.md` — what belongs in a deployable versus private owner data.
+- `docs/PROJECT-STATE-2026-10-29.md` — dated repository and roadmap reconciliation.
 
 ## Deployment
 

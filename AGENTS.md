@@ -1,5 +1,7 @@
 # Agent contract — MyPersonas / Personas mobile
 
+Read `ROOT-HANDOFF.md` first for current repository, release, project-map, and data-boundary status.
+
 This checkout is the canonical **MyPersonas** platform (`castleism/MyPersonas`).
 Phone-test prototypes that live on the owner desktop are **not** here. Do not
 claim access to them. No attachment transfer should be assumed.
@@ -31,6 +33,8 @@ Do **not** replace the platform with a local fake social publisher.
 - Android path: `apps/personas-android/README.md`
 - iOS path: `apps/personas-ios/README.md`
 - Product roadmap: `MyPersonas.Online_v0/ROADMAP.md` and `MOBILE-BLUEPRINT.md`
+- Current cross-model handoff: `ROOT-HANDOFF.md`
+- Install/package privacy boundary: `docs/INSTALL-PACKAGE-DATA-BOUNDARY.md`
 
 Existing architecture, approved content, and connector publishing gates stay in
 place. Do not merge, deploy, publish to stores, or apply production migrations

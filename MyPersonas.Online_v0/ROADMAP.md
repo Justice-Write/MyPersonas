@@ -1,5 +1,7 @@
 # MyPersonas automation control plane — Roadmap
 
+> 2026-10-29 reconciliation: the current project map, release truth, next integration slice, and install-package/privacy boundary are recorded in `../ROOT-HANDOFF.md`, `../docs/PROJECT-STATE-2026-10-29.md`, and `../docs/INSTALL-PACKAGE-DATA-BOUNDARY.md`. The next roadmap action is controlled branch integration and evidence-backed release acceptance, not a new parallel architecture. No deployment or provider publication is implied by this documentation update.
+
 
 > October 13: the existing Soul Concept Persona Studio was inspected before building the website creative workspace. See ../docs/CREATIVE-WORKSPACE-2026-10-13.md for implemented website/library/OpenArt scope, tests, and release boundaries. Do not build a duplicate desktop studio from this document.
 

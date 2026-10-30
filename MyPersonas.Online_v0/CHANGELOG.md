@@ -1,5 +1,12 @@
 # Changelog — AliaSpaces / MyPersonas
 
+## Project-state and package-data reconciliation (2026-10-29)
+
+- Added a concise root handoff for other AI models with the current project map, release gates, and next integration slice.
+- Added a dated repository stock-take and an explicit separation between install-package files and owner/private data.
+- Updated the repository entry points and roadmap to reference the new release and privacy documentation.
+- No production migration, provider action, social publication, store submission, or deployment is included in this documentation release.
+
 Versioning per VERSIONING.md: majors are milestones, `.x` are roadmap items,
 trailing letters are hotfixes. Releases are git tags.
 
