@@ -11,44 +11,38 @@ as two arguments. No repository dependency or shipped package is added. The scri
 closes its browser in `finally`. Its synthetic origin is `https://fixture.invalid`.
 Popup blocking is not disabled by Playwright's usual launch flag.
 
-## Nine passing checks
+## Fixed behavior and verification
 
-- The actual shared destructive dialog focuses Cancel; Escape cancels with no popup.
-- Clicking its OK button preserves user activation and opens a popup with no opener.
-  The successful `window.open` returns null with `noopener,noreferrer`.
-- The actual OpenRouter capture/return functions consume synthetic PKCE state and
-  scrub the code from the URL. Accepted, blank and cancelled model prompts each
-  trigger one mocked exchange, with the exact code/verifier/model payload.
-- Expired state, mismatched initiating owner, replaced returned session and changed
-  auth generation each prevent exchange (four separate cases).
+Nine isolated Edge checks pass: actual shared destructive dialog Cancel focus,
+Escape cancellation, and OK-click activation for an opener-isolated popup; actual
+OAuth callback accepted/blank/cancel, expired state, wrong owner, replaced session
+and changed auth generation. Synthetic code/verifier/model payloads are exact.
 
-These are headless browser observations, not physical-device or signed-in acceptance.
+OAuth Cancel now consumes only this pending attempt's PKCE/code, scrubs the callback
+URL and returns before a second session lookup, provider exchange or backend reload.
+Existing backend state stays unchanged. Explicitly accepting an empty model retains
+the existing optional-model contract: connect now, then use Edit to add a model.
 
-## Concrete technical remainder
+Successful noopener windows return null. Unsubscribe feedback now says the page
+was requested and suggests checking popup settings if no tab appears; it no longer
+asserts blocking. Owner, account, finding and view are rechecked before side effects.
+Opener isolation is unchanged.
 
-1. **Mailbox:** the current `if(opened) ... else toast(blocked)` treats a successful
-   noopener popup as failure. Preserve noopener; redesign feedback around what the
-   browser can actually establish. The async target lookup must also be bound to
-   the still-current account/finding/owner before showing the final destination.
-   Test real destination confirmation and cancellation, then OS mail-handler launch
-   without sending mail. A synthetic popup alone does not accept that full flow.
-2. **OAuth:** Cancel currently means the same thing as an optional blank model and
-   still exchanges the code. A replacement must explicitly resolve this contract:
-   abort connection on Cancel versus retain optional-model skip behavior. This
-   qualification records the current behavior without silently changing it. Same-
-   browser synthetic PKCE/session tests now exist; real provider return acceptance
-   remains separate.
-3. **Clipboard:** `copyText` currently handles only fulfilled `writeText`, with no
-   rejection/fallback handling. Exact packet/owner binding and recoverable copy
-   failure need implementation and tests before conversion. No OS clipboard was
-   accessed, so clipboard acceptance remains unclaimed.
+Clipboard failures now settle false with retry guidance, including denial,
+cancellation, unavailable API and synchronous errors. Success settles true. Business
+copy binds the exact reviewed packet and owner before invoking the clipboard.
+No automatic fallback exposes or transmits the text.
 
-The next foreground request should be bounded to a fresh, unsigned-in temporary
-browser profile and local synthetic fixtures: clipboard preservation/restoration
-including formats (or an isolated clipboard environment), HTTPS popup checks, and
-mail-handler launch with a synthetic destination and no send. Actual Android
-WebView and assistive-technology checks need their own device/scope. The released
-desktop lease alone supplies none of these acceptance results.
+Fifteen new injected-clipboard/popup/context Node regressions pass. Full local suite:
+906/906. Nine isolated Edge checks pass; syntax/diff checks pass. No real clipboard,
+profile, provider, backend or foreground UI was accessed.
 
-All five native calls remain unchanged. This test-only continuation does not deploy,
-install, modify permissions, or claim the full dialog roadmap is complete.
+## Remaining acceptance
+
+Five native calls remain: these fixes do not replace their UI. Actual clipboard
+permission/activation, OS mail-handler launch without sending, Android WebView,
+assistive technology and signed-in provider return remain separate checks.
+Foreground scope must be requested for a fresh unsigned-in temporary profile/local
+fixture, with all clipboard formats preserved or an isolated clipboard environment.
+No foreground scope was taken. Source is not deployed or installed; exact-source
+backend evidence and private canary still precede production release.

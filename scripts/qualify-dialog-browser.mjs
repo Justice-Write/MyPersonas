@@ -33,21 +33,21 @@ try{
  for(const scenario of cases){
   const p=await context.newPage();await p.goto('https://fixture.invalid/?code=synthetic-code');
   await p.evaluate(scenario=>{
-   window.scenario=scenario;window.calls=[];window.notices=[];window.session={user:{id:'synthetic-owner'}};window.authLoadGeneration=1;
+   window.scenario=scenario;window.calls=[];window.notices=[];window.sessionLookups=0;window.existingBackend={id:"existing",model:"unchanged"};window.session={user:{id:'synthetic-owner'}};window.authLoadGeneration=1;
    window.CONFIG={SUPABASE_URL:'https://provider.invalid'};window.toast=x=>notices.push(x);window.showOpenRouterKeyWarning=x=>notices.push(x);window.loadMine=async()=>{};window.go=()=>{};
    sessionStorage.setItem('or_pkce',JSON.stringify({verifier:'synthetic-verifier',initiatingUserId:scenario==='pending-owner'?'other':'synthetic-owner',createdAt:Date.now()-(scenario==='expired'?660000:0)}));
-   let count=0;window.sb={auth:{getSession:async()=>{count++;if(count===2&&scenario==='generation-replaced')authLoadGeneration++;return {data:{session:{user:{id:count===2&&scenario==='session-replaced'?'other':'synthetic-owner'},access_token:'synthetic-token'}}};}}};
+   let count=0;window.sb={auth:{getSession:async()=>{count++;window.sessionLookups++;if(count===2&&scenario==='generation-replaced')authLoadGeneration++;return {data:{session:{user:{id:count===2&&scenario==='session-replaced'?'other':'synthetic-owner'},access_token:'synthetic-token'}}};}}};
    window.fetch=async(url,options)=>{calls.push({url,body:JSON.parse(options.body)});return {ok:true,json:async()=>({connected:true})}};
   },scenario);
   p.on('dialog',dialog=>scenario==='cancel'?dialog.dismiss():dialog.accept(scenario==='blank'?'':'synthetic-model'));
   await p.addScriptTag({content:extract('captureOpenRouterReturn')+'\n'+extract('handleOAuthReturn')});
   await p.evaluate(async()=>{captureOpenRouterReturn();await handleOAuthReturn();});
-  const state=await p.evaluate(()=>({calls,pkce:sessionStorage.getItem('or_pkce'),code:sessionStorage.getItem('or_return_code'),url:location.href}));
-  assert.equal(state.pkce,null);assert.equal(state.code,null);assert.equal(new URL(state.url).searchParams.has('code'),false);
-  const shouldSend=['accepted','blank','cancel'].includes(scenario);assert.equal(state.calls.length,shouldSend?1:0);
+  const state=await p.evaluate(()=>({calls,sessionLookups,existingBackend,pkce:sessionStorage.getItem('or_pkce'),code:sessionStorage.getItem('or_return_code'),url:location.href}));
+  if(scenario==='cancel'){assert.equal(state.sessionLookups,1);assert.deepEqual(state.existingBackend,{id:'existing',model:'unchanged'});}assert.equal(state.pkce,null);assert.equal(state.code,null);assert.equal(new URL(state.url).searchParams.has('code'),false);
+  const shouldSend=['accepted','blank'].includes(scenario);assert.equal(state.calls.length,shouldSend?1:0);
   if(shouldSend)assert.deepEqual(state.calls[0].body,{code:'synthetic-code',codeVerifier:'synthetic-verifier',model:scenario==='accepted'?'synthetic-model':''});
   results.push(`Existing OAuth callback: ${scenario}; ${shouldSend?'one mocked exchange':'no exchange'}`);await p.close();
  }
- console.log(JSON.stringify({browser:browser.version(),results,limitations:['Headless synthetic Edge only; no physical WebView or assistive technology','No clipboard read/write, OS mail-handler invocation, authenticated account or provider exchange','Native OAuth prompt cancellation currently continues with blank optional model; behavior recorded, not endorsed or changed']},null,2));
+ console.log(JSON.stringify({browser:browser.version(),results,limitations:['Headless synthetic Edge only; no physical WebView or assistive technology','No clipboard read/write, OS mail-handler invocation, authenticated account or provider exchange','OAuth Cancel aborts; explicit accepted blank model remains optional']},null,2));
  await context.close();
 }finally{await browser.close();}
