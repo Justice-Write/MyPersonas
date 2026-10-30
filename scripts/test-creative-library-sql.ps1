@@ -16,7 +16,9 @@ try {
   $taskCreated = $true
   $taskReady = $false
   for ($taskAttempt = 0; $taskAttempt -lt 30; $taskAttempt += 1) {
-    & docker exec $taskContainer pg_isready -U postgres | Out-Null
+    # The official image starts a temporary socket-only initialization server.
+    # Wait for TCP on the final server, not that transient socket.
+    & docker exec $taskContainer pg_isready -h 127.0.0.1 -U postgres | Out-Null
     if ($LASTEXITCODE -eq 0) { $taskReady = $true; break }
     Start-Sleep -Milliseconds 500
   }
@@ -30,7 +32,7 @@ try {
   )
   foreach ($taskRelative in $taskFiles) {
     $taskPath = Join-Path $taskRepo $taskRelative
-    Get-Content -LiteralPath $taskPath -Raw | & docker exec -i $taskContainer psql --set=ON_ERROR_STOP=1 -U postgres -d postgres
+    Get-Content -LiteralPath $taskPath -Raw | & docker exec -i --env PGPASSWORD=postgres $taskContainer psql --set=ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d postgres
     if ($LASTEXITCODE -ne 0) { throw "SQL verification failed while applying $taskRelative" }
   }
   Write-Output "Creative library migration applied and reapplied; owner isolation, AAL2, immutable paths and foreign persona/version assertions passed."

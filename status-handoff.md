@@ -46,9 +46,9 @@
 
 
 ## In progress
-- Release increment complete locally; committing/pushing review branch.
+- None. Release enforcement merged in PR27; audit and startup-test follow-through are committed in PR26.
 ## Current state
-Clean main-derived release candidate; backend evidence and private canary not yet verified; no connected phone.
+Integrated release/audit candidate; backend evidence and private canary remain unverified. PR28 records a newer installed Android shell than the rebuilt candidate: preserve it; do not downgrade.
 ## Work log
 - Worktree created at C:/mp-release29 from origin/main.
 
@@ -63,6 +63,14 @@ Clean main-derived release candidate; backend evidence and private canary not ye
 
 
 - Follow-up: current CI advisory range requires Electron44.10.0. Updated exact Electron pin/lockfile with scripts disabled, preserving reviewed undici resolution. Fresh npm audit --package-lock-only --audit-level=low reports zero vulnerabilities. No desktop binary installed.
+
+## Package inventory and CI startup follow-through
+
+PR26 adds a standalone read-only inventory/parity command and a data-boundary guide at docs/PACKAGE-BOUNDARY-VERIFICATION.md. Its source/package checks supplement the deployment verifier above; media and embedded archives still require separate content/provenance review. Private machine and task inventories stay outside this public checkout.
+
+The creative-library SQL test now waits for the final PostgreSQL TCP listener instead of the image's temporary initialization socket. A mocked lifecycle test reproduces the old failure without Docker; the real hosted SQL check passed at01ea421. Product SQL and production gates were not changed.
+
+Current integration: merged main35c6db9 and subsequent documentation readback88736ee into this branch, retaining its newer Electron/undici lockfile and workflow verifier. Combined local checks pass:537Node tests, frontend syntax and package checks. Final hosted checks are recorded on PR26; no production deployment or device installation is claimed. Older audit-branch dependency pins are superseded by current main.
 
 
 ## Final readback — October 29, 2026
