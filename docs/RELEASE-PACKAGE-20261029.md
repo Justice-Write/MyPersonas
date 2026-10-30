@@ -33,3 +33,6 @@ Private local package manifests and build output live under the portfolio stock-
 
 Android build result: offline Gradle assembleDebug failed before compilation with java.io.IOException: Unable to establish loopback connection. No new APK or installed version is claimed. Website ZIP independent verification passed for 81 members; SHA-256 3d18c416d742bf98b92728371127ecd9ea2b58d50acd5852a0c63cf63b1ba915.
 
+
+CI reconciliation: initial run41019471561 passed four checks and failed the pre-existing Workroom dependency audit. This release branch incorporates PR24 commit45d7fa5 (reviewed Electron/undici dependency fixes); its original PR remains open. Backend run38448350086 has zero retained artifacts, so a fresh exact-revision backend receipt is required before Pages.
+
