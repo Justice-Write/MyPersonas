@@ -1,5 +1,7 @@
 # MyPersonas automation control plane — Roadmap
 
+> Dialog roadmap continuation: [complete disposition](../docs/NATIVE-DIALOG-DISPOSITION-20261030.md) —94 of the99 remaining native calls converted with stale-context guards;5 calls in3 browser-dependent flows retained pending the specified browser/redirect acceptance. Provider/helper compatibility, PR22 decisions and production gates remain separate.
+
 > October 30 project stocktake: product source is current through PR42 / `1f0137e`
 > and merged-main CI is green, but the live Pages site remains the September 24
 > `acadc5d` deployment and the latest backend run retains no exact-current release

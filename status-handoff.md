@@ -51,7 +51,11 @@
 
 
 
+
 ## Current state
+
+- Dialog disposition now accounts for all99 baseline calls/85function groups:94 converted across82 groups;5 native calls retained in3 browser-specific flows (clipboard, unsubscribe destination opening, OpenRouter return). See docs/NATIVE-DIALOG-DISPOSITION-20261030.md and its per-function JSON. These are browser-integration gates, not99 blocked product tasks. Eleven browser request helpers also bind the initiating owner/view across token lookup. Source-only; no provider/backend/schema/installed changes.
+
 
 - Creative workspace's three confirmations now use guarded async dialogs. Owner/route/generation/perspective and destructive asset identity are rechecked before side effects. Focused29/full608 tests pass; remaining unqualified native-dialog candidates99. Browser/device acceptance and exact-source backend/canary release gates remain open.
 
@@ -84,6 +88,9 @@ Public-safe project/release/data boundaries are recorded in `docs/PROJECT-STOCKT
 
 ## Next steps
 
+0. Use docs/NATIVE-DIALOG-DISPOSITION-20261030.md as the current dialog queue: local conversions are complete for94 eligible calls; the5 retained calls are3 browser-integration gates, not unspecified implementation backlog. Do not re-count qualified application dialog methods as native calls.
+
+
 1. Keep PR20 open while remaining modal conversions and Reddit compatibility are separately resolved. Do not port permissive UUID/scope/expiry fallbacks without an explicit contract decision and new hardening tests. Validate the merged dialog slice in authenticated Chromium, Android WebView and assistive technology before claiming device acceptance.
 2. Resolve PR22's owner decisions before any migration 080, SQL/UI or AliaSpaces implementation. Preserve PR22 until an accepted record accounts for every unique area; no live moderation capability exists yet.
 3. Rebuild the private exact-source Pages package from final main after this documentation lands. Preserve the older 125-member package as superseded evidence, not a deploy candidate.
@@ -104,6 +111,9 @@ Public-safe project/release/data boundaries are recorded in `docs/PROJECT-STOCKT
 - The historical workspace root is gone. Use the canonical repository through isolated worktrees and preserve the dirty owner checkout.
 - Preserve PR20 after the glyph and nine-call dialog slices. Remaining modal conversions and Reddit/provider compatibility are unresolved; the merged dialog slice does not authorize provider behavior.
 ## Work log
+
+- 2026-10-30 UTC · Codex DIALOG-CLASSIFICATION-CONTINUATION completed in source: classified99 real calls/85function groups, converted94 calls/82groups across owner editor, agent board, CMS and governance; retained5 calls in3 named browser-integration flows. Added initiating-owner/view checks to11 browser request helpers across getSession. Full891tests pass (283new cases), inline/external syntax and git diff --check pass. docs/NATIVE-DIALOG-DISPOSITION-20261030.md/JSON contain the exhaustive classification, retained reasons and acceptance needs. No SQL/backend/provider scope change, deployment, live account/device/UI operation or installed-data change. Authenticated/browser/clipboard/redirect/WebView/accessibility acceptance and existing exact-source backend/canary gates remain.
+
 
 - 2026-10-30 UTC · Codex CREATIVE-DIALOGS completed: shared async guard, exact asset revalidation, captured reference input, script version and synthetic fixture update;21 new executable tests. Focused29/full608 pass, frontend/external syntax and diff check pass. Docs/PR20-REMAINING-DIALOGS-20261030.md records remaining99 candidates. Browser fixture not rerun; no provider/DB/device/deployment actions. Existing production PWA installation remains a separate lane.
 
