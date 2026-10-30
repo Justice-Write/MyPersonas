@@ -77,6 +77,9 @@ function contextWith(tablePromises) {
     document: { getElementById: () => null },
     requireAal2ForSensitiveAction: async () => true,
     confirm: () => true,
+    appConfirm: async () => true,
+    location: {hash:"#/review/persona-a"},
+    myBackends: [],
     prompt: () => "",
     navigator: { clipboard: { writeText: async () => {} } },
     window: { open() {} },
@@ -88,7 +91,7 @@ function contextWith(tablePromises) {
 
 async function until(predicate) {
   for (let attempt = 0; attempt < 20 && !predicate(); attempt += 1) {
-    await Promise.resolve();
+    await new Promise(setImmediate);
   }
   assert.equal(predicate(), true, "expected asynchronous query stage was not reached");
 }
@@ -201,6 +204,7 @@ test("an intention edit during AI explanation discards the stale reply and re-en
   vm.runInContext('governanceState.personaId="persona-a"', context);
 
   const explaining = context.governanceExplainIntentionWithAi();
+  await new Promise(setImmediate);
   assert.equal(button.disabled, true);
   assert.equal(button.textContent, "Explaining…");
 

@@ -30,6 +30,20 @@
     return myAccountConnections.find((row) => row.ledger_id === account.id && row.provider === account.provider) || null;
   }
 
+  function cmsDialogGuard(provider, ledgerId = "", draftId = "", target = "") {
+    const owner = session?.user?.id, epoch = renderEpoch, route = location.hash;
+    const read = () => {
+      const draft = draftId ? myDrafts.find(row => row.id === draftId) : null;
+      const account = myAccounts.find(row => row.id === (ledgerId || draft?.account_id) && row.provider === provider);
+      return { draft, account, connection: account && connectionRow(account) };
+    };
+    const initial = read(), snapshot = JSON.stringify(initial);
+    const valid = CMS_PROVIDERS.has(provider) && owner && initial.account?.owner === owner &&
+      (!draftId || initial.draft?.owner === owner) && (!target || initial.connection?.provider_subject === target);
+    return () => !!valid && session?.user?.id === owner && renderEpoch === epoch && location.hash === route &&
+      !(typeof ownerAppIsPersonaMode === "function" && ownerAppIsPersonaMode()) && JSON.stringify(read()) === snapshot;
+  }
+
   async function cmsAction(functionName, payload) {
     return await providerPostAction(functionName, payload);
   }
@@ -214,19 +228,22 @@
     provider,
     ledgerId,
   ) {
-    if (!CMS_PROVIDERS.has(provider)) return;
+    const current = cmsDialogGuard(provider, ledgerId);
+    if (!current()) return;
     const warning = provider === "wix" ? "Remove MyPersonas' local Wix instance credential? You must then uninstall the app in Wix to revoke provider access. Existing Wix drafts remain." : "Remove MyPersonas' local WordPress credential? You must then revoke the connected app or Application Password at WordPress. Existing drafts remain.";
-    if (!confirm(warning)) return;
+    if (!await appConfirm(warning, { title: "Disconnect CMS account?", confirmLabel: "Remove local credential", destructive: true }) || !current()) return;
     if (
       !await requireAal2ForSensitiveAction(
         `disconnect ${providerName(provider)}`,
       )
     ) return;
+    if (!current()) return;
     const result = await cmsAction(`${provider}-oauth`, {
       action: "disconnect",
       ledgerId,
       confirmLocalDisconnect: true,
     });
+    if (!current()) return;
     if (result.error) {
       toast(result.error);
       return;
@@ -544,18 +561,22 @@
     providerDraftId,
     exactTargetId,
   ) {
-    const typedDraft = (prompt(
+    const current = cmsDialogGuard(provider, "", draftId, exactTargetId);
+    if (!current() || !providerDraftId || !exactTargetId) return;
+    const typedDraft = (await appPrompt(
       `To move this provider draft to Trash, type its exact ${providerName(provider)} draft ID:\n${providerDraftId}`,
       "",
     ) || "").trim();
+    if (!current()) return;
     if (typedDraft !== providerDraftId) {
       toast("Provider draft ID did not match. Nothing was changed.");
       return;
     }
-    const typedTarget = (prompt(
+    const typedTarget = (await appPrompt(
       `Now type the exact bound site/author target:\n${exactTargetId}`,
       "",
     ) || "").trim();
+    if (!current()) return;
     if (typedTarget !== exactTargetId) {
       toast("Provider target did not match. Nothing was changed.");
       return;
@@ -565,6 +586,7 @@
         `move the exact ${providerName(provider)} draft to Trash`,
       )
     ) return;
+    if (!current()) return;
     const result = await cmsAction(`${provider}-draft`, {
       action: "delete-draft",
       draftId,
@@ -572,6 +594,7 @@
       expectedProviderDraftId: providerDraftId,
       expectedTargetId: exactTargetId,
     });
+    if (!current()) return;
     if (result.status === 202 || result.error) {
       if (
         result.status === 202 || result.data?.localCheckpointPending ||
@@ -600,20 +623,24 @@
     providerDraftId,
     exactTargetId,
   ) {
-    const typedDraft = (prompt(
+    const current = cmsDialogGuard(provider, "", draftId, exactTargetId);
+    if (!current() || !providerDraftId || !exactTargetId) return;
+    const typedDraft = (await appPrompt(
       `After confirming this item is visibly in provider Trash, type its exact ${providerName(provider)} draft ID:\n${providerDraftId}`,
       "",
     ) || "").trim();
+    if (!current()) return;
     if (typedDraft !== providerDraftId) {
       toast(
         "Provider draft ID did not match. The local checkpoint was not changed.",
       );
       return;
     }
-    const typedTarget = (prompt(
+    const typedTarget = (await appPrompt(
       `Type the exact bound site/author target:\n${exactTargetId}`,
       "",
     ) || "").trim();
+    if (!current()) return;
     if (typedTarget !== exactTargetId) {
       toast(
         "Provider target did not match. The local checkpoint was not changed.",
@@ -625,6 +652,7 @@
         `finalize the verified ${providerName(provider)} Trash checkpoint`,
       )
     ) return;
+    if (!current()) return;
     const result = await cmsAction(`${provider}-draft`, {
       action: "finalize-trash-checkpoint",
       draftId,
@@ -632,6 +660,7 @@
       expectedProviderDraftId: providerDraftId,
       expectedTargetId: exactTargetId,
     });
+    if (!current()) return;
     if (result.error) {
       toast(result.error);
       return;

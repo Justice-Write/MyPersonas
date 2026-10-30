@@ -1,5 +1,7 @@
 # Remaining native dialogs and friendship invite slice
 
+> Superseded inventory: [the complete disposition](NATIVE-DIALOG-DISPOSITION-20261030.md) accounts for the later 99-call baseline. The continuation converts94 calls in82 function groups and retains5 calls in3 explicitly browser-gated flows. Counts below describe earlier checkpoints.
+
 Baseline: main `35ee29c102321c810d1e5c9a06a5fa12090fc9b8`.
 PR20 remains a preserved review source, not a merge candidate in its entirety.
 

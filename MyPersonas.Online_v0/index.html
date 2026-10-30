@@ -525,8 +525,8 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
 <script src="./creative-workspace.js?v=20261030-1"></script>
 <script src="./owner-app.js?v=20261013-1"></script>
 <script src="./persona-view.js?v=20261030-1"></script>
-<script src="./platform-governance.js?v=20260830-1"></script>
-<script src="./agent-board.js?v=20260822-4"></script>
+<script src="./platform-governance.js?v=20261030-1"></script>
+<script src="./agent-board.js?v=20261030-1"></script>
 <script src="./ai-content-provenance.js?v=20260823-2"></script>
 <script>
 // ================= CONFIG — paste your Supabase values here =================
@@ -629,11 +629,12 @@ window.addEventListener("error",e=>logErr("js",e.message+" @ "+e.filename+":"+e.
 window.addEventListener("unhandledrejection",e=>logErr("promise",e.reason&&e.reason.message||e.reason));
 function toast(m){logErr("toast",m);const t=document.getElementById("toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",2500)}
 function inputsWithinUtf8Limits(rules){for(const rule of rules){const[id,max,label,original]=rule,el=document.getElementById(id),value=el?.value||"",size=new TextEncoder().encode(value).length,unchangedLegacy=rule.length>3&&value===String(original??"");if(size>max&&!unchangedLegacy){toast(`${label} is ${size} bytes; shorten it to ${max} UTF-8 bytes or less`);el?.focus();return false}}return true}
-async function reportError(){
-  const note=prompt("What were you doing when it broke? (optional)")||"";
+async function reportError(){if(!session?.user?.id){toast("Sign in to send a private diagnostic report");return}const dialog=ownerWorkflowDialogs();
+  const note=await dialog.prompt("What were you doing when it broke? (optional)")||"";if(!dialog.current())return;
   try{
     const{data:au}=await sb.auth.getUser();
     if(!au?.user){toast("Sign in to send a private diagnostic report");return}
+    if(!dialog.current()||au.user.id!==session.user.id)return;
     const{error}=await sb.rpc("report_client_error",{
       p_message:governanceRedactExternalText(note).slice(0,1000),
       p_context:{page:location.hash.slice(0,500),user_agent:navigator.userAgent.slice(0,300),recent:errBuf.slice(-15).map(row=>({kind:String(row.kind||"").slice(0,40),message:governanceRedactExternalText(row.msg||"").slice(0,500)}))}
@@ -717,6 +718,18 @@ function appDialog(kind,message,defaultValue="",options={}){
 }
 function appConfirm(message,options={}){return appDialog("confirm",message,"",options).then(value=>value===true)}
 function appPrompt(message,defaultValue="",options={}){return appDialog("prompt",message,defaultValue,options)}
+function ownerWorkflowDialogs(){
+  const owner=session?.user?.id,epoch=renderEpoch,route=location.hash,authEpoch=typeof authLoadGeneration==="undefined"?null:authLoadGeneration;let snapshot;
+  const read=()=>JSON.stringify({personas:myPersonas,drafts:myDrafts,backends:myBackends,tasks:myTasks,accounts:myAccounts,connections:myAccountConnections,
+    settings:typeof myAgentSettings==="undefined"?null:myAgentSettings,editId:typeof editId==="undefined"?null:editId,layout:typeof editPageLayout==="undefined"?null:editPageLayout,snippets:typeof editPageSnippets==="undefined"?null:editPageSnippets,
+    workspaces:typeof myChatWorkspaces==="undefined"?null:myChatWorkspaces,chat:typeof chatCtx==="undefined"||!chatCtx?null:{personaId:chatCtx.personaId,workspaceId:chatCtx.workspaceId,messages:chatCtx.messages},
+    perspective:typeof ownerAppState==="undefined"?null:{mode:ownerAppState.viewMode,persona:ownerAppState.selectedPersonaId,generation:ownerAppState.perspectiveGeneration},
+    metaSelection:typeof metaOAuthSelection==="undefined"?null:metaOAuthSelection,metaCapability:typeof metaOAuthCapability==="undefined"?null:metaOAuthCapability,mailbox:typeof mailboxState==="undefined"?null:mailboxState,mailboxPlan:typeof mailboxPendingPlan==="undefined"?null:mailboxPendingPlan,patreon:typeof patreonPreparedHandoff==="undefined"?null:patreonPreparedHandoff,
+    fields:[...(document.querySelectorAll?.("input,textarea,select")||[])].filter(node=>!node.closest?.("#appDialogOv")).map(node=>[node.id,node.name,node.value,node.checked])});
+  const current=()=>!!owner&&session?.user?.id===owner&&renderEpoch===epoch&&location.hash===route&&(typeof authLoadGeneration==="undefined"?null:authLoadGeneration)===authEpoch&&(snapshot===undefined||read()===snapshot);
+  const ask=async(kind,args)=>{if(!current())return kind==="confirm"?false:null;if(snapshot===undefined)snapshot=read();const value=await (kind==="confirm"?appConfirm(...args):appPrompt(...args));return current()?value:kind==="confirm"?false:null};
+  return{current,confirm:(...args)=>ask("confirm",args),prompt:(...args)=>ask("prompt",args)};
+}
 const PERSONA_FIELD_GUIDES=Object.freeze({
   name:{help:"The public display name. Keep it memorable, pronounceable, and stable so fans and the AI refer to the persona consistently.",template:"Maya Hart"},
   handle:{help:"The unique public URL name. Use a short, durable identifier rather than a campaign or temporary project name.",template:"maya.hart"},
@@ -1935,9 +1948,9 @@ async function unfriend(ownedPersonaId,targetId){
   if(error){toast(error.message);return}
   toast("Removed");route();
 }
-async function blockPersona(pid,kind){
+async function blockPersona(pid,kind){const dialog=ownerWorkflowDialogs();
   const enabled=!hasPersonaVisibilityRule(pid,kind);
-  if(enabled&&!confirm(kind==="block"?"Block this persona for your entire account? Every follow, friendship, and pending request between it and all of your personas will be removed atomically.":"Mute this persona for your entire account? None of your personas will see them here, although they can still see your public pages."))return;
+  if(enabled&&!await dialog.confirm(kind==="block"?"Block this persona for your entire account? Every follow, friendship, and pending request between it and all of your personas will be removed atomically.":"Mute this persona for your entire account? None of your personas will see them here, although they can still see your public pages."))return;
   const{error}=await sb.rpc("set_persona_visibility_rule",{p_other_persona_id:pid,p_kind:kind,p_enabled:enabled});
   if(error){toast(error.message);return}
   await loadMine();toast(enabled?(kind==="block"?"Blocked":"Muted"):(kind==="block"?"Unblocked":"Unmuted"));go("");
@@ -1973,8 +1986,8 @@ async function publishPost(){
   await loadMine(uid,generation);if(session?.user?.id!==uid||authLoadGeneration!==generation)return;
   toast("Post saved; the page is draft again and needs review");go("review/"+p.id);
 }
-async function deletePost(id){
-  if(!confirm("Delete this post?"))return;
+async function deletePost(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Delete this post?",{destructive:true}))return;
   const p=pageState.p,uid=session?.user?.id,generation=authLoadGeneration;
   const{error}=await sb.rpc("delete_persona_post",{p_post_id:id});if(error){toast(error.message);return}
   await loadMine(uid,generation);if(session?.user?.id!==uid||authLoadGeneration!==generation)return;
@@ -2199,18 +2212,18 @@ async function saveAutomationDirection(){
   let contextWarning="";if(changedFields.length){try{await appendContextLog(personaId,`content direction updated: ${changedFields.join(", ")}`,accessToken)}catch(e){contextWarning=e.message||"context append failed"}}
   if(session?.user?.id!==uid||authLoadGeneration!==generation)return;await loadMine(uid,generation);if(session?.user?.id!==uid||authLoadGeneration!==generation)return;autoTab="direction";renderStudio();toast(contextWarning?"Direction saved; roadmap context was not changed: "+contextWarning:"Direction saved");
 }
-async function setAgentAutonomy(level){
+async function setAgentAutonomy(level){const dialog=ownerWorkflowDialogs();
   const p=autoPersona(),b=autoBinding(p.id);if(!b)return;
-  if(level===3&&!confirm("Enable L3 research and private-draft automation for this persona? Native and external auto-publication remain paused; every page still needs exact owner review and explicit publication."))return;
-  if(!await requireAal2ForSensitiveAction("change persona autonomy"))return;
+  if(level===3&&!await dialog.confirm("Enable L3 research and private-draft automation for this persona? Native and external auto-publication remain paused; every page still needs exact owner review and explicit publication."))return;
+  if(!await requireAal2ForSensitiveAction("change persona autonomy"))return;if(!dialog.current())return;
   const{error}=await sb.rpc("save_my_agent_binding_controls",{p_persona_id:p.id,p_status:b.status,p_autonomy_level:level,p_fan_chat_enabled:!!b.fan_chat_enabled,p_fan_daily_message_limit:Number(b.fan_daily_message_limit||30)});if(error){toast(sensitiveActionErrorMessage(error));return}await loadMine();autoTab="direction";renderStudio();toast(`Autonomy set to L${level}`);
 }
-async function saveAgentSafety(){
+async function saveAgentSafety(){const dialog=ownerWorkflowDialogs();
   const p=autoPersona(),b=autoBinding(p.id);if(!b)return;const fanCap=Number(val("abFanCap")),fanEnabled=!!document.getElementById("abFan")?.checked,personaBackend=myBackends.find(x=>x.id===p.ai_backend),fanBackend=backendAutomationReady(personaBackend,"fan")?personaBackend:readyAutomationBackends("fan")[0];
   if(!Number.isInteger(fanCap)||fanCap<1||fanCap>500){toast("Fan-chat cap must be a whole number from 1 to 500");return}
   if(fanEnabled&&!fanBackend){toast("Link a ready hosted AI model before enabling fan chat");return}
-  if(!await requireAal2ForSensitiveAction("change persona agent controls"))return;
-  if(fanEnabled&&p.ai_backend!==fanBackend.id){if(!confirm(`Use ${fanBackend.name} as this persona's default model for fan chat?`))return;const{error:modelError}=await sb.rpc("set_persona_backend",{p_persona_id:p.id,p_backend_id:fanBackend.id});if(modelError){toast(modelError.message);return}}
+  if(!await requireAal2ForSensitiveAction("change persona agent controls"))return;if(!dialog.current())return;
+  if(fanEnabled&&p.ai_backend!==fanBackend.id){if(!await dialog.confirm(`Use ${fanBackend.name} as this persona's default model for fan chat?`))return;const{error:modelError}=await sb.rpc("set_persona_backend",{p_persona_id:p.id,p_backend_id:fanBackend.id});if(modelError){toast(modelError.message);return}}
   const{error}=await sb.rpc("save_my_agent_binding_controls",{p_persona_id:p.id,p_status:val("abStatus"),p_autonomy_level:Number(b.autonomy_level||0),p_fan_chat_enabled:fanEnabled,p_fan_daily_message_limit:fanCap});if(error){toast(sensitiveActionErrorMessage(error));return}await loadMine();autoTab="direction";renderStudio();toast("Agent controls saved");
 }
 function validTimezone(tz){try{Intl.DateTimeFormat(undefined,{timeZone:tz}).format();return true}catch(e){return false}}
@@ -2220,9 +2233,9 @@ async function saveOwnerAutomationSettings(){
   if((quiet_hours_start&&!quiet_hours_end)||(!quiet_hours_start&&quiet_hours_end)){toast("Set both quiet-hour times, or leave both blank");return}
   const row={owner:session.user.id,default_timezone:timezone,daily_draft_limit,quiet_hours_start,quiet_hours_end};const{error}=await sb.from("agent_owner_settings").upsert(row,{onConflict:"owner"});if(error){toast(error.message);return}await loadMine();renderStudio();toast("Owner limits saved");
 }
-async function toggleGlobalAutomation(){
-  const paused=!!myAgentSettings?.automation_paused;if(!paused&&!confirm("Pause every persona agent, scheduled draft, publish queue, and new fan-chat response? You can resume at any time."))return;
-  const reason=paused?"":(prompt("Optional reason for the pause:")||"");const row={owner:session.user.id,automation_paused:!paused,pause_reason:reason,paused_at:paused?null:new Date().toISOString(),default_timezone:autoTz(),daily_draft_limit:myAgentSettings?.daily_draft_limit||12};
+async function toggleGlobalAutomation(){const dialog=ownerWorkflowDialogs();
+  const paused=!!myAgentSettings?.automation_paused;if(!paused&&!await dialog.confirm("Pause every persona agent, scheduled draft, publish queue, and new fan-chat response? You can resume at any time."))return;
+  const reason=paused?"":(await dialog.prompt("Optional reason for the pause:")||"");if(!dialog.current())return;const row={owner:session.user.id,automation_paused:!paused,pause_reason:reason,paused_at:paused?null:new Date().toISOString(),default_timezone:autoTz(),daily_draft_limit:myAgentSettings?.daily_draft_limit||12};
   const{error}=await sb.from("agent_owner_settings").upsert(row,{onConflict:"owner"});if(error){toast(error.message);return}await loadMine();renderStudio();toast(paused?"All agents resumed":"All agents paused");
 }
 async function saveAutomationDestination(accountId){
@@ -2352,9 +2365,9 @@ async function performDiscordDraftPublish(id,button,receiptId){
 async function verifyDiscordDraft(id,button){
   if(button){button.disabled=true;button.textContent="Verifying…"}const result=await providerPostAction("discord-post",{action:"verify",draftId:id});await loadMine();autoTab="queue";renderStudio();if(result.error){toast(result.error);return}toast(result.data?.exists?`Discord confirmed message ${result.data.messageId||""} exists in channel ${result.data.channelId||""}.`:`Discord confirmed that message ${result.data?.messageId||""} is absent.`)
 }
-async function deleteDiscordDraft(id,button){
+async function deleteDiscordDraft(id,button){const dialog=ownerWorkflowDialogs();
   const draft=myDrafts.find(row=>row.id===id),account=draft&&myAccounts.find(row=>row.id===draft.account_id),connection=account?autoConn(account):null,messageId=String(draft?.provider_post_id||"").trim(),channelId=String(connection?.row?.provider_subject||"").trim();if(!draft||!messageId||!channelId){toast("The exact Discord message or channel ID is unavailable; verify the record first.");return}
-  const typedMessage=(prompt(`To delete this provider message, type its exact Discord message ID:\n${messageId}`,"")||"").trim();if(typedMessage!==messageId){toast("Message ID did not match; nothing was deleted.");return}const typedChannel=(prompt(`Now type the exact Discord channel ID:\n${channelId}`,"")||"").trim();if(typedChannel!==channelId){toast("Channel ID did not match; nothing was deleted.");return}if(!await requireAal2ForSensitiveAction("delete an exact Discord message"))return;if(button){button.disabled=true;button.textContent="Deleting…"}
+  const typedMessage=(await dialog.prompt(`To delete this provider message, type its exact Discord message ID:\n${messageId}`,"")||"").trim();if(!dialog.current())return;if(typedMessage!==messageId){toast("Message ID did not match; nothing was deleted.");return}const typedChannel=(await dialog.prompt(`Now type the exact Discord channel ID:\n${channelId}`,"")||"").trim();if(!dialog.current())return;if(typedChannel!==channelId){toast("Channel ID did not match; nothing was deleted.");return}if(!await requireAal2ForSensitiveAction("delete an exact Discord message"))return;if(!dialog.current())return;if(button){button.disabled=true;button.textContent="Deleting…"}
   const result=await providerPostAction("discord-post",{action:"delete",draftId:id,confirmMessageId:messageId,confirmChannelId:channelId});await loadMine();autoTab="queue";renderStudio();if(result.error){toast(result.error);return}toast(result.data?.alreadyAbsent?"Discord confirmed the exact message was already absent.":"Discord deleted the exact confirmed message.")
 }
 async function exactVerifiedVideoAsset(draft,allowedMimes){
@@ -2363,8 +2376,8 @@ async function exactVerifiedVideoAsset(draft,allowedMimes){
   if(error)throw new Error("The verified video record could not be loaded.");const rows=data||[];if(rows.length!==1)throw new Error(rows.length?"More than one video record matches this URL. Keep one canonical asset before posting.":"This URL is not a verified owner-scoped video asset. Securely ingest it before posting.");
   const asset=rows[0],mimes=new Set(allowedMimes||[]);if(asset.declaration_source==="legacy"||!/^[0-9a-f]{64}$/.test(asset.content_sha256||"")||!/^[0-9a-f]{64}$/.test(asset.provenance_sha256||"")||!mimes.has(asset.mime_type)||!Number.isSafeInteger(Number(asset.byte_size))||Number(asset.byte_size)<1)throw new Error("The video still needs current provenance, checksum, MIME, and byte-size verification.");return asset;
 }
-async function providerPostAction(functionName,payload){
-  const{data}=await sb.auth.getSession(),active=data&&data.session;if(!active||active.user.id!==session?.user?.id)return{error:"Sign in again before continuing."};
+async function providerPostAction(functionName,payload){const initiatingOwner=session?.user?.id,initiatingEpoch=renderEpoch,initiatingRoute=location.hash;
+  const{data}=await sb.auth.getSession(),active=data&&data.session;if(!initiatingOwner||session?.user?.id!==initiatingOwner||renderEpoch!==initiatingEpoch||location.hash!==initiatingRoute||active?.user?.id!==initiatingOwner)return {error:"The signed-in owner changed; nothing was sent."};if(!active||active.user.id!==session?.user?.id)return{error:"Sign in again before continuing."};
   try{const response=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+`/functions/v1/${functionName}`,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+active.access_token},body:JSON.stringify(payload)}),result=await response.json().catch(()=>({}));return response.ok?{data:result,status:response.status}:{error:result.error||`${platformPreviewProviderName(functionName.split("-")[0])} request failed (HTTP ${response.status})`,details:result,status:response.status}}catch(error){return{error:"The provider request ended without a browser response. Reload before deciding whether to retry."}}
 }
 function exactImmediateReceipt(raw,expected={}){
@@ -2475,14 +2488,14 @@ function copyPatreonPreparedPackage(){if(!patreonPreparedHandoff)return;copyText
 async function openPatreonPreparedEditor(){
   const handoff=patreonPreparedHandoff;if(!handoff?.handoffId)return;let destination;try{destination=new URL(handoff.nativeEditorUrl);if(destination.origin!=="https://www.patreon.com")throw new Error("Build and acknowledge a fresh Patreon preview before opening the editor") }catch(error){toast(error.message);return}window.open(destination.toString(),"_blank","noopener,noreferrer");
 }
-async function completePatreonPreparedHandoff(){const handoff=patreonPreparedHandoff;if(!handoff?.handoffId)return;const note=(prompt("Record exactly what you completed in Patreon (for example: saved draft after native preview, or scheduled for Aug 31 at 9:00 AM):","")||"").trim();if(!note){toast("Add a completion note; no status was changed");return}const result=await providerPostAction("patreon-handoff",{action:"owner-completed",handoffId:handoff.handoffId,ownerCompletionNote:note});if(result.error){toast(result.error);return}patreonPreparedHandoff={...handoff,...(result.data||{}),status:"owner_completed"};showPatreonPreparedHandoff();toast("Recorded as owner-attested only; Patreon completion was not API-verified.")}
-async function abandonPatreonPreparedHandoff(){const handoff=patreonPreparedHandoff;if(!handoff?.handoffId||!confirm("Abandon this prepared Patreon handoff? Nothing will be changed in Patreon."))return;const result=await providerPostAction("patreon-handoff",{action:"abandon",handoffId:handoff.handoffId});if(result.error){toast(result.error);return}patreonPreparedHandoff=null;document.getElementById("patreonPreparedOv")?.remove();toast("Patreon handoff abandoned; no provider action was claimed.")}
-async function markManualDraftPosted(id){if(!confirm("Confirm that you posted this yourself on the external platform?"))return;const{error}=await sb.rpc("mark_manual_draft_posted",{p_draft_id:id});if(error){toast(error.message);return}await loadMine();autoTab="queue";renderStudio();toast("Marked as manually posted")}
+async function completePatreonPreparedHandoff(){const dialog=ownerWorkflowDialogs();const handoff=patreonPreparedHandoff;if(!handoff?.handoffId)return;const note=(await dialog.prompt("Record exactly what you completed in Patreon (for example: saved draft after native preview, or scheduled for Aug 31 at 9:00 AM):","")||"").trim();if(!dialog.current())return;if(!note){toast("Add a completion note; no status was changed");return}const result=await providerPostAction("patreon-handoff",{action:"owner-completed",handoffId:handoff.handoffId,ownerCompletionNote:note});if(result.error){toast(result.error);return}patreonPreparedHandoff={...handoff,...(result.data||{}),status:"owner_completed"};showPatreonPreparedHandoff();toast("Recorded as owner-attested only; Patreon completion was not API-verified.")}
+async function abandonPatreonPreparedHandoff(){const dialog=ownerWorkflowDialogs();const handoff=patreonPreparedHandoff;if(!handoff?.handoffId||!await dialog.confirm("Abandon this prepared Patreon handoff? Nothing will be changed in Patreon."))return;const result=await providerPostAction("patreon-handoff",{action:"abandon",handoffId:handoff.handoffId});if(result.error){toast(result.error);return}patreonPreparedHandoff=null;document.getElementById("patreonPreparedOv")?.remove();toast("Patreon handoff abandoned; no provider action was claimed.")}
+async function markManualDraftPosted(id){const dialog=ownerWorkflowDialogs();if(!await dialog.confirm("Confirm that you posted this yourself on the external platform?"))return;const{error}=await sb.rpc("mark_manual_draft_posted",{p_draft_id:id});if(error){toast(error.message);return}await loadMine();autoTab="queue";renderStudio();toast("Marked as manually posted")}
 async function openFanTranscript(id){
   const s=myFanSessions.find(x=>x.id===id);if(!s)return;toast("Loading the full conversation…");const result=await fetchAllPages((from,to)=>sb.from("fan_chat_messages").select("*",{count:"exact"}).eq("owner",session.user.id).eq("session_id",id).order("created_at",{ascending:true}).range(from,to));if(result.error){toast("Could not load this conversation: "+result.error.message);return}const ms=result.data||[],o=document.createElement("div");o.className="overlay";o.id="fanTranscriptOv";o.innerHTML=`<div class="wizbox"><h2>${s.escalated?"Escalated fan conversation":"Fan conversation"}</h2><p class="muted">${esc(s.escalation_reason||"The fan accepted the owner-visibility and AI-labeling warning before messaging.")}</p>${ms.map(m=>`<div class="cmsg ${m.role==="fan"?"u":m.role==="owner"?"h":m.role==="system"?"s":"a"}"><b>${m.role==="fan"?"Fan":m.role==="owner"?"Owner":m.role==="system"?"Notice":"AI"}</b> ${esc(m.content)}</div>`).join("")||'<p class="muted">No messages.</p>'}<div class="autoformactions"><button class="btn danger" onclick="deleteFanConversation('${s.id}')">Delete conversation</button><button class="btn sec" onclick="document.getElementById('fanTranscriptOv').remove()">Close</button></div></div>`;document.body.appendChild(o);
 }
 async function setFanThreadState(id,state){const{error}=await sb.from("fan_chat_sessions").update({inbox_state:state}).eq("id",id);if(error){toast(error.message);return}await loadMine();autoTab="chats";renderStudio()}
-async function deleteFanConversation(id){if(!confirm("Delete this full fan conversation and transcript? This cannot be undone."))return;const{data,error}=await sb.rpc("delete_my_fan_chat_session",{p_session_id:id});if(error||data!==true){toast(error?.message||"Conversation could not be deleted");return}document.getElementById("fanTranscriptOv")?.remove();await loadMine();autoTab="chats";renderStudio();toast("Conversation deleted")}
+async function deleteFanConversation(id){const dialog=ownerWorkflowDialogs();if(!await dialog.confirm("Delete this full fan conversation and transcript? This cannot be undone.",{destructive:true}))return;const{data,error}=await sb.rpc("delete_my_fan_chat_session",{p_session_id:id});if(error||data!==true){toast(error?.message||"Conversation could not be deleted");return}document.getElementById("fanTranscriptOv")?.remove();await loadMine();autoTab="chats";renderStudio();toast("Conversation deleted")}
 
 // ---------- studio ----------
 function renderStudio(){
@@ -2753,11 +2766,11 @@ function assertRestoreSession(context){if(!restoreSessionCurrent(context)){const
 async function restoreAwait(context,operation){assertRestoreSession(context);const result=await operation();assertRestoreSession(context);return result}
 function restoreRpc(context,name,args){return restoreAwait(context,()=>context.client.rpc(name,args))}
 function restoreWrite(context,operation){return restoreAwait(context,operation)}
-function restoreFromFile(input){
+function restoreFromFile(input){const dialog=ownerWorkflowDialogs();
   const f=input.files&&input.files[0];if(!f)return;if(f.size>RESTORE_MAX_FILE_BYTES){toast("This backup is larger than the 20 MB restore limit");input.value="";return}const r=new FileReader();
   r.onload=async()=>{try{const data=JSON.parse(r.result);validateRestoreImport(data,f.size);
     const c=k=>Array.isArray(data[k])?data[k].length:0;
-    if(!confirm(`This backup has ${c("personas")} personas, ${c("persona_family_relationships")} family edges, ${c("persona_projects")} projects, ${c("businesses")} businesses, ${c("persona_backup_relationships")} backup relationships, ${c("persona_page_layouts")} page layouts, and ${c("persona_page_code_snippets")} private snippets.\n\nRestore safe owner-authored drafts now? Restored persona and business pages stay unpublished; organization visibility is owner-only; resources are disconnected and disabled; extension source is inert and must be reviewed again.\n\nPersonas whose handle already exists are skipped. Business publication review evidence, provider connections, sync authority, follows/friends, invitations, platform roles, staff decisions, and security/audit state are export-only and will NOT be restored.`)){input.value="";return}
+    if(!await dialog.confirm(`This backup has ${c("personas")} personas, ${c("persona_family_relationships")} family edges, ${c("persona_projects")} projects, ${c("businesses")} businesses, ${c("persona_backup_relationships")} backup relationships, ${c("persona_page_layouts")} page layouts, and ${c("persona_page_code_snippets")} private snippets.\n\nRestore safe owner-authored drafts now? Restored persona and business pages stay unpublished; organization visibility is owner-only; resources are disconnected and disabled; extension source is inert and must be reviewed again.\n\nPersonas whose handle already exists are skipped. Business publication review evidence, provider connections, sync authority, follows/friends, invitations, platform roles, staff decisions, and security/audit state are export-only and will NOT be restored.`,{destructive:true})){input.value="";return}
     await restoreImport(data);
   }catch(e){toast(e?.message||"That's not a MyPersonas backup (.json)")}input.value="";};
   r.readAsText(f);
@@ -2979,8 +2992,8 @@ async function createGroup(){
   if(error){toast(error.message);return}
   await loadGroups();toast("Group created");
 }
-async function deleteGroup(id){
-  if(!confirm("Delete this group? Your personas are not affected."))return;
+async function deleteGroup(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Delete this group? Your personas are not affected.",{destructive:true}))return;
   const{error}=await sb.rpc("delete_persona_group",{p_group_id:id});if(error){toast(error.message);return}
   await loadGroups();toast("Group deleted");
 }
@@ -3038,8 +3051,8 @@ function openPromo(pid){
 }
 // ----- content drafts (for external platforms) -----
 function copyDraft(id){const d=myDrafts.find(x=>x.id===id);if(!d)return;copyText([d.title||"",d.body||"",d.tags||"",d.media_url?`Media: ${d.media_url}`:""].filter(Boolean).join("\n\n"))}
-async function deleteDraft(id){
-  if(!confirm("Delete this draft?"))return;
+async function deleteDraft(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Delete this draft?",{destructive:true}))return;
   const result=await sb.rpc("delete_my_draft",{p_draft_id:id});
   if(result.error){toast(result.error.message);return}
   await loadMine();renderStudio();
@@ -3126,13 +3139,13 @@ function movePageBuilderModule(id,delta){const order=editPageLayout.order,index=
 function setPageBuilderCard(id,key,value){if(!PAGE_LAYOUT_MODULES.includes(id)||!["span","shape","tone"].includes(key))return;editPageLayout.cards[id]={...normalizePageCard(editPageLayout.cards[id]),[key]:value};editPageLayout=normalizePersonaPageLayout(editPageLayout);renderPageBuilder()}
 function movePageBuilderWidget(id,delta){const list=editPageLayout.widgets,index=list.findIndex(widget=>widget.id===id),next=index+delta;if(index<0||next<0||next>=list.length)return;[list[index],list[next]]=[list[next],list[index]];renderPageBuilder()}
 function removePageBuilderWidget(id){editPageLayout.widgets=editPageLayout.widgets.filter(widget=>widget.id!==id);renderPageBuilder()}
-function addPageBuilderWidget(kind){if(editPageLayout.widgets.length>=12){toast("A page can have at most 12 custom boxes");return}const title=(prompt(kind==="link"?"Link box title":"Text box title",kind==="link"?"Useful link":"Custom box")||"").trim();if(!title)return;let body="",label="",url="";if(kind==="link"){label=(prompt("Link button label","Open link")||"").trim();url=(prompt("HTTPS destination","https://")||"").trim();if(!safeHttpUrl(url).startsWith("https://")){toast("Link boxes require a valid HTTPS URL");return}}else body=(prompt("Text for this box")||"").trim();editPageLayout.widgets.push({id:"widget_"+crypto.randomUUID().replace(/-/g,"").slice(0,18),kind,title,body,label,url,span:"half",shape:"soft",tone:"default"});editPageLayout=normalizePersonaPageLayout(editPageLayout);renderPageBuilder()}
+async function addPageBuilderWidget(kind){const dialog=ownerWorkflowDialogs();if(editPageLayout.widgets.length>=12){toast("A page can have at most 12 custom boxes");return}const title=(await dialog.prompt(kind==="link"?"Link box title":"Text box title",kind==="link"?"Useful link":"Custom box")||"").trim();if(!dialog.current())return;if(!title)return;let body="",label="",url="";if(kind==="link"){label=(await dialog.prompt("Link button label","Open link")||"").trim();if(!dialog.current())return;url=(await dialog.prompt("HTTPS destination","https://")||"").trim();if(!dialog.current())return;if(!safeHttpUrl(url).startsWith("https://")){toast("Link boxes require a valid HTTPS URL");return}}else body=(await dialog.prompt("Text for this box")||"").trim();if(!dialog.current())return;editPageLayout.widgets.push({id:"widget_"+crypto.randomUUID().replace(/-/g,"").slice(0,18),kind,title,body,label,url,span:"half",shape:"soft",tone:"default"});editPageLayout=normalizePersonaPageLayout(editPageLayout);renderPageBuilder()}
 function refreshPageBuilderCode(){const language=document.getElementById("pageBuilderCodeLang")?.value||"html",box=document.getElementById("pageBuilderCode");if(box)box.value=pageLayoutLearningCode(editPageLayout,language);const explanation=document.getElementById("pageBuilderExplain");if(explanation)explanation.textContent=explainPageCodeSelection("")}
 function explainSelectedPageCode(){const box=document.getElementById("pageBuilderCode"),out=document.getElementById("pageBuilderExplain");if(!box||!out)return;out.textContent=explainPageCodeSelection(box.value.slice(box.selectionStart,box.selectionEnd))}
 function copyPageBuilderSnippet(id){const snippet=editPageSnippets.find(row=>row.id===id);if(snippet)copyText(snippet.code)}
 async function reloadPageBuilderSnippets(){const result=await sb.rpc("my_persona_page_code_snippets",{p_persona_id:editId});if(!result.error)editPageSnippets=result.data||[]}
-async function savePageBuilderSnippet(){const name=(prompt("Snippet name","My page layout recipe")||"").trim(),language=document.getElementById("pageBuilderCodeLang")?.value||"html",code=document.getElementById("pageBuilderCode")?.value||"";if(!name)return;const result=await sb.rpc("save_persona_page_code_snippet",{p_snippet_id:null,p_persona_id:editId,p_name:name,p_language:language,p_code:code});if(result.error){toast(result.error.message);return}await reloadPageBuilderSnippets();renderPageBuilder();toast("Private snippet saved")}
-async function deletePageBuilderSnippet(id){if(!confirm("Delete this private snippet?"))return;const result=await sb.rpc("delete_persona_page_code_snippet",{p_snippet_id:id});if(result.error){toast(result.error.message);return}editPageSnippets=editPageSnippets.filter(row=>row.id!==id);renderPageBuilder()}
+async function savePageBuilderSnippet(){const dialog=ownerWorkflowDialogs();const name=(await dialog.prompt("Snippet name","My page layout recipe")||"").trim(),language=document.getElementById("pageBuilderCodeLang")?.value||"html",code=document.getElementById("pageBuilderCode")?.value||"";if(!dialog.current())return;if(!name)return;const result=await sb.rpc("save_persona_page_code_snippet",{p_snippet_id:null,p_persona_id:editId,p_name:name,p_language:language,p_code:code});if(result.error){toast(result.error.message);return}await reloadPageBuilderSnippets();renderPageBuilder();toast("Private snippet saved")}
+async function deletePageBuilderSnippet(id){const dialog=ownerWorkflowDialogs();if(!await dialog.confirm("Delete this private snippet?",{destructive:true}))return;const result=await sb.rpc("delete_persona_page_code_snippet",{p_snippet_id:id});if(result.error){toast(result.error.message);return}editPageSnippets=editPageSnippets.filter(row=>row.id!==id);renderPageBuilder()}
 function personaBackupEditorHtml(targetId){
   const privacy='<p class="muted">Private roster organization only. This does not publish, reveal, or publicly link either profile; use public Linked personas separately if you intentionally want a public funnel.</p>';
   if(!targetId)return `<section class="backupeditor"><h3>Backup persona</h3>${privacy}<p class="muted">Save this persona first, then reopen it to assign one of your other personas as its backup.</p></section>`;
@@ -3329,7 +3342,7 @@ async function createAlbum(){
   if(error){toast(error.message);return}
   document.getElementById("nAlbTitle").value="";await loadMine();await loadEditAlbums();toast("Album saved to the page draft; review before publishing");
 }
-async function deleteAlbum(id){if(!confirm("Delete this album and its items?"))return;const{error}=await sb.rpc("delete_persona_album",{p_album_id:id});if(error){toast(error.message);return}await loadMine();await loadEditAlbums();toast("Album removed from the page draft; review before publishing")}
+async function deleteAlbum(id){const dialog=ownerWorkflowDialogs();if(!await dialog.confirm("Delete this album and its items?",{destructive:true}))return;const{error}=await sb.rpc("delete_persona_album",{p_album_id:id});if(error){toast(error.message);return}await loadMine();await loadEditAlbums();toast("Album removed from the page draft; review before publishing")}
 async function addAlbumItem(aid){
   const thumb=document.getElementById("ait_"+aid).value.trim();
   if(!thumb){toast("Add a thumbnail first (URL or upload)");return}
@@ -3460,8 +3473,8 @@ async function savePersona(destination="default"){
   if(destination==="view"&&savedPersona?.handle){go("p/"+savedPersona.handle);return}
   go(requiresReview?"review/"+_pid:"p/"+(savedPersona?.handle||handle));
 }
-async function deletePersona(){
-  const targetId=editId,uid=session?.user?.id,epoch=renderEpoch;if(!targetId||!confirm("Delete this persona, its page, links and all its posts? This cannot be undone. If it is in a backup pair, the other persona stays and becomes standalone."))return;
+async function deletePersona(){const dialog=ownerWorkflowDialogs();
+  const targetId=editId,uid=session?.user?.id,epoch=renderEpoch;if(!targetId||!await dialog.confirm("Delete this persona, its page, links and all its posts? This cannot be undone. If it is in a backup pair, the other persona stays and becomes standalone.",{destructive:true}))return;
   const{error}=await sb.rpc("delete_owned_persona",{p_persona_id:targetId});if(editId!==targetId||session?.user?.id!==uid||epoch!==renderEpoch)return;if(error){toast(error.message);return}
   await loadMine(uid,authLoadGeneration);if(session?.user?.id===uid)go("studio");
 }
@@ -3546,8 +3559,8 @@ async function createChatWorkspace(personaId){
   const{error}=await sb.from("chat_workspaces").insert(row);if(session?.user?.id!==uid)return;if(error){toast("Workspace could not be created: "+error.message);return}
   myChatWorkspaces.push(row);myChatWorkspaces.sort(sortChatWorkspaces);const input=document.getElementById("newWorkspaceTitle");if(input)input.value="";renderWorkspaceList(personaId);toast("Workspace created — choose Resume when you are ready to chat");
 }
-async function renameChatWorkspace(id){
-  const uid=session?.user?.id,w=myChatWorkspaces.find(row=>row.id===id&&row.owner===uid);if(!w)return;const title=validWorkspaceTitle(prompt("Workspace name",w.title||"")||"");if(!title)return;
+async function renameChatWorkspace(id){const dialog=ownerWorkflowDialogs();
+  const uid=session?.user?.id,w=myChatWorkspaces.find(row=>row.id===id&&row.owner===uid);if(!w)return;const title=validWorkspaceTitle(await dialog.prompt("Workspace name",w.title||"")||"");if(!dialog.current())return;if(!title)return;
   const now=new Date().toISOString(),{data,error}=await sb.from("chat_workspaces").update({title,updated_at:now}).eq("id",id).eq("owner",uid).select("id").maybeSingle();if(session?.user?.id!==uid)return;if(error||!data){toast("Workspace could not be renamed"+(error?": "+error.message:" because it no longer exists"));return}w.title=title;w.updated_at=now;renderWorkspaceList(w.persona_id);if(chatCtx?.workspaceId===id){chatCtx.workspaceTitle=title;document.querySelector("#chatov .chtitle").textContent=(myPersonas.find(p=>p.id===w.persona_id)?.name||"Persona")+" — "+title}toast("Workspace renamed");
 }
 async function pinChatWorkspace(id,pinned){
@@ -3585,9 +3598,9 @@ async function attachSelectedWorkspaces(){
   const button=document.getElementById("attachContextBtn"),requestId=crypto.randomUUID();ctx.attachRequest=requestId;if(button){button.disabled=true;button.textContent="Distilling…"}
   try{const additions=[];for(const id of ids){if(chatCtx!==ctx||session?.user?.id!==uid||ctx.attachRequest!==requestId)return;const w=myChatWorkspaces.find(row=>row.id===id&&row.owner===uid&&row.persona_id===ctx.personaId);if(!w)continue;const rows=await workspaceTranscript(w,uid);if(chatCtx!==ctx||ctx.attachRequest!==requestId)return;const summary=await distillTranscriptForContext(ctx.personaId,w.title,rows,ctx.backendId);additions.push({workspaceId:w.id,title:w.title||"Saved workspace",summary})}if(chatCtx!==ctx||session?.user?.id!==uid||ctx.attachRequest!==requestId)return;const merged=new Map((ctx.attachedSummaries||[]).map(s=>[s.workspaceId,s]));additions.forEach(s=>merged.set(s.workspaceId,s));ctx.attachedSummaries=[...merged.values()].slice(-3);ctx.attachRequest="";document.getElementById("attachContextOv")?.remove();renderAttachedContext();toast(`${additions.length} workspace ${additions.length===1?"summary":"summaries"} attached`)}catch(e){ctx.attachRequest="";toast("Context could not be attached: "+e.message);if(button){button.disabled=false;button.textContent="Distill and attach"}}
 }
-async function saveChatToContext(){
+async function saveChatToContext(){const dialog=ownerWorkflowDialogs();
   const ctx=chatCtx,uid=ctx?.ownerUid;if(!ctx?.personaId||ctx.contextBusy||session?.user?.id!==uid)return;const p=myPersonas.find(row=>row.id===ctx.personaId);if(!p)return;const title=ctx.workspaceTitle||ctx.title||"Persona chat";ctx.contextBusy=true;toast("Distilling the recent conversation…");
-  try{const summary=await distillTranscriptForContext(ctx.personaId,title,ctx.messages,ctx.backendId);if(chatCtx!==ctx||session?.user?.id!==uid)return;const reviewed=prompt("Review or edit the distilled takeaway before saving it to this persona's AI-readable context:",summary);if(reviewed===null)return;const approved=distilledSummary(reviewed,430);if(!approved){toast("Nothing was saved because the takeaway was empty");return}await appendContextLog(ctx.personaId,`Chat workspace “${distilledSummary(title,120)}”: ${approved}`);if(chatCtx===ctx)toast("Approved takeaway saved to persona context")}
+  try{const summary=await distillTranscriptForContext(ctx.personaId,title,ctx.messages,ctx.backendId);if(chatCtx!==ctx||session?.user?.id!==uid)return;const reviewed=await dialog.prompt("Review or edit the distilled takeaway before saving it to this persona's AI-readable context:",summary);if(!dialog.current())return;if(reviewed===null)return;const approved=distilledSummary(reviewed,430);if(!approved){toast("Nothing was saved because the takeaway was empty");return}await appendContextLog(ctx.personaId,`Chat workspace “${distilledSummary(title,120)}”: ${approved}`);if(chatCtx===ctx)toast("Approved takeaway saved to persona context")}
   catch(e){if(chatCtx===ctx&&session?.user?.id===uid)toast("Context was not saved: "+e.message)}finally{ctx.contextBusy=false}
 }
 function openChat(opts){
@@ -3818,7 +3831,7 @@ image:"Write 3 detailed image-generation prompts (style, composition, lighting, 
 newsletter:"Write a newsletter email: 3 subject lines, punchy intro, 2-4 short sections, sign-off with call-to-action.",
 promo:"Write 3 promo posts for a product/offer in the persona's voice with clear call-to-action.",
 custom:""};
-async function deleteTask(id){if(!confirm("Delete this content schedule? Existing drafts stay in the queue."))return;if(!await requireAal2ForSensitiveAction("delete an automation schedule"))return;const{error}=await sb.rpc("delete_ai_task_definition",{p_task_id:id});if(error){toast(error.message);return}await loadMine();autoTab="schedule";renderStudio();toast("Content schedule deleted")}
+async function deleteTask(id){const dialog=ownerWorkflowDialogs();if(!await dialog.confirm("Delete this content schedule? Existing drafts stay in the queue.",{destructive:true}))return;if(!await requireAal2ForSensitiveAction("delete an automation schedule"))return;if(!dialog.current())return;const{error}=await sb.rpc("delete_ai_task_definition",{p_task_id:id});if(error){toast(error.message);return}await loadMine();autoTab="schedule";renderStudio();toast("Content schedule deleted")}
 async function runTask(id){
   const t=myTasks.find(x=>x.id===id);if(!t)return;
   const p=myPersonas.find(x=>x.id===t.persona_id);
@@ -3881,8 +3894,8 @@ async function saveBackendEdits(id){
   if(res.error){toast(res.error.message);return}
   closeEditBackend();await loadMine();renderStudio();toast("Model updated");
 }
-async function toggleBackendHostConfirmation(id,surface){
-  if(!await requireAal2ForSensitiveAction("change this model connection"))return;
+async function toggleBackendHostConfirmation(id,surface){const dialog=ownerWorkflowDialogs();
+  if(!await requireAal2ForSensitiveAction("change this model connection"))return;if(!dialog.current())return;
   const b=myBackends.find(x=>x.id===id);if(!b||backendBuiltInAutomation(b))return;
   const spec=surface==="fan"
     ?{key:"fan_host_confirmed",secret:"FAN_CHAT_AI_HOSTS",label:"Fan-chat"}
@@ -3890,13 +3903,13 @@ async function toggleBackendHostConfirmation(id,surface){
       ?{key:"mailbox_host_confirmed",secret:"MAILBOX_AI_HOSTS",label:"Inbox"}
       :{key:"schedule_host_confirmed",secret:"SCHEDULE_AI_HOSTS",label:"Schedule"};
   const next=b.extra?.[spec.key]!==true;
-  if(next&&!confirm(`Confirm only after this hostname was added to the deployed ${spec.secret} secret. The server will still reject it if the allowlist is missing or unsafe.`))return;
+  if(next&&!await dialog.confirm(`Confirm only after this hostname was added to the deployed ${spec.secret} secret. The server will still reject it if the allowlist is missing or unsafe.`))return;
   const extra={...(b.extra||{}),[spec.key]:next};
   const res=await sb.rpc("update_ai_backend",{p_backend_id:id,p_name:b.name,p_model:b.model,p_extra:extra});
   if(res.error){toast(res.error.message);return}
   await loadMine();renderStudio();toast(next?`${spec.label} host confirmation saved`:`${spec.label} host confirmation removed`);
 }
-async function deleteBackend(id){if(!await requireAal2ForSensitiveAction("remove this model credential"))return;const b=myBackends.find(x=>x.id===id);if(!b)return;const oauth=b.provider==="openrouter"&&b.extra?.auth_method==="openrouter_oauth";if(!confirm(oauth?"Remove this model and its encrypted key from AliaSpaces? You must also revoke the key on OpenRouter.":"Remove this model and its encrypted key from AliaSpaces? This does not revoke a key at the provider."))return;const res=await sb.rpc("delete_ai_backend",{p_backend_id:id});if(res.error){toast(res.error.message);return}await loadMine();renderStudio();if(oauth)showOpenRouterKeyWarning("The encrypted AliaSpaces copy was removed. OpenRouter still controls the issued key; revoke it there now.");else toast("Model connection removed from AliaSpaces")}
+async function deleteBackend(id){const dialog=ownerWorkflowDialogs();if(!await requireAal2ForSensitiveAction("remove this model credential"))return;if(!dialog.current())return;const b=myBackends.find(x=>x.id===id);if(!b)return;const oauth=b.provider==="openrouter"&&b.extra?.auth_method==="openrouter_oauth";if(!await dialog.confirm(oauth?"Remove this model and its encrypted key from AliaSpaces? You must also revoke the key on OpenRouter.":"Remove this model and its encrypted key from AliaSpaces? This does not revoke a key at the provider.",{destructive:true}))return;const res=await sb.rpc("delete_ai_backend",{p_backend_id:id});if(res.error){toast(res.error.message);return}await loadMine();renderStudio();if(oauth)showOpenRouterKeyWarning("The encrypted AliaSpaces copy was removed. OpenRouter still controls the issued key; revoke it there now.");else toast("Model connection removed from AliaSpaces")}
 async function setDefaultBackend(id){
   if(!await requireAal2ForSensitiveAction("change the default model connection"))return;
   const target=myBackends.find(x=>x.id===id);if(!target)return;
@@ -4359,8 +4372,8 @@ function mailboxChooseAccount(id){
   mailboxView="subscriptions";mailboxRender();
   if(account?.provider==="gmail"&&mailboxGmailCanScan(account))mailboxLoad();
 }
-async function mailboxCall(action,payload={}){
-  const{data}=await sb.auth.getSession(),active=data&&data.session;
+async function mailboxCall(action,payload={}){const initiatingOwner=session?.user?.id,initiatingEpoch=renderEpoch,initiatingRoute=location.hash;
+  const{data}=await sb.auth.getSession(),active=data&&data.session;if(!initiatingOwner||session?.user?.id!==initiatingOwner||renderEpoch!==initiatingEpoch||location.hash!==initiatingRoute||active?.user?.id!==initiatingOwner)throw new Error("The signed-in owner changed; nothing was sent.");
   if(!active)throw new Error("Sign in again before managing this inbox.");
   let response;
   try{
@@ -4661,9 +4674,9 @@ function mailboxPlanKeydown(event){
   else if(!event.shiftKey&&(document.activeElement===last||!dialog?.contains(document.activeElement))){event.preventDefault();first.focus()}
 }
 function mailboxClosePlan(){document.getElementById("mailActionOv")?.remove();mailboxPlanInert.forEach(element=>element.inert=false);mailboxPlanInert=[];mailboxPendingPlan=null;const target=mailboxPlanReturnFocus;mailboxPlanReturnFocus=null;target?.focus?.()}
-async function mailboxCancelPreview(planId="",fromModal=false){
+async function mailboxCancelPreview(planId="",fromModal=false){const dialog=ownerWorkflowDialogs();
   const id=mailboxSafeId(planId||mailboxPendingPlan?.id),account=mailboxSelectedAccount();if(!id||!account)return;
-  if(!fromModal&&!confirm("Cancel this unapproved cleanup preview? No email will be changed."))return;
+  if(!fromModal&&!await dialog.confirm("Cancel this unapproved cleanup preview? No email will be changed.",{destructive:true}))return;
   const buttons=[...document.querySelectorAll("#mailActionOv button")];buttons.forEach(button=>button.disabled=true);
   const cancelButton=document.querySelector("#mailActionOv .btn.sec");if(cancelButton)cancelButton.textContent="Cancelling…";
   try{
@@ -4685,9 +4698,9 @@ async function mailboxApprovePlan(){
     await mailboxCall("approve-action",{ledgerId:account.id,planId,planHash});mailboxClosePlan();toast("Approved action queued. Refreshing until it finishes.");await mailboxLoad(true);
   }catch(e){modalButtons.forEach(item=>item.disabled=false);if(button)button.textContent="Approve this exact plan";toast(e.message)}
 }
-async function mailboxDismissSelected(){
+async function mailboxDismissSelected(){const dialog=ownerWorkflowDialogs();
   const findingIds=mailboxSelectedIds(),account=mailboxSelectedAccount();if(!findingIds.length||!account)return;
-  if(!confirm(`Deny ${findingIds.length} suggestion${findingIds.length===1?"":"s"} and remove ${findingIds.length===1?"it":"them"} from this report? This does not change the email.`))return;
+  if(!await dialog.confirm(`Deny ${findingIds.length} suggestion${findingIds.length===1?"":"s"} and remove ${findingIds.length===1?"it":"them"} from this report? This does not change the email.`,{destructive:true}))return;
   try{await mailboxCall("dismiss",{ledgerId:account.id,findingIds});toast("Suggestions denied; no email was changed.");await mailboxLoad(true)}catch(e){toast(e.message)}
 }
 async function mailboxUnsubscribe(findingId){
@@ -4725,11 +4738,11 @@ function mailboxActivityHtml(){
   const auditRows=audit.slice(0,50).map(item=>`<div class="mailboxactivityitem"><div class="top"><div><b>${esc(String(mailboxValue(item,"label","event","eventType","event_type","action")||"Inbox event").replace(/[._]/g," "))}</b><div class="muted">${esc(String(mailboxValue(item,"detail","message","summary")||""))}</div></div></div><time>${esc(mailboxDate(mailboxValue(item,"createdAt","created_at")))}</time></div>`);
   return `<div class="mailboxactivity">${[...planRows,...runRows,...auditRows].join("")||'<div class="mailboxempty">No inbox scan or cleanup activity yet.</div>'}</div>`;
 }
-async function mailboxUndo(planId){
+async function mailboxUndo(planId){const dialog=ownerWorkflowDialogs();
   const id=mailboxSafeId(planId),account=mailboxSelectedAccount();if(!id||!account)return;
   if(mailboxGlobalPaused()){toast("Resume the global Matrix safety switch before starting an undo job.");return}
   if(mailboxInboxPaused()){toast("Open inbox settings, clear “Pause this inbox,” and save before requesting undo.");return}
-  if(!confirm("Queue the available undo for this action plan? Gmail may not be able to restore changes made later outside MyPersonas."))return;
+  if(!await dialog.confirm("Queue the available undo for this action plan? Gmail may not be able to restore changes made later outside MyPersonas.",{destructive:true}))return;
   try{await mailboxCall("request-undo",{ledgerId:account.id,planId:id});toast("Undo queued. Refreshing until it finishes.");await mailboxLoad(true)}catch(e){toast(e.message)}
 }
 
@@ -4823,15 +4836,17 @@ function refreshLedgerSavedPicker(providerSelect){
   row.dataset.ledgerId="";delete row.dataset.savedSnapshot;providerSelect.disabled=false;picker.disabled=!saved.count;picker.innerHTML=saved.html;
   row.querySelector(".lrUser").disabled=false;row.querySelector(".lrEmail").disabled=false;setLedgerSavedHelp(row);
 }
-function applyLedgerSavedAccount(picker){
+async function applyLedgerSavedAccount(picker){const dialog=ownerWorkflowDialogs();
   const row=picker.closest(".ledgerrow"),id=picker.value,previous=row.dataset.ledgerId||"";
   if(!id){
-    if(previous&&ledgerSavedRowDirty(row)&&!confirm("Clear your changes and start a new account?")){picker.value=previous;return}
+    if(previous&&ledgerSavedRowDirty(row)&&!await dialog.confirm("Clear your changes and start a new account?",{destructive:true})){picker.value=previous;return}
+    if(!dialog.current())return;
     if(previous)clearLedgerRowDetails(row);row.dataset.ledgerId="";delete row.dataset.savedSnapshot;row.querySelector(".lrProvider").disabled=false;row.querySelector(".lrUser").disabled=false;row.querySelector(".lrEmail").disabled=false;setLedgerSavedHelp(row);return
   }
   const a=myAccounts.find(x=>x.id===id);if(!a){picker.value="";toast("That saved account is no longer available");return}
   const hasTyped=[".lrUser",".lrEmail",".lrUrl",".lrNotes"].some(s=>row.querySelector(s).value.trim());
-  if(hasTyped&&previous!==id&&!confirm("Replace the values in this row with the saved account?")){picker.value=previous;return}
+  if(hasTyped&&previous!==id&&!await dialog.confirm("Replace the values in this row with the saved account?",{destructive:true})){picker.value=previous;return}
+  if(!dialog.current())return;
   row.dataset.ledgerId=a.id;row.querySelector(".lrProvider").value=a.provider;row.querySelector(".lrProvider").disabled=true;
   row.querySelector(".lrUser").value=a.username||"";row.querySelector(".lrEmail").value=a.login_email||"";row.querySelector(".lrUrl").value=a.url||"";row.querySelector(".lrNotes").value=a.notes||"";
   const persona=row.querySelector(".lrPersona");persona.value=a.persona_id&&myPersonas.some(p=>p.id===a.persona_id)?a.persona_id:"";toggleLedgerQuick(persona);
@@ -5373,8 +5388,8 @@ async function verifyLedgerOwnership(id){
   }
   await loadMine();acctTab="accounts";renderStudio();toast("Sign-in email matched. External provider/API access is still not connected.");
 }
-async function gmailOAuthAction(action,id,extra={}){
-  const{data}=await sb.auth.getSession(),s=data&&data.session;
+async function gmailOAuthAction(action,id,extra={}){const initiatingOwner=session?.user?.id,initiatingEpoch=renderEpoch,initiatingRoute=location.hash;
+  const{data}=await sb.auth.getSession(),s=data&&data.session;if(!initiatingOwner||session?.user?.id!==initiatingOwner||renderEpoch!==initiatingEpoch||location.hash!==initiatingRoute||s?.user?.id!==initiatingOwner)return {error:"The signed-in owner changed; nothing was sent."};
   if(!s)return{error:"Sign in again before connecting Gmail."};
   try{
     const r=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/gmail-oauth",{
@@ -5418,21 +5433,21 @@ async function finishPendingGmail(expectedUid=session?.user?.id||null,generation
   renderStudio();
   toast(gmailNoticeMessage);
 }
-async function disconnectGmail(id){
-  if(!confirm("Disconnect Gmail and revoke MyPersonas inbox access? Your Gmail account and messages will not be deleted."))return;
+async function disconnectGmail(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Disconnect Gmail and revoke MyPersonas inbox access? Your Gmail account and messages will not be deleted.",{destructive:true}))return;
   const result=await gmailOAuthAction("disconnect",id);
   if(result.error){toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();
   toast(result.data.googleRevocationConfirmed?"Gmail disconnected and access revoked.":"Gmail disconnected locally. Review Google Account permissions to confirm revocation.");
 }
-async function resetGmailAttempt(id){
-  if(!confirm("Clear this failed local Gmail attempt? This will not revoke the Google grant used by the Gmail account that is already connected elsewhere."))return;
+async function resetGmailAttempt(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Clear this failed local Gmail attempt? This will not revoke the Google grant used by the Gmail account that is already connected elsewhere.",{destructive:true}))return;
   const result=await gmailOAuthAction("reset",id);
   if(result.error){toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();toast("Failed Gmail attempt reset. The other connected Gmail account was not changed.");
 }
-async function twitterOAuthAction(action,id,extra={}){
-  const{data}=await sb.auth.getSession(),s=data&&data.session;
+async function twitterOAuthAction(action,id,extra={}){const initiatingOwner=session?.user?.id,initiatingEpoch=renderEpoch,initiatingRoute=location.hash;
+  const{data}=await sb.auth.getSession(),s=data&&data.session;if(!initiatingOwner||session?.user?.id!==initiatingOwner||renderEpoch!==initiatingEpoch||location.hash!==initiatingRoute||s?.user?.id!==initiatingOwner)return {error:"The signed-in owner changed; nothing was sent."};
   if(!s)return{error:"Sign in again before connecting X."};
   try{
     const r=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/twitter-oauth",{
@@ -5477,11 +5492,11 @@ async function connectTwitter(id,enablePosting=false){
     location.assign(destination.toString());
   }catch(e){toast(e.message||"Invalid X authorization link")}
 }
-async function enableTwitterPosting(id){
+async function enableTwitterPosting(id){const dialog=ownerWorkflowDialogs();
   const account=myAccounts.find(a=>a.id===id);if(!account||account.provider!=="twitter"){toast("That X account is no longer available");return}
   const capability=await twitterOAuthAction("capabilities",id);if(capability.error){toast(capability.error);return}
   if(capability.data?.postingEnabled===true){toast("This X account already has verified posting access.");await loadMine();acctTab="accounts";renderStudio();return}
-  if(!confirm(`Reconnect @${normalizeLedgerUsername(account.username)} with X posting access? MyPersonas will revoke the current read-only grant, then X will show a new consent screen requesting tweet.write. This does not publish or delete any post.`))return;
+  if(!await dialog.confirm(`Reconnect @${normalizeLedgerUsername(account.username)} with X posting access? MyPersonas will revoke the current read-only grant, then X will show a new consent screen requesting tweet.write. This does not publish or delete any post.`))return;
   if(capability.data?.connectionState==="connected"){
     const disconnected=await twitterOAuthAction("disconnect",id);
     if(disconnected.error){await loadMine();acctTab="accounts";renderStudio();toast(disconnected.error);return}
@@ -5498,8 +5513,8 @@ async function finishPendingTwitter(expectedUid=session?.user?.id||null,generati
   if(session?.user?.id!==expectedUid||generation!==authLoadGeneration)return;
   twitterOAuthNotice={message:result.error||(result.data?.postingEnabled?"X connected with tweet.write for this exact account. Posts still require an exact preview and an explicit owner Queue action.":"X connected and its identity was verified with read-only access. Reconnect explicitly if you want to enable posting.")};
 }
-async function disconnectTwitter(id){
-  if(!confirm("Disconnect X and revoke MyPersonas access? This does not delete the external X account or its posts."))return;
+async function disconnectTwitter(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Disconnect X and revoke MyPersonas access? This does not delete the external X account or its posts.",{destructive:true}))return;
   const result=await twitterOAuthAction("disconnect",id);
   if(result.error){await loadMine();if(result.details&&result.details.manualRevocationRequired)focusLedgerConnection(id);else{acctTab="accounts";renderStudio()}toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();
@@ -5511,20 +5526,20 @@ async function refreshTwitter(id){
   if(result.error){toast(result.error);await loadMine();acctTab="accounts";renderStudio();return}
   await loadMine();acctTab="accounts";renderStudio();toast("X connection refreshed and reverified.");
 }
-async function resetTwitterAttempt(id){
-  if(!confirm("Clear this failed local X authorization attempt? No external X account or posts will be deleted."))return;
+async function resetTwitterAttempt(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Clear this failed local X authorization attempt? No external X account or posts will be deleted.",{destructive:true}))return;
   const result=await twitterOAuthAction("reset",id);
   if(result.error){toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();toast("Failed X authorization attempt reset.");
 }
-async function confirmManualTwitterRevocation(id){
-  if(!confirm("Continue only if you already opened X Connected Apps and revoked MyPersonas. This removes the local encrypted token copy; it cannot verify a provider grant whose final state was ambiguous."))return;
+async function confirmManualTwitterRevocation(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Continue only if you already opened X Connected Apps and revoked MyPersonas. This removes the local encrypted token copy; it cannot verify a provider grant whose final state was ambiguous.",{destructive:true}))return;
   const result=await twitterOAuthAction("reset",id,{manualRevocationAcknowledged:true});
   if(result.error){toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();toast("Manual X revocation acknowledged and the local connection was reset.");
 }
-async function redditOAuthAction(action,id=null){
-  const{data}=await sb.auth.getSession(),s=data&&data.session;
+async function redditOAuthAction(action,id=null){const initiatingOwner=session?.user?.id,initiatingEpoch=renderEpoch,initiatingRoute=location.hash;
+  const{data}=await sb.auth.getSession(),s=data&&data.session;if(!initiatingOwner||session?.user?.id!==initiatingOwner||renderEpoch!==initiatingEpoch||location.hash!==initiatingRoute||s?.user?.id!==initiatingOwner)return {error:"The signed-in owner changed; nothing was sent."};
   if(!s)return{error:"Sign in again before connecting Reddit."};
   try{
     const payload={action};if(id)payload.ledgerId=id;
@@ -5552,13 +5567,13 @@ async function connectReddit(id){
   toast("Opening Reddit authorization…");const result=await redditOAuthAction("start",id);if(result.error){toast(result.error);return}
   try{const destination=new URL(result.data.authorizationUrl);if(destination.origin!=="https://www.reddit.com"||destination.pathname!=="/api/v1/authorize")throw new Error("Unexpected Reddit authorization destination");location.assign(destination.toString())}catch(e){toast(e.message||"Invalid Reddit authorization link")}
 }
-async function disconnectReddit(id){
-  if(!confirm("Disconnect Reddit and ask Reddit to revoke MyPersonas access? This does not delete the external account or its posts."))return;
+async function disconnectReddit(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Disconnect Reddit and ask Reddit to revoke MyPersonas access? This does not delete the external account or its posts.",{destructive:true}))return;
   const result=await redditOAuthAction("disconnect",id);if(result.error){toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();toast(result.data?.providerRevoked?"Reddit confirmed revocation and the local token copies were cleared.":"No stored Reddit grant remained; the local connection was cleared.");
 }
-async function youtubeOAuthAction(action,id=null,extra={}){
-  const{data}=await sb.auth.getSession(),s=data&&data.session;if(!s)return{error:"Sign in again before connecting YouTube."};
+async function youtubeOAuthAction(action,id=null,extra={}){const initiatingOwner=session?.user?.id,initiatingEpoch=renderEpoch,initiatingRoute=location.hash;
+  const{data}=await sb.auth.getSession(),s=data&&data.session;if(!initiatingOwner||session?.user?.id!==initiatingOwner||renderEpoch!==initiatingEpoch||location.hash!==initiatingRoute||s?.user?.id!==initiatingOwner)return {error:"The signed-in owner changed; nothing was sent."};if(!s)return{error:"Sign in again before connecting YouTube."};
   try{
     const payload=Object.assign({action},id?{ledgerId:id}:{},extra),r=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/youtube-oauth",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+s.access_token},body:JSON.stringify(payload)}),j=await r.json().catch(()=>({}));
     return r.ok?{data:j}:{error:j.error||("YouTube authorization failed (HTTP "+r.status+")"),details:j};
@@ -5594,12 +5609,12 @@ async function finishPendingYouTube(expectedUid=session?.user?.id||null,generati
 async function refreshYouTube(id){
   if(!await requireAal2ForSensitiveAction("refresh a YouTube channel"))return;toast("Refreshing the YouTube connection…");const result=await youtubeOAuthAction("refresh",id);if(result.error){toast(result.error);await loadMine();acctTab="accounts";renderStudio();return}await loadMine();acctTab="accounts";renderStudio();toast("YouTube channel refreshed and reverified.");
 }
-async function disconnectYouTube(id){
-  if(!confirm("Disconnect this YouTube channel and ask Google to revoke MyPersonas upload access? This does not delete the channel or any video."))return;
-  if(!await requireAal2ForSensitiveAction("disconnect a YouTube channel"))return;const result=await youtubeOAuthAction("disconnect",id);if(result.error){toast(result.error);return}await loadMine();acctTab="accounts";renderStudio();toast("YouTube access was revoked and the local credential was removed.");
+async function disconnectYouTube(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Disconnect this YouTube channel and ask Google to revoke MyPersonas upload access? This does not delete the channel or any video.",{destructive:true}))return;
+  if(!await requireAal2ForSensitiveAction("disconnect a YouTube channel"))return;if(!dialog.current())return;const result=await youtubeOAuthAction("disconnect",id);if(result.error){toast(result.error);return}await loadMine();acctTab="accounts";renderStudio();toast("YouTube access was revoked and the local credential was removed.");
 }
-async function tiktokOAuthAction(action,id=null,extra={}){
-  const{data}=await sb.auth.getSession(),s=data&&data.session;if(!s)return{error:"Sign in again before connecting TikTok."};
+async function tiktokOAuthAction(action,id=null,extra={}){const initiatingOwner=session?.user?.id,initiatingEpoch=renderEpoch,initiatingRoute=location.hash;
+  const{data}=await sb.auth.getSession(),s=data&&data.session;if(!initiatingOwner||session?.user?.id!==initiatingOwner||renderEpoch!==initiatingEpoch||location.hash!==initiatingRoute||s?.user?.id!==initiatingOwner)return {error:"The signed-in owner changed; nothing was sent."};if(!s)return{error:"Sign in again before connecting TikTok."};
   try{const payload=Object.assign({action},id?{ledgerId:id}:{},extra),r=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/tiktok-oauth",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+s.access_token},body:JSON.stringify(payload)}),j=await r.json().catch(()=>({}));return r.ok?{data:j}:{error:j.error||("TikTok authorization failed (HTTP "+r.status+")"),details:j}}catch(e){return{error:"Could not reach TikTok authorization: "+(e.message||e)}}
 }
 async function loadTikTokCapability(expectedUid=session?.user?.id||null,generation=authLoadGeneration){
@@ -5617,10 +5632,10 @@ async function finishPendingTikTok(expectedUid=session?.user?.id||null,generatio
   if(!tiktokOAuthPending||tiktokOAuthCompleting||!expectedUid||session?.user?.id!==expectedUid||generation!==authLoadGeneration)return;const pending=tiktokOAuthPending;tiktokOAuthPending=null;tiktokOAuthCompleting=true;const result=await tiktokOAuthAction("complete",null,pending);tiktokOAuthCompleting=false;if(session?.user?.id!==expectedUid||generation!==authLoadGeneration)return;tiktokOAuthNotice={message:result.error||(result.data?.connected?`TikTok @${result.data.username||"creator"} connected for Upload-to-inbox. Every video remains previewed and completed in TikTok.`:"TikTok authorization did not complete.")};
 }
 async function refreshTikTok(id){if(!await requireAal2ForSensitiveAction("refresh a TikTok creator"))return;toast("Refreshing the TikTok connection…");const result=await tiktokOAuthAction("refresh",id);if(result.error){toast(result.error);await loadMine();acctTab="accounts";renderStudio();return}await loadMine();acctTab="accounts";renderStudio();toast("TikTok creator refreshed and reverified.")}
-async function disconnectTikTok(id){if(!confirm("Disconnect this TikTok creator and revoke MyPersonas access? This does not delete the account or its posts."))return;if(!await requireAal2ForSensitiveAction("disconnect a TikTok creator"))return;const result=await tiktokOAuthAction("disconnect",id);if(result.error){await loadMine();acctTab="accounts";renderStudio();toast(result.error);return}await loadMine();acctTab="accounts";renderStudio();toast("TikTok access was revoked and the local credential was removed.")}
-async function confirmManualTikTokRevocation(id){if(!confirm("Continue only if you already revoked MyPersonas in TikTok Manage app permissions. This clears the retained encrypted token after an ambiguous provider result."))return;if(!await requireAal2ForSensitiveAction("reset a revoked TikTok connection"))return;const result=await tiktokOAuthAction("reset",id,{manualRevocationAcknowledged:true});if(result.error){toast(result.error);return}await loadMine();acctTab="accounts";renderStudio();toast("Manual TikTok revocation acknowledged and the local connection was reset.")}
-async function discordOAuthAction(action,id=null,extra={}){
-  const{data}=await sb.auth.getSession(),active=data&&data.session;if(!active||active.user.id!==session?.user?.id)return{error:"Sign in again before connecting Discord."};
+async function disconnectTikTok(id){const dialog=ownerWorkflowDialogs();if(!await dialog.confirm("Disconnect this TikTok creator and revoke MyPersonas access? This does not delete the account or its posts.",{destructive:true}))return;if(!await requireAal2ForSensitiveAction("disconnect a TikTok creator"))return;if(!dialog.current())return;const result=await tiktokOAuthAction("disconnect",id);if(result.error){await loadMine();acctTab="accounts";renderStudio();toast(result.error);return}await loadMine();acctTab="accounts";renderStudio();toast("TikTok access was revoked and the local credential was removed.")}
+async function confirmManualTikTokRevocation(id){const dialog=ownerWorkflowDialogs();if(!await dialog.confirm("Continue only if you already revoked MyPersonas in TikTok Manage app permissions. This clears the retained encrypted token after an ambiguous provider result.",{destructive:true}))return;if(!await requireAal2ForSensitiveAction("reset a revoked TikTok connection"))return;if(!dialog.current())return;const result=await tiktokOAuthAction("reset",id,{manualRevocationAcknowledged:true});if(result.error){toast(result.error);return}await loadMine();acctTab="accounts";renderStudio();toast("Manual TikTok revocation acknowledged and the local connection was reset.")}
+async function discordOAuthAction(action,id=null,extra={}){const initiatingOwner=session?.user?.id,initiatingEpoch=renderEpoch,initiatingRoute=location.hash;
+  const{data}=await sb.auth.getSession(),active=data&&data.session;if(!initiatingOwner||session?.user?.id!==initiatingOwner||renderEpoch!==initiatingEpoch||location.hash!==initiatingRoute||active?.user?.id!==initiatingOwner)return {error:"The signed-in owner changed; nothing was sent."};if(!active||active.user.id!==session?.user?.id)return{error:"Sign in again before connecting Discord."};
   try{const payload=Object.assign({action},id?{ledgerId:id}:{},extra),response=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/discord-oauth",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+active.access_token},body:JSON.stringify(payload)}),result=await response.json().catch(()=>({}));return response.ok?{data:result,status:response.status}:{error:result.error||("Discord authorization failed (HTTP "+response.status+")"),details:result,status:response.status}}catch(error){return{error:"Could not reach Discord authorization: "+(error.message||error)}}
 }
 async function loadDiscordCapability(expectedUid=session?.user?.id||null,generation=authLoadGeneration){
@@ -5637,11 +5652,11 @@ async function finishPendingDiscord(expectedUid=session?.user?.id||null,generati
   if(!discordOAuthPending||discordOAuthCompleting||!expectedUid||session?.user?.id!==expectedUid||generation!==authLoadGeneration)return;const pending=discordOAuthPending;discordOAuthPending=null;discordOAuthCompleting=true;const result=await discordOAuthAction("complete",null,pending);discordOAuthCompleting=false;if(session?.user?.id!==expectedUid||generation!==authLoadGeneration)return;
   discordOAuthNotice={message:result.error||(result.data?.connected?`Discord channel ${result.data.webhookName||result.data.channelId||""} connected. Every message remains previewed and owner-triggered; scheduling is off.`:"Discord authorization did not complete.")};
 }
-async function disconnectDiscord(id){
-  if(!confirm("Disconnect this exact Discord channel and delete the provider webhook? This does not delete the server, channel, or messages already sent."))return;if(!await requireAal2ForSensitiveAction("disconnect a Discord channel"))return;const result=await discordOAuthAction("disconnect",id);if(result.error){toast(result.error+" The account remains visibly locked until Discord cleanup is proven.");await loadMine();acctTab="accounts";renderStudio();return}await loadMine();acctTab="accounts";renderStudio();toast("Discord confirmed webhook cleanup, OAuth revocation, and local credential removal.");
+async function disconnectDiscord(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Disconnect this exact Discord channel and delete the provider webhook? This does not delete the server, channel, or messages already sent.",{destructive:true}))return;if(!await requireAal2ForSensitiveAction("disconnect a Discord channel"))return;if(!dialog.current())return;const result=await discordOAuthAction("disconnect",id);if(result.error){toast(result.error+" The account remains visibly locked until Discord cleanup is proven.");await loadMine();acctTab="accounts";renderStudio();return}await loadMine();acctTab="accounts";renderStudio();toast("Discord confirmed webhook cleanup, OAuth revocation, and local credential removal.");
 }
-async function twitchOAuthAction(action,id=null,extra={}){
-  const{data}=await sb.auth.getSession(),active=data&&data.session;if(!active||active.user.id!==session?.user?.id)return{error:"Sign in again before connecting Twitch."};
+async function twitchOAuthAction(action,id=null,extra={}){const initiatingOwner=session?.user?.id,initiatingEpoch=renderEpoch,initiatingRoute=location.hash;
+  const{data}=await sb.auth.getSession(),active=data&&data.session;if(!initiatingOwner||session?.user?.id!==initiatingOwner||renderEpoch!==initiatingEpoch||location.hash!==initiatingRoute||active?.user?.id!==initiatingOwner)return {error:"The signed-in owner changed; nothing was sent."};if(!active||active.user.id!==session?.user?.id)return{error:"Sign in again before connecting Twitch."};
   try{const payload=Object.assign({action},id?{ledgerId:id}:{},extra),response=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/twitch-oauth",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+active.access_token},body:JSON.stringify(payload)}),result=await response.json().catch(()=>({}));return response.ok?{data:result,status:response.status}:{error:result.error||("Twitch authorization failed (HTTP "+response.status+")"),details:result,status:response.status}}catch(error){return{error:"Could not reach Twitch authorization: "+(error.message||error)}}
 }
 async function loadTwitchCapability(expectedUid=session?.user?.id||null,generation=authLoadGeneration){
@@ -5657,9 +5672,9 @@ async function startTwitchConnection(id){
 }
 async function finishPendingTwitch(expectedUid=session?.user?.id||null,generation=authLoadGeneration){if(!twitchOAuthPending||twitchOAuthCompleting||!expectedUid||session?.user?.id!==expectedUid||generation!==authLoadGeneration)return;const pending=twitchOAuthPending;twitchOAuthPending=null;twitchOAuthCompleting=true;const result=await twitchOAuthAction("complete",null,pending);twitchOAuthCompleting=false;if(session?.user?.id!==expectedUid||generation!==authLoadGeneration)return;twitchOAuthNotice={message:result.error||(result.data?.connected?`Twitch broadcaster @${result.data.broadcasterLogin||""} connected for only the selected features. General posting remains unavailable.`:"Twitch authorization did not complete.")}}
 async function refreshTwitch(id){if(!await requireAal2ForSensitiveAction("refresh Twitch access"))return;const result=await twitchOAuthAction("refresh",id);await loadMine();acctTab="accounts";renderStudio();toast(result.error||"Twitch identity and feature scopes were revalidated.")}
-async function disconnectTwitch(id){if(!confirm("Disconnect this exact Twitch broadcaster and revoke MyPersonas feature access? This does not delete the channel or its content."))return;if(!await requireAal2ForSensitiveAction("disconnect Twitch"))return;const result=await twitchOAuthAction("disconnect",id);await loadMine();acctTab="accounts";renderStudio();toast(result.error?result.error+" The connection remains locked until provider revocation is proven.":"Twitch confirmed revocation and local credential cleanup.")}
-async function patreonOAuthAction(action,id=null,extra={}){
-  const{data}=await sb.auth.getSession(),active=data&&data.session;if(!active||active.user.id!==session?.user?.id)return{error:"Sign in again before connecting Patreon."};
+async function disconnectTwitch(id){const dialog=ownerWorkflowDialogs();if(!await dialog.confirm("Disconnect this exact Twitch broadcaster and revoke MyPersonas feature access? This does not delete the channel or its content.",{destructive:true}))return;if(!await requireAal2ForSensitiveAction("disconnect Twitch"))return;if(!dialog.current())return;const result=await twitchOAuthAction("disconnect",id);await loadMine();acctTab="accounts";renderStudio();toast(result.error?result.error+" The connection remains locked until provider revocation is proven.":"Twitch confirmed revocation and local credential cleanup.")}
+async function patreonOAuthAction(action,id=null,extra={}){const initiatingOwner=session?.user?.id,initiatingEpoch=renderEpoch,initiatingRoute=location.hash;
+  const{data}=await sb.auth.getSession(),active=data&&data.session;if(!initiatingOwner||session?.user?.id!==initiatingOwner||renderEpoch!==initiatingEpoch||location.hash!==initiatingRoute||active?.user?.id!==initiatingOwner)return {error:"The signed-in owner changed; nothing was sent."};if(!active||active.user.id!==session?.user?.id)return{error:"Sign in again before connecting Patreon."};
   try{const payload=Object.assign({action},id?{ledgerId:id}:{},extra),response=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/patreon-oauth",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+active.access_token},body:JSON.stringify(payload)}),result=await response.json().catch(()=>({}));return response.ok?{data:result,status:response.status}:{error:result.error||("Patreon request failed (HTTP "+response.status+")"),details:result,status:response.status}}catch(error){return{error:"Could not reach Patreon: "+(error.message||error)}}
 }
 async function loadPatreonCapability(expectedUid=session?.user?.id||null,generation=authLoadGeneration){if(!expectedUid||session?.user?.id!==expectedUid||generation!==authLoadGeneration)return false;const result=await patreonOAuthAction("capabilities");if(session?.user?.id!==expectedUid||generation!==authLoadGeneration)return false;if(result.error){patreonOAuthCapability={loaded:true,configured:false,readOnly:true,nativeHandoffSupported:false,ordinaryPostCreateSupported:false,ordinaryPostSchedulingSupported:false,error:result.error,callbackUrl:""};return false}const data=result.data||{};patreonOAuthCapability={loaded:true,configured:data.credentialsConfigured===true,readOnly:data.readOnly!==false,nativeHandoffSupported:data.nativeHandoffSupported===true,ordinaryPostCreateSupported:data.ordinaryPostCreateSupported===true,ordinaryPostSchedulingSupported:data.ordinaryPostSchedulingSupported===true,error:"",callbackUrl:"https://nwsqyuucwzihruszocge.supabase.co/functions/v1/patreon-oauth"};return true}
@@ -5670,9 +5685,9 @@ function openPatreonCampaignSelection(){const selection=patreonCampaignSelection
 async function selectPatreonCampaign(){const selection=patreonCampaignSelection,campaignId=document.querySelector('input[name="patreonCampaign"]:checked')?.value||"";if(!selection?.ledgerId||!campaignId){toast("Choose one Patreon campaign");return}if(!await requireAal2ForSensitiveAction("bind a Patreon campaign"))return;const result=await patreonOAuthAction("select-campaign",selection.ledgerId,{campaignId});if(result.error){toast(result.error);return}patreonCampaignSelection=null;document.getElementById("patreonCampaignOv")?.remove();await loadMine();acctTab="accounts";renderStudio();toast(`Patreon campaign ${result.data?.campaign?.name||campaignId} bound for read/report and native-editor handoff.`)}
 async function refreshPatreon(id){if(!await requireAal2ForSensitiveAction("refresh Patreon access"))return;const result=await patreonOAuthAction("refresh",id);await loadMine();acctTab="accounts";renderStudio();toast(result.error||"Patreon campaign access was revalidated.")}
 async function loadPatreonReport(id){if(!await requireAal2ForSensitiveAction("read a Patreon post report"))return;const result=await patreonOAuthAction("report",id);if(result.error){toast(result.error);return}const data=result.data||{},overlay=document.createElement("div");overlay.className="overlay";overlay.id="patreonReportOv";overlay.innerHTML=`<div class="wizbox" role="dialog" aria-modal="true"><h2>${esc(data.campaignName||"Patreon campaign")} · existing posts</h2><p class="muted">Read-only API v2 report. No post was created, edited, scheduled, or deleted.</p><div class="schedulelist">${(data.posts||[]).map(post=>`<div class="scheduleitem"><b>${esc(post.title||post.id||"Post")}</b><br><span class="muted">${esc(post.published_at||"")}${post.is_public===true?" · public":""}${post.is_paid===true?" · paid":""}</span>${safeHttpUrl(post.url)?`<br><a href="${esc(safeHttpUrl(post.url))}" target="_blank" rel="noopener">Open on Patreon ↗</a>`:""}</div>`).join("")||'<p class="muted">No posts were returned.</p>'}</div><div class="autoformactions"><button class="btn sec" onclick="document.getElementById('patreonReportOv')?.remove()">Close</button></div></div>`;document.body.appendChild(overlay)}
-async function disconnectPatreon(id,manual=false){if(!manual&&!confirm("Disconnect this Patreon campaign? Patreon requires you to remove MyPersonas under connected apps before local credentials can be cleared."))return;if(!await requireAal2ForSensitiveAction("disconnect Patreon"))return;const result=await patreonOAuthAction("disconnect",id,{manualRevocationAcknowledged:manual===true});if(result.error&&result.details?.manualRevocationRequired){const url=safeHttpUrl(result.details.manualRevocationUrl)||"https://www.patreon.com/settings/apps";document.getElementById("patreonDisconnectOv")?.remove();const overlay=document.createElement("div");overlay.className="overlay";overlay.id="patreonDisconnectOv";overlay.innerHTML=`<div class="wizbox" role="dialog" aria-modal="true"><h2>Finish Patreon revocation</h2><p>Open Patreon's connected-app settings and remove MyPersonas first. Then return here and confirm. Local credentials remain locked until you do.</p><div class="autoformactions"><a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Open Patreon connected apps ↗</a><button class="btn danger" onclick="disconnectPatreon('${id}',true)">I removed MyPersonas — clear local access</button><button class="btn sec" onclick="document.getElementById('patreonDisconnectOv')?.remove()">Cancel</button></div></div>`;document.body.appendChild(overlay);return}await loadMine();acctTab="accounts";renderStudio();if(result.error){toast(result.error);return}document.getElementById("patreonDisconnectOv")?.remove();toast("Patreon provider revocation was owner-confirmed and local credentials were cleared.")}
-async function metaOAuthAction(action,id=null,extra={}){
-  const{data}=await sb.auth.getSession(),s=data&&data.session;
+async function disconnectPatreon(id,manual=false){const dialog=ownerWorkflowDialogs();if(!manual&&!await dialog.confirm("Disconnect this Patreon campaign? Patreon requires you to remove MyPersonas under connected apps before local credentials can be cleared.",{destructive:true}))return;if(!await requireAal2ForSensitiveAction("disconnect Patreon"))return;if(!dialog.current())return;const result=await patreonOAuthAction("disconnect",id,{manualRevocationAcknowledged:manual===true});if(result.error&&result.details?.manualRevocationRequired){const url=safeHttpUrl(result.details.manualRevocationUrl)||"https://www.patreon.com/settings/apps";document.getElementById("patreonDisconnectOv")?.remove();const overlay=document.createElement("div");overlay.className="overlay";overlay.id="patreonDisconnectOv";overlay.innerHTML=`<div class="wizbox" role="dialog" aria-modal="true"><h2>Finish Patreon revocation</h2><p>Open Patreon's connected-app settings and remove MyPersonas first. Then return here and confirm. Local credentials remain locked until you do.</p><div class="autoformactions"><a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Open Patreon connected apps ↗</a><button class="btn danger" onclick="disconnectPatreon('${id}',true)">I removed MyPersonas — clear local access</button><button class="btn sec" onclick="document.getElementById('patreonDisconnectOv')?.remove()">Cancel</button></div></div>`;document.body.appendChild(overlay);return}await loadMine();acctTab="accounts";renderStudio();if(result.error){toast(result.error);return}document.getElementById("patreonDisconnectOv")?.remove();toast("Patreon provider revocation was owner-confirmed and local credentials were cleared.")}
+async function metaOAuthAction(action,id=null,extra={}){const initiatingOwner=session?.user?.id,initiatingEpoch=renderEpoch,initiatingRoute=location.hash;
+  const{data}=await sb.auth.getSession(),s=data&&data.session;if(!initiatingOwner||session?.user?.id!==initiatingOwner||renderEpoch!==initiatingEpoch||location.hash!==initiatingRoute||s?.user?.id!==initiatingOwner)return {error:"The signed-in owner changed; nothing was sent."};
   if(!s)return{error:"Sign in again before connecting Meta."};
   try{
     const payload=Object.assign({action},id?{ledgerId:id}:{},extra);
@@ -5732,16 +5747,17 @@ async function retryMetaCapability(){
   await loadMetaCapability();acctTab="accounts";renderStudio();
   toast(metaOAuthCapability.pendingAuthorizationCleanupRequired?"Resolve the retained Meta authorization cleanup before starting another connection.":metaOAuthCapability.error?metaOAuthCapability.error:metaOAuthCapability.configured?"Meta Page pairing and explicit publishing reauthorization are ready.":"Meta still needs its Business app credentials and approved configuration.");
 }
-async function cancelPendingMetaAuthorization(manualAcknowledgement=false){
+async function cancelPendingMetaAuthorization(manualAcknowledgement=false){const dialog=ownerWorkflowDialogs();
   if(metaOAuthCancelling||metaOAuthFinalizing)return;
   if(!metaOAuthCapability.loaded)await loadMetaCapability();
   if(!metaOAuthCapability.pendingAuthorizationCleanupRequired){toast("No pending Meta authorization cleanup remains");acctTab="accounts";renderStudio();return}
   if(metaOwnershipInvestigationActive()){toast("Do not revoke Meta access for this ownership-investigation hold. Recheck from the original MyPersonas sign-in or report the problem.");acctTab="accounts";renderStudio();return}
   const manual=(manualAcknowledgement||metaOAuthCapability.pendingAuthorizationManualRevocationRequired)&&metaOAuthCapability.manualRevocationSafe,providerRevoked=metaOAuthCapability.pendingAuthorizationProviderRevoked;
   const hasConnectedAssets=myAccountConnections.some(connection=>["facebook","instagram"].includes(connection.provider)&&connection.connection_state==="connected");
-  if(manual&&!confirm("Continue only if you already removed MyPersonas in Meta Business Integrations. One shared Meta grant covers every paired Facebook Page and linked Instagram account; this acknowledgement clears the retained encrypted token and shared local connection records."))return;
-  if(!manual&&!providerRevoked&&hasConnectedAssets&&!confirm("Cancel the previous Meta authorization and revoke the shared grant? Every Facebook Page and linked Instagram record already paired through it will be disconnected."))return;
-  if(!manual&&!providerRevoked&&!hasConnectedAssets&&!confirm("Cancel the previous Meta authorization and revoke its retained provider access? No new Page or Instagram record will be paired."))return;
+  if(manual&&!await dialog.confirm("Continue only if you already removed MyPersonas in Meta Business Integrations. One shared Meta grant covers every paired Facebook Page and linked Instagram account; this acknowledgement clears the retained encrypted token and shared local connection records.",{destructive:true}))return;
+  if(!manual&&!providerRevoked&&hasConnectedAssets&&!await dialog.confirm("Cancel the previous Meta authorization and revoke the shared grant? Every Facebook Page and linked Instagram record already paired through it will be disconnected.",{destructive:true}))return;
+  if(!manual&&!providerRevoked&&!hasConnectedAssets&&!await dialog.confirm("Cancel the previous Meta authorization and revoke its retained provider access? No new Page or Instagram record will be paired.",{destructive:true}))return;
+  if(!dialog.current()||metaOAuthCancelling||metaOAuthFinalizing)return;
   metaOAuthCancelling=true;setMetaActionBusy("cancel",true,providerRevoked?"Finishing cleanup…":"Revoking…");
   try{
     const result=await metaOAuthAction("cancel_pending",null,manual?{manualRevocationAcknowledged:true}:{});
@@ -5777,13 +5793,13 @@ async function connectMeta(id,options={}){
   }catch(e){toast(e.message||"Invalid Meta authorization link")}
   finally{if(!navigating){metaOAuthStarting=false;setMetaActionBusy("start",false,"Connect Meta & choose Pages")}}
 }
-async function enableMetaPublishing(id){
+async function enableMetaPublishing(id){const dialog=ownerWorkflowDialogs();
   const account=myAccounts.find(a=>a.id===id);if(!account||!["facebook","instagram"].includes(account.provider)){toast("That Meta account is no longer available");return}
   const capability=await metaOAuthAction("capabilities",id);if(capability.error){toast(capability.error);return}
   if(capability.data?.postingEnabled===true){toast("This exact Meta destination already has a recorded write-ready grant. The publisher will still recheck it live before every post.");await loadMine();acctTab="accounts";renderStudio();return}
   const connectedProviders=new Set(myAccounts.filter(row=>["facebook","instagram"].includes(row.provider)&&ledgerConnectionInfo(row).state==="connected").map(row=>row.provider)),publishTargets=["facebook",...(connectedProviders.has("instagram")?["instagram"]:[])];
   const label=publishTargets.length===2?"Facebook Page and linked Instagram publishing":"Facebook Page publishing";
-  if(!confirm(`Authorize ${label} for the shared Meta grant? Meta will show the exact permissions on its consent screen. This does not schedule or publish anything, and existing Page bindings cannot be changed in this flow.`))return;
+  if(!await dialog.confirm(`Authorize ${label} for the shared Meta grant? Meta will show the exact permissions on its consent screen. This does not schedule or publish anything, and existing Page bindings cannot be changed in this flow.`))return;
   return connectMeta(id,{requestPublishing:true,publishTargets});
 }
 async function finishPendingMeta(expectedUid=session?.user?.id||null,generation=authLoadGeneration){
@@ -5870,13 +5886,14 @@ async function dismissStaleMetaCandidate(){
   await loadMetaCapability();
   return !metaOAuthCapability.pendingAuthorizationCleanupRequired;
 }
-async function cancelMetaSelection(){
+async function cancelMetaSelection(){const dialog=ownerWorkflowDialogs();
   const selection=metaOAuthSelection;if(!selection){releaseOwnerModal("metaSelectionOv");return}
   if(metaOAuthCancelling||metaOAuthFinalizing)return;
   if(metaOwnershipInvestigationActive()){toast("This Meta ownership hold must be reviewed before provider access can be revoked. Do not cancel or revoke the shared integration from this state.");return}
   const acknowledged=selection.manualRevocationRequired===true,hasConnectedAssets=metaSelectionHasConnectedAssets(selection);
-  if(acknowledged&&!confirm(`Continue only if you already removed MyPersonas in Meta Business Integrations. This clears the retained encrypted token${hasConnectedAssets?" and disconnects every Page and linked Instagram record in the shared grant":""} after your provider-side revocation.`))return;
-  if(!acknowledged&&hasConnectedAssets&&!confirm("Cancel this selection and revoke the shared Meta grant? Every Facebook Page and linked Instagram record already paired through it will be disconnected."))return;
+  if(acknowledged&&!await dialog.confirm(`Continue only if you already removed MyPersonas in Meta Business Integrations. This clears the retained encrypted token${hasConnectedAssets?" and disconnects every Page and linked Instagram record in the shared grant":""} after your provider-side revocation.`,{destructive:true}))return;
+  if(!acknowledged&&hasConnectedAssets&&!await dialog.confirm("Cancel this selection and revoke the shared Meta grant? Every Facebook Page and linked Instagram record already paired through it will be disconnected.",{destructive:true}))return;
+  if(!dialog.current()||metaOAuthCancelling||metaOAuthFinalizing)return;
   metaOAuthCancelling=true;setMetaSelectionBusy(true,"cancel");
   try{
     const result=await metaOAuthAction("cancel",null,{selectionToken:selection.selectionToken,browserNonce:selection.browserNonce,...(acknowledged?{manualRevocationAcknowledged:true}:{})});
@@ -5923,36 +5940,38 @@ async function finalizeMetaSelection(){
     toast(reauthorizing?(result.data?.postingEnabled?"Meta publishing access is recorded for the confirmed bindings. Every post still requires an exact preview and owner approval.":"Meta reauthorization finished, but the required write scopes or Page tasks are still missing. Open the connection details for readiness."):"Meta assets paired securely. Posting remains locked until you explicitly enable Meta publishing.");
   }finally{metaOAuthFinalizing=false;setMetaSelectionBusy(false)}
 }
-async function disconnectMeta(id){
+async function disconnectMeta(id){const dialog=ownerWorkflowDialogs();
   if(metaOAuthDisconnecting)return;
   if(metaOwnershipInvestigationActive()){toast("Do not revoke the shared Meta integration while the ownership-investigation hold is active. Recheck from the original MyPersonas sign-in or report the problem.");acctTab="accounts";renderStudio();return}
-  if(!confirm("Disconnect this shared Meta grant? This revokes MyPersonas access for every Facebook Page and linked Instagram account paired through the same Meta authorization. It does not delete external accounts or posts."))return;
+  if(!await dialog.confirm("Disconnect this shared Meta grant? This revokes MyPersonas access for every Facebook Page and linked Instagram account paired through the same Meta authorization. It does not delete external accounts or posts.",{destructive:true}))return;
+  if(!dialog.current()||metaOAuthDisconnecting||metaOAuthCancelling||metaOAuthFinalizing)return;
   metaOAuthDisconnecting=true;setMetaActionBusy("disconnect",true,"Disconnecting…");
   try{
     const result=await metaOAuthAction("disconnect",id);if(result.error){await refreshMetaCleanupAfterError(result.details);await loadMine();if(result.details?.manualRevocationRequired)focusLedgerConnection(id);else{acctTab="accounts";renderStudio()}toast(result.error);return}
     await loadMine();acctTab="accounts";autoTaskEditId="";renderStudio();toast("Shared Meta access disconnected. Review Meta Business Integrations if provider revocation could not be confirmed.");
   }finally{metaOAuthDisconnecting=false;setMetaActionBusy("disconnect",false,"Disconnect shared Meta grant")}
 }
-async function confirmManualMetaRevocation(id){
+async function confirmManualMetaRevocation(id){const dialog=ownerWorkflowDialogs();
   if(metaOwnershipInvestigationActive()){toast("Manual Meta revocation is disabled for this ownership-investigation hold. Do not revoke provider access; report the problem.");acctTab="accounts";renderStudio();return}
-  if(!confirm("Continue only if you already removed MyPersonas from Facebook Business Integrations. This deletes the retained encrypted Meta token copies and disconnects every Page and linked Instagram account in the shared grant."))return;
+  if(!await dialog.confirm("Continue only if you already removed MyPersonas from Facebook Business Integrations. This deletes the retained encrypted Meta token copies and disconnects every Page and linked Instagram account in the shared grant.",{destructive:true}))return;
   const result=await metaOAuthAction("reset",id,{manualRevocationAcknowledged:true});if(result.error){if(await refreshMetaCleanupAfterError(result.details)){acctTab="accounts";renderStudio()}toast(result.error);return}
   await loadMine();acctTab="accounts";renderStudio();toast("Manual Meta revocation acknowledged and the shared local grant was removed.");
 }
-async function deleteLedgerAccount(id){
+async function deleteLedgerAccount(id){const dialog=ownerWorkflowDialogs();
   const account=myAccounts.find(a=>a.id===id),isGmail=account&&account.provider==="gmail",isTwitter=account&&account.provider==="twitter",isReddit=account&&account.provider==="reddit",isMeta=account&&["facebook","instagram"].includes(account.provider),connection=myAccountConnections.find(c=>c.ledger_id===id),gmailResetOnly=isGmail&&gmailResetOnlyError(connection&&connection.error_code),twitterResetOnly=isTwitter&&twitterResetOnlyError(connection&&connection.error_code),twitterManualRevoke=isTwitter&&connection&&connection.error_code==="x_manual_revoke_required",metaManualRevoke=isMeta&&connection&&connection.error_code==="meta_manual_revoke_required";
   if(isMeta&&metaOAuthDisconnecting)return;
   if(isMeta&&metaOwnershipInvestigationActive()){toast("This Meta ledger record cannot be deleted while the ownership-investigation hold is active. Do not revoke provider access; recheck or report the problem.");acctTab="accounts";renderStudio();return}
   if(twitterManualRevoke){toggleLedgerAuth(id);toast("Revoke MyPersonas in X Connected Apps, then use “I revoked it — reset” before deleting this ledger record.");return}
   if(metaManualRevoke){toggleLedgerAuth(id);toast("Remove MyPersonas in Meta Business Integrations, then use “I removed it — reset” before deleting this ledger record.");return}
   const warning=gmailResetOnly?"Remove this failed Gmail ledger entry and its local token copy? The Google grant used by the account connected elsewhere will not be revoked.":twitterResetOnly?"Remove this failed local X ledger attempt? The X grant used by the account connected elsewhere will not be revoked.":isGmail?"Remove this account from your private ledger and revoke any stored Gmail access? The external Gmail account and messages will not be deleted.":isTwitter?"Remove this account from your private ledger and revoke any stored X access? The external X account and posts will not be deleted.":isReddit?"Remove this account from your private ledger, ask Reddit to revoke access, and delete the local token copies? The external Reddit account and posts will not be deleted.":isMeta&&connection?.connection_state==="connected"?"Remove this record and revoke the shared Meta grant? Every Facebook Page and linked Instagram account paired through that grant will be disconnected. External accounts and posts will not be deleted.":"Remove this account from your private ledger? This does not delete the external account.";
-  if(!confirm(warning))return;
-  if(!await requireAal2ForSensitiveAction("disconnect and remove this account record"))return;
+  if(!await dialog.confirm(warning,{destructive:true}))return;
+  if(!await requireAal2ForSensitiveAction("disconnect and remove this account record"))return;if(!dialog.current())return;
   if(isGmail){const disconnected=await gmailOAuthAction(gmailResetOnly?"reset":"disconnect",id);if(disconnected.error){toast(disconnected.error);return}}
   if(isTwitter&&connection&&["connected","error"].includes(connection.connection_state)){const disconnected=await twitterOAuthAction(twitterResetOnly?"reset":"disconnect",id);if(disconnected.error){await loadMine();if(disconnected.details&&disconnected.details.manualRevocationRequired)focusLedgerConnection(id);else{acctTab="accounts";renderStudio()}toast(disconnected.error);return}}
   if(isReddit&&connection&&["connected","error"].includes(connection.connection_state)){const disconnected=await redditOAuthAction("disconnect",id);if(disconnected.error){toast(disconnected.error);return}}
   if(isMeta&&connection&&["connected","error"].includes(connection.connection_state)){
-    metaOAuthDisconnecting=true;setMetaActionBusy("disconnect",true,"Disconnecting…");let disconnected;
+    if(!dialog.current()||metaOAuthDisconnecting||metaOAuthCancelling||metaOAuthFinalizing)return;
+  metaOAuthDisconnecting=true;setMetaActionBusy("disconnect",true,"Disconnecting…");let disconnected;
     try{disconnected=await metaOAuthAction("disconnect",id)}finally{metaOAuthDisconnecting=false;setMetaActionBusy("disconnect",false,"Disconnect shared Meta grant")}
     if(disconnected.error){await refreshMetaCleanupAfterError(disconnected.details);await loadMine();if(disconnected.details?.manualRevocationRequired)focusLedgerConnection(id);else{acctTab="accounts";renderStudio()}toast(disconnected.error);return}
   }
@@ -6027,9 +6046,9 @@ async function mfaDiscard(factorId){
   const box=document.getElementById("mfaBox");if(box)box.innerHTML='<p class="muted">Incomplete setup discarded.</p><button class="btn sm sec" onclick="mfaStart()">Set up an authenticator</button>';
   toast("Incomplete setup discarded");
 }
-async function mfaRemove(factorId,status="verified"){
-  if(status==="verified"&&!await requireAal2ForSensitiveAction("remove this authenticator"))return;
-  if(!confirm("Remove this authenticator from your account?"))return;
+async function mfaRemove(factorId,status="verified"){const dialog=ownerWorkflowDialogs();
+  if(status==="verified"&&!await requireAal2ForSensitiveAction("remove this authenticator"))return;if(!dialog.current())return;
+  if(!await dialog.confirm("Remove this authenticator from your account?",{destructive:true}))return;
   const{error}=await sb.auth.mfa.unenroll({factorId});
   if(error){toast(error.message);return}
   const box=document.getElementById("mfaBox");if(box)box.innerHTML='<p class="muted">This authenticator was removed.</p><button class="btn sm sec" onclick="mfaStart()">Set up an authenticator</button>';
@@ -6075,8 +6094,8 @@ function showEraseProviderWarning(requiredProviders){
   o.innerHTML=`<div class="wizbox" role="dialog" aria-modal="true" aria-labelledby="eraseProviderWarningTitle" aria-describedby="eraseProviderWarningText" tabindex="-1" onkeydown="ownerModalKeydown(event,'erase')"><h2 id="eraseProviderWarningTitle">Revoke provider access first</h2><p id="eraseProviderWarningText">${steps.join(" ")}</p><p class="muted">Continue only after those provider-side revocations are complete. MyPersonas will then remove its local encrypted copies.</p><div class="autoformactions">${links}<button class="btn danger" id="confirmEraseProviderRevocations">I revoked them — continue</button><button class="btn sec" onclick="releaseOwnerModal('eraseProviderWarning')">Cancel</button></div></div>`;
   document.body.appendChild(o);activateOwnerModal(o);document.getElementById("confirmEraseProviderRevocations").addEventListener("click",()=>{releaseOwnerModal("eraseProviderWarning");deleteAllContentConfirmed(acknowledged)});return true;
 }
-async function deleteAllContent(){
-  if(!confirm("Delete ALL your personas, pages, posts, albums, account ledger, drafts, tasks and linked models? This cannot be undone. Your sign-in record stays. Model keys are removed from AliaSpaces, but pasted provider keys are not revoked at their provider."))return;
+async function deleteAllContent(){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Delete ALL your personas, pages, posts, albums, account ledger, drafts, tasks and linked models? This cannot be undone. Your sign-in record stays. Model keys are removed from AliaSpaces, but pasted provider keys are not revoked at their provider.",{destructive:true}))return;
   const hasMetaInvestigation=metaOwnershipInvestigationActive();
   if(hasMetaInvestigation){acctTab="accounts";renderStudio();toast("Content erasure is fail-closed during the Meta ownership investigation. Do not revoke provider access; recheck from the original MyPersonas sign-in or report the problem.");return}
   const hasOpenRouter=myBackends.some(isOpenRouterBackend),hasAmbiguousX=myAccountConnections.some(c=>c.provider==="twitter"&&c.error_code==="x_manual_revoke_required"),hasAmbiguousMeta=myAccountConnections.some(c=>["facebook","instagram"].includes(c.provider)&&c.error_code==="meta_manual_revoke_required")||(metaOAuthCapability.pendingAuthorizationCleanupRequired&&metaOAuthCapability.pendingAuthorizationManualRevocationRequired&&metaOAuthCapability.manualRevocationSafe);
@@ -6597,10 +6616,10 @@ function ownerDraftImageFieldLabel(d,field,label){
   const hasMedia=!!String(d?.media_url||"").trim(),hasAsset=PUBLIC_PERSONA_UUID.test(String(d?.media_asset_id||"")),locked=["publishing","published"].includes(String(d?.publish_state||""))||!!String(d?.provider_post_id||"").trim(),enabled=hasMedia&&hasAsset&&!locked,title=locked?"Published or provider-bound history cannot generate replacement copy":!hasMedia?"Attach and save a registered persona image first":!hasAsset?"This media URL is not a registered persona image. Import it and save the draft first":"Send a metadata-stripped, size-bounded derivative plus this draft's saved title, body, and tags to the linked vision model. Unsaved edits are not sent";
   return `<div style="display:flex;justify-content:space-between;gap:8px;align-items:end"><label for="de${field[0].toUpperCase()+field.slice(1)}" style="margin:0">${esc(label)}</label><button class="btn sec sm" type="button" id="deGenerate_${field}_${d.id}" ${enabled?`onclick="ownerDraftGenerateImageText('${d.id}','${field}')"`:"disabled"} title="${esc(title)}">Generate from image</button></div>`;
 }
-async function ownerDraftGenerateImageText(id,field){
+async function ownerDraftGenerateImageText(id,field){const dialog=ownerWorkflowDialogs();
   const draft=myDrafts.find(row=>row.id===id),inputIds={title:"deTitle",body:"deBody",tags:"deTags"},input=document.getElementById(inputIds[field]),mediaInput=document.getElementById("deMedia"),button=document.getElementById(`deGenerate_${field}_${id}`);if(!draft||!input||!mediaInput||!button||!PUBLIC_PERSONA_UUID.test(String(draft.media_asset_id||"")))return;
   const savedMedia=String(draft.media_url||"");if(mediaInput.value!==savedMedia){toast("Save or import the changed image first, then reopen this draft to generate from it");return}
-  const originalValue=input.value,originalMedia=mediaInput.value,originalAsset=String(draft.media_asset_id||"");if(originalValue.trim()&&!confirm("Replace the current text with a new AI suggestion based on this image?"))return;
+  const originalValue=input.value,originalMedia=mediaInput.value,originalAsset=String(draft.media_asset_id||"");if(originalValue.trim()&&!await dialog.confirm("Replace the current text with a new AI suggestion based on this image?"))return;
   const original=button.textContent;button.disabled=true;button.textContent="Generating…";
   try{const generated=await requestRegisteredImageText({sourceType:"owner_draft",sourceId:id,field,expectedImageAssetId:originalAsset,expectedRevision:String(draft.updated_at||""),expectedMediaUrl:originalMedia});if(myDrafts.find(row=>row.id===id)!==draft||!document.contains(input)||input.value!==originalValue||mediaInput.value!==originalMedia||String(draft.media_asset_id||"")!==originalAsset)throw new Error("The Queue draft changed while the image was being analyzed");if(generated.imageAssetId!==originalAsset)throw new Error("The registered image changed while the Queue draft was being analyzed");input.value=generated.text;toast("Image-based suggestion inserted. Review and save the draft; nothing was approved or published.")}
   catch(error){toast(error?.message||"The image description could not be generated")}
@@ -6618,17 +6637,17 @@ async function requestRegisteredImageText({sourceType,sourceId,field,expectedIma
 function composerBriefGenerateState(){
   const button=document.getElementById("cmpGenerateBrief"),image=document.getElementById("cmpImg"),ready=PUBLIC_PERSONA_UUID.test(String(image?.dataset.assetId||""))&&image?.dataset.personaId===val("cmpPersona");if(!button)return;button.disabled=!ready;button.title=ready?"Send a metadata-stripped, size-bounded derivative of this registered image to the linked vision model and insert an unsaved brief":"Choose and prepare a registered image for this persona first";
 }
-async function composerGenerateBriefFromImage(){
+async function composerGenerateBriefFromImage(){const dialog=ownerWorkflowDialogs();
   const input=document.getElementById("cmpBrief"),image=document.getElementById("cmpImg"),button=document.getElementById("cmpGenerateBrief"),assetId=String(image?.dataset.assetId||""),personaId=val("cmpPersona");if(!input||!image||!button||!PUBLIC_PERSONA_UUID.test(assetId)||image.dataset.personaId!==personaId){toast("Choose and prepare a registered image for this persona first");return}
-  const originalValue=input.value,originalImage=String(image.value||"");if(originalValue.trim()&&!confirm("Replace the current brief with a new AI suggestion based on this image?"))return;
+  const originalValue=input.value,originalImage=String(image.value||"");if(originalValue.trim()&&!await dialog.confirm("Replace the current brief with a new AI suggestion based on this image?"))return;
   const original=button.textContent;button.disabled=true;button.textContent="Generating…";
   try{const generated=await requestRegisteredImageText({sourceType:"persona_media_asset",sourceId:assetId,field:"brief",expectedImageAssetId:assetId,expectedMediaUrl:originalImage});if(!document.contains(input)||input.value!==originalValue||String(image.dataset.assetId||"")!==assetId||String(image.value||"")!==originalImage||val("cmpPersona")!==personaId)throw new Error("The selected image or persona changed while the image was being analyzed");if(generated.imageAssetId!==assetId)throw new Error("The server analyzed a different registered image; the suggestion was discarded");input.value=generated.text;toast("Image-based brief inserted. Review it before staging; nothing was saved or published.")}
   catch(error){toast(error?.message||"The image brief could not be generated")}
   finally{if(button.isConnected){button.textContent=original;composerBriefGenerateState()}}
 }
-async function composerGenerateImageText(id,field){
+async function composerGenerateImageText(id,field){const dialog=ownerWorkflowDialogs();
   const d=composerDraftRows.get(id),inputId=field==="fb_caption"?"cmpFb_"+id:field==="ig_caption"?"cmpIg_"+id:"cmpX_"+id,input=document.getElementById(inputId),button=document.getElementById("cmpGenerate_"+field+"_"+id),platform=field==="fb_caption"?"facebook":field==="ig_caption"?"instagram":"twitter",assetId=composerMediaAssetId(d,platform);if(!d||!input||!button||!PUBLIC_PERSONA_UUID.test(assetId))return;
-  const originalValue=input.value,originalImage=composerMediaUrl(d,platform);if(originalValue.trim()&&!confirm("Replace the current text with a new AI suggestion based on this image?"))return;
+  const originalValue=input.value,originalImage=composerMediaUrl(d,platform);if(originalValue.trim()&&!await dialog.confirm("Replace the current text with a new AI suggestion based on this image?"))return;
   const original=button.textContent;button.disabled=true;button.textContent="Generating…";
   try{const generated=await requestRegisteredImageText({sourceType:"post_draft",sourceId:id,field,expectedImageAssetId:assetId,expectedRevision:String(d.updated_at||""),expectedMediaUrl:originalImage});if(composerDraftRows.get(id)!==d||!document.contains(input)||input.value!==originalValue||composerMediaUrl(d,platform)!==originalImage||composerMediaAssetId(d,platform)!==assetId)throw new Error("The draft changed while the image was being analyzed");if(generated.imageAssetId!==assetId)throw new Error("The server analyzed a different registered image; the suggestion was discarded");input.value=generated.text;composerPreviewProofs.delete(id);if(field==="x_caption")composerXCount(id);toast("Image-based draft inserted. Review it and save edits before approval.")}
   catch(error){toast(error?.message||"The image description could not be generated")}
@@ -6785,8 +6804,8 @@ async function composerCommitSchedule(id,receiptId){
   const owner=session?.user?.id,button=document.getElementById("cmpSchedule_"+id);if(!owner)return;if(button){button.disabled=true;button.textContent="Scheduling…"}
   try{const{data:{session:active}}=await sb.auth.getSession();if(!active||active.user.id!==owner){toast("Your signed-in account changed; nothing was scheduled");return}const response=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/approve-post-draft",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+active.access_token},body:JSON.stringify({action:"commit-schedule",draftId:id,receiptId})}),result=await response.json().catch(()=>({}));if(session?.user?.id!==owner)return;if(!response.ok||!result.draft){toast(result.error||`The acknowledged schedule could not be committed (HTTP ${response.status})`);return}toast("Exact preview receipt consumed; scheduled while the background publisher remains dormant")}catch(error){toast("The commit response was lost. Reload before attempting anything else; the one-shot receipt prevents a duplicate commit.")}finally{if(session?.user?.id===owner)composerRefresh()}
 }
-async function composerUnschedule(id){
-  composerPreviewProofs.delete(id);if(!confirm("Unschedule this draft and clear its approval?"))return;const{data,error}=await sb.rpc("unschedule_post_draft",{p_draft_id:id});toast(error?error.message:data?"Unscheduled; edit and approve it again":"The draft changed; reloading");composerRefresh();
+async function composerUnschedule(id){const dialog=ownerWorkflowDialogs();
+  composerPreviewProofs.delete(id);if(!await dialog.confirm("Unschedule this draft and clear its approval?",{destructive:true}))return;const{data,error}=await sb.rpc("unschedule_post_draft",{p_draft_id:id});toast(error?error.message:data?"Unscheduled; edit and approve it again":"The draft changed; reloading");composerRefresh();
 }
 async function composerPublish(id){
   const d=composerDraftRows.get(id),edits=composerEdits(id),proof=composerPreviewProofs.get(id);if(!d||!edits)return;const targets=edits.targets;if(targets.includes("twitter")){toast("X publishing is not wired yet. Uncheck X before publishing the Meta variants; its caption remains saved.");return}if(!targets.some(t=>t==="facebook"||t==="instagram")){toast("Choose Facebook or Instagram");return}let binding;try{binding=await composerPreviewBinding(d,targets)}catch(error){toast(error.message);return}const currentKey=composerPreviewKey(id,d,edits,"",autoTz(),binding,"Publish immediately");if(!proof||proof.mode!=="publish"||proof.key!==currentKey){composerPreviewProofs.delete(id);toast("Open and approve the current platform previews before publishing.");return}composerPreviewProofs.delete(id);
@@ -6801,8 +6820,8 @@ async function composerExecutePreparedPublish(id,receiptId){
   const owner=session?.user?.id,btn=document.getElementById("cmpPublish_"+id);if(!owner)return;if(btn){btn.disabled=true;btn.textContent="Publishing…"}
   try{const sent=await providerPostAction("meta-post",{action:"publish-draft",draftId:id,receiptId});if(session?.user?.id!==owner)return;if(sent.error){toast(sent.details?.reconciliationRequired?"A provider result is uncertain. Reconcile this locked draft before retrying.":sent.error);return}toast(sent.data?.status==="posted"?"Published and provider results saved":"Publish incomplete: "+(sent.data?.errors||[]).join(" | "))}catch(error){toast("The publish service could not be reached. Reload before deciding whether to retry.")}finally{composerRefresh()}
 }
-async function composerDelete(id){
-  if(!confirm("Delete this unpublished draft?"))return;const{data,error}=await sb.rpc("delete_post_draft",{p_draft_id:id});toast(error?error.message:data?"Deleted":"The draft changed; reloading");composerRefresh();
+async function composerDelete(id){const dialog=ownerWorkflowDialogs();
+  if(!await dialog.confirm("Delete this unpublished draft?",{destructive:true}))return;const{data,error}=await sb.rpc("delete_post_draft",{p_draft_id:id});toast(error?error.message:data?"Deleted":"The draft changed; reloading");composerRefresh();
 }
 function siteGo(h){closeSiteMenu();go(h);}
 function goAccount(){closeSiteMenu();go('studio');setTimeout(()=>{const el=document.getElementById('acctTabs');if(el){if(window.switchAcctTab)switchAcctTab('profile');el.scrollIntoView({behavior:'smooth',block:'start'});}},90);}
@@ -6825,6 +6844,6 @@ async function renderTag(tag,epoch=++renderEpoch){
 }
 
 </script>
-<script src="./cms-connector-ui.js?v=20260830-1"></script>
+<script src="./cms-connector-ui.js?v=20261030-1"></script>
 </body>
 </html>

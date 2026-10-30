@@ -1,0 +1,792 @@
+{
+  "baselineCommit": "1dddca219d5fae69ce975ecb129e6cd3caf962f7",
+  "baselineCalls": 99,
+  "baselineFunctionGroups": 85,
+  "convertedCalls": 94,
+  "convertedFunctionGroups": 82,
+  "retainedNativeCalls": 5,
+  "retainedFunctionGroups": 3,
+  "falsePositiveCalls": 0,
+  "method": "Lexical call scan plus manual source review; function group counts are not independent roadmap task counts.",
+  "groups": [
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "reportError",
+      "baselineLines": [
+        633
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "blockPersona",
+      "baselineLines": [
+        1940
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deletePost",
+      "baselineLines": [
+        1977
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "setAgentAutonomy",
+      "baselineLines": [
+        2204
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "saveAgentSafety",
+      "baselineLines": [
+        2213
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "toggleGlobalAutomation",
+      "baselineLines": [
+        2224,
+        2225
+      ],
+      "calls": 2,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deleteDiscordDraft",
+      "baselineLines": [
+        2357,
+        2357
+      ],
+      "calls": 2,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "completePatreonPreparedHandoff",
+      "baselineLines": [
+        2478
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "abandonPatreonPreparedHandoff",
+      "baselineLines": [
+        2479
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "markManualDraftPosted",
+      "baselineLines": [
+        2480
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deleteFanConversation",
+      "baselineLines": [
+        2485
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "restoreFromFile",
+      "baselineLines": [
+        2760
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deleteGroup",
+      "baselineLines": [
+        2983
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deleteDraft",
+      "baselineLines": [
+        3042
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "addPageBuilderWidget",
+      "baselineLines": [
+        3129,
+        3129,
+        3129,
+        3129
+      ],
+      "calls": 4,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "savePageBuilderSnippet",
+      "baselineLines": [
+        3134
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deletePageBuilderSnippet",
+      "baselineLines": [
+        3135
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deleteAlbum",
+      "baselineLines": [
+        3332
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deletePersona",
+      "baselineLines": [
+        3464
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "renameChatWorkspace",
+      "baselineLines": [
+        3550
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "saveChatToContext",
+      "baselineLines": [
+        3590
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deleteTask",
+      "baselineLines": [
+        3821
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "toggleBackendHostConfirmation",
+      "baselineLines": [
+        3893
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deleteBackend",
+      "baselineLines": [
+        3899
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "mailboxCancelPreview",
+      "baselineLines": [
+        4666
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "mailboxDismissSelected",
+      "baselineLines": [
+        4690
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "mailboxUnsubscribe",
+      "baselineLines": [
+        4696,
+        4704,
+        4711
+      ],
+      "calls": 3,
+      "disposition": "browser_activation_acceptance"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "mailboxUndo",
+      "baselineLines": [
+        4732
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "applyLedgerSavedAccount",
+      "baselineLines": [
+        4829,
+        4834
+      ],
+      "calls": 2,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "disconnectGmail",
+      "baselineLines": [
+        5422
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "resetGmailAttempt",
+      "baselineLines": [
+        5429
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "enableTwitterPosting",
+      "baselineLines": [
+        5484
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "disconnectTwitter",
+      "baselineLines": [
+        5502
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "resetTwitterAttempt",
+      "baselineLines": [
+        5515
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "confirmManualTwitterRevocation",
+      "baselineLines": [
+        5521
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "disconnectReddit",
+      "baselineLines": [
+        5556
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "disconnectYouTube",
+      "baselineLines": [
+        5598
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "disconnectTikTok",
+      "baselineLines": [
+        5620
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "confirmManualTikTokRevocation",
+      "baselineLines": [
+        5621
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "disconnectDiscord",
+      "baselineLines": [
+        5641
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "disconnectTwitch",
+      "baselineLines": [
+        5660
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "disconnectPatreon",
+      "baselineLines": [
+        5673
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "cancelPendingMetaAuthorization",
+      "baselineLines": [
+        5742,
+        5743,
+        5744
+      ],
+      "calls": 3,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "enableMetaPublishing",
+      "baselineLines": [
+        5786
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "cancelMetaSelection",
+      "baselineLines": [
+        5878,
+        5879
+      ],
+      "calls": 2,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "disconnectMeta",
+      "baselineLines": [
+        5929
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "confirmManualMetaRevocation",
+      "baselineLines": [
+        5938
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deleteLedgerAccount",
+      "baselineLines": [
+        5949
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "mfaRemove",
+      "baselineLines": [
+        6032
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "deleteAllContent",
+      "baselineLines": [
+        6079
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "handleOAuthReturn",
+      "baselineLines": [
+        6478
+      ],
+      "calls": 1,
+      "disposition": "same_browser_oauth_return_acceptance"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "ownerDraftGenerateImageText",
+      "baselineLines": [
+        6603
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "composerGenerateBriefFromImage",
+      "baselineLines": [
+        6623
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "composerGenerateImageText",
+      "baselineLines": [
+        6631
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "composerUnschedule",
+      "baselineLines": [
+        6789
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/index.html",
+      "function": "composerDelete",
+      "baselineLines": [
+        6805
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/agent-board.js",
+      "function": "agentBoardSaveSettings",
+      "baselineLines": [
+        226
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/agent-board.js",
+      "function": "agentBoardApprove",
+      "baselineLines": [
+        242
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/agent-board.js",
+      "function": "agentBoardReject",
+      "baselineLines": [
+        247
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/agent-board.js",
+      "function": "agentBoardCancel",
+      "baselineLines": [
+        248
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/agent-board.js",
+      "function": "agentBoardDelete",
+      "baselineLines": [
+        249
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/agent-board.js",
+      "function": "agentBoardRun",
+      "baselineLines": [
+        259
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/agent-board.js",
+      "function": "agentBoardSaveBudget",
+      "baselineLines": [
+        282
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceExplainIntentionWithAi",
+      "baselineLines": [
+        145
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceUnpublish",
+      "baselineLines": [
+        337
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceSubmitFeature",
+      "baselineLines": [
+        351
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceWithdrawFeature",
+      "baselineLines": [
+        355
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceDeleteFeature",
+      "baselineLines": [
+        356
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceIssueInvite",
+      "baselineLines": [
+        382
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceRevokeInvites",
+      "baselineLines": [
+        394
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceSubmitExtension",
+      "baselineLines": [
+        405
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceWithdrawExtension",
+      "baselineLines": [
+        407
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceDeleteExtension",
+      "baselineLines": [
+        408
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceDeleteFamilyRelationship",
+      "baselineLines": [
+        442
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceEraseReviewRequestPii",
+      "baselineLines": [
+        476
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceDeleteProduct",
+      "baselineLines": [
+        511
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceDeleteOffer",
+      "baselineLines": [
+        521
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceBusinessPublishedMutationCheck",
+      "baselineLines": [
+        582
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceCreateBusinessDraft",
+      "baselineLines": [
+        584,
+        584
+      ],
+      "calls": 2,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceDeleteMissionItem",
+      "baselineLines": [
+        586
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceCopyBusinessReview",
+      "baselineLines": [
+        590
+      ],
+      "calls": 1,
+      "disposition": "clipboard_activation_acceptance"
+    },
+    {
+      "file": "MyPersonas.Online_v0/platform-governance.js",
+      "function": "governanceUnpublishBusiness",
+      "baselineLines": [
+        618
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/cms-connector-ui.js",
+      "function": "disconnectCmsAccount",
+      "baselineLines": [
+        219
+      ],
+      "calls": 1,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/cms-connector-ui.js",
+      "function": "trashCmsDraft",
+      "baselineLines": [
+        547,
+        555
+      ],
+      "calls": 2,
+      "disposition": "converted_guarded_async"
+    },
+    {
+      "file": "MyPersonas.Online_v0/cms-connector-ui.js",
+      "function": "finalizeCmsTrashCheckpoint",
+      "baselineLines": [
+        603,
+        613
+      ],
+      "calls": 2,
+      "disposition": "converted_guarded_async"
+    }
+  ]
+}
