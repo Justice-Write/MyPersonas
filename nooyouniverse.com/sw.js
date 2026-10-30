@@ -15,7 +15,7 @@
  * Bump CACHE_VERSION whenever the shell changes. Old caches are deleted on activate.
  */
 
-const CACHE_VERSION = 'noo-v1-2026-09-25';
+const CACHE_VERSION = 'noo-v2-2026-10-29';
 const CACHE_NAME = `noo-youniverse-${CACHE_VERSION}`;
 
 // The shell: enough to render something honest while offline.

@@ -46,10 +46,13 @@
 
 
 ## In progress
-- None. Release enforcement merged in PR27; audit and startup-test follow-through are committed in PR26.
+- None in this lane.
 ## Current state
 Integrated release/audit candidate; backend evidence and private canary remain unverified. PR28 records a newer installed Android shell than the rebuilt candidate: preserve it; do not downgrade.
+
+Noo public-source mirror reconciliation is complete on focused branch `codex/noo-source-sync-20261030`: 30/30 public files are byte-for-byte identical to canonical `Justice-Write/nooyouniverse` main `73035f0`, including the later disclosure/accessibility/cache changes. The deploy helper remains preview-only by default and reported 30 unchanged / 0 differences. Private `outputs/` material was not touched. Merging this source mirror does not deploy either website.
 ## Work log
+- 2026-10-30 UTC · Codex GPT-6: based a clean worktree on MyPersonas `origin/main` `847aa0d`, integrated reviewed parity commit `aaf212f`, applied only four later canonical Noo public-file changes, and proved exact 30/30 raw-byte parity through `_ops/deploy-nooyouniverse.ps1`. `git diff --check` passed. No MyPersonas/Noo deployment, provider action, migration, private-output edit or device action occurred.
 - Worktree created at C:/mp-release29 from origin/main.
 
 
