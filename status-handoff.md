@@ -64,3 +64,11 @@ Clean main-derived release candidate; backend evidence and private canary not ye
 
 - Follow-up: current CI advisory range requires Electron44.10.0. Updated exact Electron pin/lockfile with scripts disabled, preserving reviewed undici resolution. Fresh npm audit --package-lock-only --audit-level=low reports zero vulnerabilities. No desktop binary installed.
 
+
+## Final readback — October 29, 2026
+
+PR27 merged as main35c6db9fd61d9f87b90eff9b0b25bb168bfc815d. All five PR checks passed. Main CI41020175200 initially hit a PostgreSQL startup race before SQL execution; its failed-job rerun passed. Local full suite533passed, no failures/skips; current Workroom lockfile audit zero vulnerabilities.
+
+Android offline packaging SUCCEEDED (34tasks) after setting JAVA_TOOL_OPTIONS to short existing java.io.tmpdir and jdk.net.unixdomain.tmpdir directories. Initial failures are retained in private logs. Candidate APK SHA256a3842919112a733ac25c97fc9c7dd25d4daa79c92c024d2fb43e08712454906b: online.mypersonas.owner.debug.local, versionCode1,0.1.0-debug,targetSDK34. It was NOT installed because the authorized phone already has the SAME package at versionCode2,0.1.1-debug,targetSDK36,lastupdatedSeptember30. Preserve newer installation and data; reconcile its source before an upgrade. No downgrade/uninstall or private-account writes. The installed base APK was read back for program/signature verification, without reading app sandbox/user records.
+
+Remaining: current exact-main backend artifact/private canary for production Pages and signed-in acceptance; canonical source reconciliation for the newer installed owner shell. Public website ZIP remains81exact-source files, private/local, not deployed. AliaSpaces/Akasha remains in its separate active release chat; Soulular/personal/model/media stores unchanged.
