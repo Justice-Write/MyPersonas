@@ -7,24 +7,60 @@ trailing letters are hotfixes. Releases are git tags.
 
 Status: **Implemented and tested locally; not applied to the linked database, not
 deployed.** Apply `sql-updates/080-content-reports-moderation-queue.sql` in the SQL
-Editor, then run `supabase/snippets/verify_080_content_reports.sql`.
+Editor, then run `supabase/snippets/verify_080_content_reports.sql`. Every row should
+say ok.
 
-- `report_content(target_kind, target_id, reason, details, reporter_persona_id)`:
-  persona/post/comment targets; reasons spam, harassment, impersonation, illegal and
-  other; details up to 400 chars. Fails closed through `persona_visible` with one
-  generic error, so unknown, private, draft, blocked and muted targets are
-  indistinguishable. Own content can't be reported. A repeat active report returns the
-  same id. 20 per account per hour.
-- `staff_list_content_reports` and `staff_resolve_content_report`: global_administrator
-  or technician plus AAL2. Every status change appends to `content_report_events`.
-  Resolving records a decision only; it never unpublishes or deletes.
-- Tables have RLS with no policies and no client grants; anon can't execute.
+080 was rewritten the same day. The owner chose the reviewed design from aliaspaces
+branch `codex/aliaspaces-m2-reports-20261016` over the first draft. The RPC name
+`report_content` is unchanged, so the merged aliaspaces client keeps working.
+
+- `report_content(target_kind, target_id, reason, details, reporter_persona_id)`
+  returns `{id, state, duplicate}`.
+  - Targets: persona, post or comment.
+  - 11 reasons, from spam to illegal; details up to 2,000 characters.
+  - You can report what you can see, or what only your own block or mute hides. So
+    report-then-block and block-then-report both work.
+  - Content hidden because the author blocked you gets the same "not found" as
+    missing, draft or private content. That holds even after you mute them, so a
+    report never confirms a block.
+  - Own content can't be reported. A repeat report while one is unresolved returns
+    the same report, including under concurrency. Limits: 20 per hour, 100 per day.
+- `my_content_reports`: the reporter's own reports. It never shows the target owner,
+  the details, the assignee or the resolution.
+- Staff RPCs `staff_list_content_reports` and `staff_review_content_report` need
+  global_administrator or technician plus AAL2.
+  - Recusal: staff never see reports about their own content, and cannot act on a
+    report they filed or one about their content.
+  - States are open, needs_review and resolved; resolving needs a resolution. A null
+    assignee keeps the current one.
+  - Every change appends before-and-after state, resolution and assignee to
+    `content_report_events`.
+  - Resolving records a decision only; it never unpublishes or deletes.
+- Evidence survives deletion. Reports keep target ids and a 2,000-character excerpt
+  with no cascading foreign keys, so deleting the reported persona doesn't erase
+  reports about it. (The first draft cascaded.)
+- Tables have RLS with no policies and no client grants. Helpers live in
+  `moderation_private`, which Data API roles cannot use.
+- `081-content-moderation-holds.DRAFT.sql`: moderation holds for posts and comments,
+  plus a per-viewer `content_visibility_state`.
+  - Not mirrored into `supabase/migrations`.
+  - It fails closed. It refuses to commit until the seven SECURITY DEFINER social
+    RPCs that bypass RLS filter held content.
+  - It also refuses on any unreviewed definer function, read policy or owner-rights
+    view over posts, comments or reactions.
 - Finding: symmetric blocking was already enforced server-side (migration 051's
   `persona_visible` / `can_request` / `persona_mode_can_view`). The AliaSpaces roadmap
   line that called blocking client-only was stale.
-- Tests: `tests/content-reports-moderation.test.mjs` (static); `npm run
-  test:content-reports-sql` or `scripts/test-content-reports-sql.sh` (disposable PG16,
-  migration applied twice). Full suite 533/533.
+- Tests: `tests/content-reports-moderation.test.mjs` (static).
+  `npm run test:content-reports-sql` or `scripts/test-content-reports-sql.sh` runs a
+  disposable PG16; the `.ps1` runs the same script in `postgres:16`. It checks:
+  - the seed (production `persona_visible`, non-superuser owner), then 080 applied
+    twice, then the verify snippet at 9/9 ok;
+  - runtime assertions, plus three dblink race checks: duplicate reports, a reopen
+    racing a new report, and a burst against the hourly limit;
+  - five fail-closed refusals of 081, then 081 adopted, with holds assertions.
+  - An independent review of the first version found 11 defects; all are fixed. Of
+    30 targeted mutations, 29 are killed and one is equivalent.
 
 ## Owner mobile workflow completion pass (local source) (2026-09-20)
 

@@ -1,0 +1,6 @@
+
+
+# Keep moderation SQL mirrors and static verification identical on Windows/Linux.
+/MyPersonas.Online_v0/sql-updates/080-content-reports-moderation-queue.sql text eol=lf
+/MyPersonas.Online_v0/sql-updates/081-content-moderation-holds.DRAFT.sql text eol=lf
+/supabase/migrations/20261016180000_content_reports_moderation_queue.sql text eol=lf

@@ -473,9 +473,13 @@ larger product phase remains.
       flag for Concept LoRA sets (verify Adobe ToS on ML use of API-pulled assets)
 - [ ] Discovery: trending personas/tags, better ranking than recency
 - [~] Moderation pipeline: user reports on content/personas, review queue. Migration 080
-      (`report_content`, staff queue + resolve with AAL2 and an audit trail) is implemented
-      and tested locally (disposable PG16, 9/9 mutants killed). Remaining: owner applies 080
-      in the SQL Editor, then a staff queue screen; resolving never takes content actions.
+      (`report_content`, `my_content_reports`, staff list/review with AAL2, recusal and
+      a before/after audit trail) is rewritten from the reviewed aliaspaces design and
+      tested locally. The test run uses a disposable PG16 with a non-superuser owner,
+      race checks and the verify snippet. Holds that hide content are drafted as
+      081 (fail-closed until the seven definer social RPCs adopt the filter).
+      Remaining: owner applies 080 in the SQL Editor, a staff queue screen, then 081
+      adoption. Resolving never takes content actions.
 - [~] PWA: install/offline shell complete locally; real-device release verification and
       a separate push-notification permission/subscription/delivery phase remain
 - [ ] Custom auth domain (auth.aliaspaces.com) for branded OAuth consent
