@@ -52,7 +52,7 @@ Client date: 2026-10-29. Package-audit tooling and documentation isolated branch
 
 
 ## Current state
-Read-only public-package auditor and data-boundary verification guide added. All 530 Node tests and frontend syntax pass. The main-source local artifact has 81 files / 83,955,756 bytes with exact byte parity. Publication of this audit branch is pending; production deployment and installation are not claimed.
+Read-only public-package auditor and data-boundary verification guide added. All 530 Node tests and frontend syntax pass. The main-source local artifact has 81 files / 83,955,756 bytes with exact byte parity. Audit implementation b62b4a4 is committed and pushed on codex/personas-release-stocktake-20261029; PR/CI readback follows. Production deployment and installation are not claimed.
 
 ## In progress
 - None.
@@ -68,4 +68,3 @@ Run the auditor on release artifacts, complete bundled media/archive review, and
 
 ## Work log
 - 2026-10-29 Codex: added read-only inventory/parity tool, three regression tests covering deny-default rules, private-store/key/model exclusion, and extra/missing/changed artifact bytes, plus package-boundary documentation. Full suite 530/530, zero skips/failures; frontend syntax and local 81-file parity passed. No application runtime, release workflow, production data or installation changes.
-
