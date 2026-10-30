@@ -525,7 +525,7 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
 <script src="./creative-workspace.js?v=20261030-1"></script>
 <script src="./owner-app.js?v=20261013-1"></script>
 <script src="./persona-view.js?v=20261030-1"></script>
-<script src="./platform-governance.js?v=20261030-1"></script>
+<script src="./platform-governance.js?v=20261030-2"></script>
 <script src="./agent-board.js?v=20261030-1"></script>
 <script src="./ai-content-provenance.js?v=20260823-2"></script>
 <script>
@@ -854,7 +854,10 @@ async function boundedAssetBlob(response,maxBytes=50*1024*1024){
 }
 async function downloadPersonaAssetCopy(button){const overlay=document.getElementById("personaAssetPreview"),url=safeHttpUrl(overlay?.dataset?.assetUrl||""),label=overlay?.dataset?.assetLabel||"Persona asset";if(!url||!button)return;button.disabled=true;button.textContent="Preparing…";try{const response=await fetch(url,{credentials:"omit",referrerPolicy:"no-referrer",cache:"no-store"});if(!response.ok)throw new Error(`Asset server returned ${response.status}`);const blob=await boundedAssetBlob(response),name=safePersonaAssetFilename(url,label,blob.type);dlBlob(name,blob);toast("Asset copy downloaded")}catch(error){toast("Direct copy was blocked. Open the original and use your browser's Save as command.")}finally{button.disabled=false;button.textContent="Save a copy"}}
 function go(h){if(typeof ownerAppToggleMore==="function")ownerAppToggleMore(false,false);location.hash="#/"+h}
-function copyText(t){navigator.clipboard.writeText(t).then(()=>toast("Copied ✓"))}
+async function copyText(t){
+  try{if(!navigator.clipboard?.writeText)throw new Error("Clipboard unavailable");await navigator.clipboard.writeText(t);toast("Copied ✓");return true}
+  catch(error){toast("Copy failed or was cancelled. Nothing was sent; review the text and try copying again.");return false}
+}
 function pageUrl(handle){return location.host+location.pathname.replace(/index\.html$/,"")+"#/p/"+handle}
 function ico(n){return `<svg class="ico" aria-hidden="true"><use href="#i-${n}"/></svg>`}
 function platformGlyph(id){const key=id&&Object.prototype.hasOwnProperty.call(PLATS,id)?id:"other";return PLATFORM_ICONS[key]()}
@@ -4705,23 +4708,31 @@ async function mailboxDismissSelected(){const dialog=ownerWorkflowDialogs();
 }
 async function mailboxUnsubscribe(findingId){
   const id=mailboxSafeId(findingId),account=mailboxSelectedAccount(),finding=mailboxFindings().find(f=>String(f.id)===id);if(!id||!account||!finding)return;
+  const owner=session?.user?.id,epoch=renderEpoch,route=location.hash,snapshot=JSON.stringify({account,finding});
+  const current=()=>!!owner&&session?.user?.id===owner&&renderEpoch===epoch&&location.hash===route&&JSON.stringify({account:mailboxSelectedAccount(),finding:mailboxFindings().find(f=>String(f.id)===id)})===snapshot;
   const sender=mailboxFindingSender(finding);
   if(!confirm(`Review the unsubscribe destination supplied by ${sender}? MyPersonas will not visit it or send an email automatically.`))return;
+  if(!current())return;
   try{
     const target=await mailboxCall("unsubscribe-target",{ledgerId:account.id,findingId:id}),kind=String(target.kind||"").toLowerCase(),raw=String(target.url||"");
     if(kind==="https"){
+      if(!current())return;
       const url=new URL(raw);
       if(url.protocol!=="https:"||url.username||url.password||url.port||!url.hostname.includes(".")||raw.length>2048)throw new Error("The unsubscribe destination is not a safe HTTPS URL.");
       if(target.hostname&&String(target.hostname).toLowerCase()!==url.hostname.toLowerCase())throw new Error("The unsubscribe hostname did not match the reviewed destination.");
       url.hash="";
       if(!confirm(`Open the unsubscribe page on ${url.hostname}? This leaves MyPersonas; review that site's confirmation before submitting.`))return;
-      const opened=window.open(url.toString(),"_blank","noopener,noreferrer");if(opened)opened.opener=null;else toast("Your browser blocked the new tab. Allow pop-ups and try again.");
+      if(!current())return;
+      const opened=window.open(url.toString(),"_blank","noopener,noreferrer");if(opened)opened.opener=null;
+      toast("Requested the unsubscribe page in a separate tab. If no tab appeared, check your browser's pop-up settings.");
       return;
     }
     if(kind==="mailto"&&/^mailto:[^\r\n]{1,2000}$/i.test(raw)){
+      if(!current())return;
       const url=new URL(raw),recipient=decodeURIComponent(url.pathname).trim(),domain=recipient.split("@")[1]?.toLowerCase()||"";
       if(url.protocol!=="mailto:"||url.username||url.password||url.search||url.hash||!/^[A-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?(?:\.[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?)+$/i.test(recipient)||!domain||target.hostname&&String(target.hostname).toLowerCase()!==domain)throw new Error("The unsubscribe email destination did not pass safety checks.");
       if(!confirm(`Open your mail app with an unsubscribe email addressed to ${recipient}? Review it before sending; MyPersonas will not send it.`))return;
+      if(!current())return;
       location.href=`mailto:${encodeURIComponent(recipient)}`;return;
     }
     throw new Error("This message did not provide a supported HTTPS or email unsubscribe destination.");
@@ -6494,7 +6505,9 @@ async function handleOAuthReturn(expectedUid=session?.user?.id||null,generation=
     if(!pending||typeof pending.verifier!=="string"||typeof pending.createdAt!=="number"||Date.now()-pending.createdAt>10*60*1000){toast("This OpenRouter connection expired. Start it again; no key was requested.");return}
     if(!s||s.user.id!==pending.initiatingUserId||session?.user?.id!==pending.initiatingUserId||expectedUid!==pending.initiatingUserId||generation!==authLoadGeneration){toast("The signed-in account changed. Start OpenRouter again from the correct account; no key was requested.");return}
     const initiatingUid=s.user.id,initiatingGeneration=generation;
-    const model=(prompt("OpenRouter is ready to connect. Enter the model id you want this agent to use (you can edit it later):","")||"").trim();
+    const modelInput=prompt("OpenRouter is ready to connect. Enter the model id you want this agent to use (you can edit it later):","");
+    if(modelInput===null){toast("OpenRouter connection cancelled. No key was requested.");return}
+    const model=modelInput.trim();
     const fresh=await sb.auth.getSession(),freshSession=fresh.data&&fresh.data.session;
     if(!freshSession||freshSession.user.id!==initiatingUid||session?.user?.id!==initiatingUid||authLoadGeneration!==initiatingGeneration){toast("The signed-in account changed. Start OpenRouter again; no key was requested.");return}
     exchangeStarted=true;

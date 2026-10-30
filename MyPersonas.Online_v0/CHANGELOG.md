@@ -1,5 +1,11 @@
 # Changelog — AliaSpaces / MyPersonas
 
+## Browser defect fixes - 2026-10-30 (PR48)
+
+OAuth Cancel now aborts before exchange; accepted blank model remains optional. Noopener feedback no longer falsely reports blocking; mailbox target context and business copy packet are guarded. Clipboard rejection/cancellation is handled. 906 unit tests and nine isolated Edge checks pass. Five native dialogs and real clipboard/mail-handler/WebView/provider acceptance remain; no release or personal-data operations.
+
+See docs/BROWSER-DIALOG-QUALIFICATION-20261030.md in the repository root.
+
 ## Public availability checklist and mobile browser install help (2026-10-30)
 
 Status: **Implemented and tested in source; not deployed or installed.** A production

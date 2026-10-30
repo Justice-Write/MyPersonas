@@ -52,7 +52,13 @@
 
 
 
+
+
 ## Current state
+
+- 2026-10-30 Codex BROWSER-DEFECT-FIX complete: OAuth Cancel now aborts before exchange; accepted blank model remains optional. Noopener feedback no longer falsely reports blocking; mailbox target context and business copy packet are guarded. Clipboard rejection/cancellation is handled. 906 unit tests and nine isolated Edge checks pass. Five native dialogs and real clipboard/mail-handler/WebView/provider acceptance remain; no release or personal-data operations. Earlier test-only findings below are historical.
+
+- 2026-10-30 Codex BROWSER-QUALIFICATION completed: nine isolated headless Edge156 checks pass using actual shared dialog/OpenRouter callback functions. No personal profile/clipboard/OS handler/account/foreground activity. Successful noopener popup returns null; existing OAuth Cancel exchanges blank model. All five native calls remain. Script and docs/BROWSER-DIALOG-QUALIFICATION-20261030.md record exact technical remainder, clipboard fallback and foreground/device acceptance scope. Test-only source; no release/package update needed.
 
 - Dialog disposition now accounts for all99 baseline calls/85function groups:94 converted across82 groups;5 native calls retained in3 browser-specific flows (clipboard, unsubscribe destination opening, OpenRouter return). See docs/NATIVE-DIALOG-DISPOSITION-20261030.md and its per-function JSON. These are browser-integration gates, not99 blocked product tasks. Eleven browser request helpers also bind the initiating owner/view across token lookup. Source-only; no provider/backend/schema/installed changes.
 
@@ -111,6 +117,10 @@ Public-safe project/release/data boundaries are recorded in `docs/PROJECT-STOCKT
 - The historical workspace root is gone. Use the canonical repository through isolated worktrees and preserve the dirty owner checkout.
 - Preserve PR20 after the glyph and nine-call dialog slices. Remaining modal conversions and Reddit/provider compatibility are unresolved; the merged dialog slice does not authorize provider behavior.
 ## Work log
+
+- 2026-10-30 Codex BROWSER-DEFECT-FIX complete: OAuth Cancel now aborts before exchange; accepted blank model remains optional. Noopener feedback no longer falsely reports blocking; mailbox target context and business copy packet are guarded. Clipboard rejection/cancellation is handled. 906 unit tests and nine isolated Edge checks pass. Five native dialogs and real clipboard/mail-handler/WebView/provider acceptance remain; no release or personal-data operations. Earlier test-only findings below are historical.
+
+- 2026-10-30 Codex BROWSER-QUALIFICATION completed: nine isolated headless Edge156 checks pass using actual shared dialog/OpenRouter callback functions. No personal profile/clipboard/OS handler/account/foreground activity. Successful noopener popup returns null; existing OAuth Cancel exchanges blank model. All five native calls remain. Script and docs/BROWSER-DIALOG-QUALIFICATION-20261030.md record exact technical remainder, clipboard fallback and foreground/device acceptance scope. Test-only source; no release/package update needed.
 
 - 2026-10-30 UTC · Codex DIALOG-CLASSIFICATION-CONTINUATION completed in source: classified99 real calls/85function groups, converted94 calls/82groups across owner editor, agent board, CMS and governance; retained5 calls in3 named browser-integration flows. Added initiating-owner/view checks to11 browser request helpers across getSession. Full891tests pass (283new cases), inline/external syntax and git diff --check pass. docs/NATIVE-DIALOG-DISPOSITION-20261030.md/JSON contain the exhaustive classification, retained reasons and acceptance needs. No SQL/backend/provider scope change, deployment, live account/device/UI operation or installed-data change. Authenticated/browser/clipboard/redirect/WebView/accessibility acceptance and existing exact-source backend/canary gates remain.
 
