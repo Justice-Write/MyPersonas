@@ -48,7 +48,7 @@
 ## In progress
 - None. Release enforcement merged in PR27; audit and startup-test follow-through are committed in PR26.
 ## Current state
-Clean main-derived release candidate; backend evidence and private canary not yet verified; no connected phone.
+Integrated release/audit candidate; backend evidence and private canary remain unverified. PR28 records a newer installed Android shell than the rebuilt candidate: preserve it; do not downgrade.
 ## Work log
 - Worktree created at C:/mp-release29 from origin/main.
 
@@ -70,4 +70,13 @@ PR26 adds a standalone read-only inventory/parity command and a data-boundary gu
 
 The creative-library SQL test now waits for the final PostgreSQL TCP listener instead of the image's temporary initialization socket. A mocked lifecycle test reproduces the old failure without Docker; the real hosted SQL check passed at01ea421. Product SQL and production gates were not changed.
 
-Current integration: merged main35c6db9 into this branch, retaining its newer Electron/undici lockfile and workflow verifier. Combined local checks pass:537Node tests, frontend syntax and package checks. Final hosted checks are recorded on PR26; no production deployment or device installation is claimed. Older audit-branch dependency pins are superseded by current main.
+Current integration: merged main35c6db9 and subsequent documentation readback88736ee into this branch, retaining its newer Electron/undici lockfile and workflow verifier. Combined local checks pass:537Node tests, frontend syntax and package checks. Final hosted checks are recorded on PR26; no production deployment or device installation is claimed. Older audit-branch dependency pins are superseded by current main.
+
+
+## Final readback — October 29, 2026
+
+PR27 merged as main35c6db9fd61d9f87b90eff9b0b25bb168bfc815d. All five PR checks passed. Main CI41020175200 initially hit a PostgreSQL startup race before SQL execution; its failed-job rerun passed. Local full suite533passed, no failures/skips; current Workroom lockfile audit zero vulnerabilities.
+
+Android offline packaging SUCCEEDED (34tasks) after setting JAVA_TOOL_OPTIONS to short existing java.io.tmpdir and jdk.net.unixdomain.tmpdir directories. Initial failures are retained in private logs. Candidate APK SHA256a3842919112a733ac25c97fc9c7dd25d4daa79c92c024d2fb43e08712454906b: online.mypersonas.owner.debug.local, versionCode1,0.1.0-debug,targetSDK34. It was NOT installed because the authorized phone already has the SAME package at versionCode2,0.1.1-debug,targetSDK36,lastupdatedSeptember30. Preserve newer installation and data; reconcile its source before an upgrade. No downgrade/uninstall or private-account writes. The installed base APK was read back for program/signature verification, without reading app sandbox/user records.
+
+Remaining: current exact-main backend artifact/private canary for production Pages and signed-in acceptance; canonical source reconciliation for the newer installed owner shell. Public website ZIP remains81exact-source files, private/local, not deployed. AliaSpaces/Akasha remains in its separate active release chat; Soulular/personal/model/media stores unchanged.
