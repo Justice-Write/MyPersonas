@@ -52,7 +52,7 @@ Client date: 2026-10-29. Package-audit tooling and documentation isolated branch
 
 
 ## Current state
-Read-only public-package auditor and data-boundary verification guide added. All 530 Node tests and frontend syntax pass. The main-source local artifact has 81 files / 83,955,756 bytes with exact byte parity. Audit implementation b62b4a4 is committed and pushed on codex/personas-release-stocktake-20261029; PR/CI readback follows. Production deployment and installation are not claimed.
+Read-only public-package auditor and data-boundary verification guide added. All 530 Node tests and frontend syntax pass. The main-source local artifact has 81 files / 83,955,756 bytes with exact byte parity. Audit implementation is published on PR26. Existing PR24 dependency remediation is incorporated unchanged as 118b5a1 after the inherited audit failure. All 530 local tests still pass; final hosted checks are tracked on the PR. Production deployment and installation are not claimed.
 
 ## In progress
 - None.
@@ -67,4 +67,6 @@ Phone disconnected. Website signed-in canary remains unverified. Other source la
 Run the auditor on release artifacts, complete bundled media/archive review, and retain existing exact-main backend/canary gates. Connected-device acceptance remains separate. See docs/PACKAGE-BOUNDARY-VERIFICATION.md.
 
 ## Work log
+- 2026-10-29 Codex: incorporated exact dependency fix45d7fa5 from existing PR24 as118b5a1, preserving attribution and validation notes; no new dependency resolution or local installation. Full530tests and Workroom syntax pass. Earlier database-isolation CI failed during PostgreSQL startup and passed on one retry; no SQL gate was suppressed. Final hosted CI follows on PR26.
+
 - 2026-10-29 Codex: added read-only inventory/parity tool, three regression tests covering deny-default rules, private-store/key/model exclusion, and extra/missing/changed artifact bytes, plus package-boundary documentation. Full suite 530/530, zero skips/failures; frontend syntax and local 81-file parity passed. No application runtime, release workflow, production data or installation changes.
