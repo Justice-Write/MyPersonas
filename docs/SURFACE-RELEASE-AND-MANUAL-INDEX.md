@@ -23,6 +23,7 @@ This index neither integrates candidates nor activates a feature.
 | Soul Concept Engine | Separate consent/provenance repository | Related contracts and tooling, not MyPersonas deployment authority. |
 | Castleborn / CREATE and persona-brand sites | Separate consumer/site authorities; see the [stocktake map](PROJECT-STOCKTAKE-20261030.md) | Canon, brand workspaces and identity assets are owner-authorized content, not generic installer members. Each site retains its own deploy gate. |
 | Provider and review candidates | Current connector/roadmap source plus the root handoff and GitHub review record | Candidate code, fixtures, approvals and drafts are not provider acceptance. `publishing_enabled=false`; no social send is inferred. |
+| Feed, push and alternative native-client proposals | [PR14 extraction/security design](PR14-NATIVE-FEED-PUSH-SECURITY-DESIGN.md) | PR14 is an exploratory source, not a merge candidate. Feed retrieval, push capabilities and Expo/native choices require the documented redesign and release evidence. |
 
 ## Evidence vocabulary
 

@@ -433,7 +433,10 @@ larger product phase remains.
 - [ ] Personas = personalized AI news feed (owner vision): AI researches assigned
       interests, fact-checks, cites sources, serves tailored blurbs (feed_items +
       ai/research) instead of mindless scroll; later, projects = multi-persona
-      collaboration. See V2-BLUEPRINT.md §6.
+      collaboration. See V2-BLUEPRINT.md §6. PR14's proposed migration 078 is not a
+      current schema: retrieval, evidence, AAL2/RPC-only mutation, quotas, retention,
+      export/erasure and SSRF/prompt-injection controls must follow the
+      [current extraction design](../docs/PR14-NATIVE-FEED-PUSH-SECURITY-DESIGN.md).
 - [ ] "soulular" identity layer (parallel to cellular) — confirm intent
       (concepts/soulular.md); likely the persona follow/graph/discovery layer
 - [x] V2 rebuild blueprint written (V2-BLUEPRINT.md) — incremental migration path,
@@ -474,7 +477,8 @@ larger product phase remains.
       owner AAL2 two-account privacy proof, real-device sign-in, store submission,
       push-notification backend, Expo/React Native rewrite, news-feed schema
       approval, and Meta App Review. See `MOBILE-BLUEPRINT.md`,
-      `apps/personas-android/README.md`, and `apps/personas-ios/README.md`.
+      `apps/personas-android/README.md`, `apps/personas-ios/README.md`, and the
+      [PR14 native/feed/push extraction design](../docs/PR14-NATIVE-FEED-PUSH-SECURITY-DESIGN.md).
 - [~] Chat workspaces: migration 031 APPLIED + verified; owner-scoped list/create/rename/
       pin/resume, workspace messages, inclusion in the full account export, owner-reviewed Save context, and max-three
       distilled Attach context are complete locally. Deploy ai-proxy first, then Pages,

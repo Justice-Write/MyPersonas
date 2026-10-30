@@ -161,15 +161,18 @@ to future ones later as you continue to build the context for the persona."_ Thi
 6. **Android debug WebView (first native path, local).** Source-complete: wraps the
    real `#/owner` command center, restores it when the network returns, accepts
    `https://mypersonas.online/` deep links, shows offline limitations, and
-   exports/imports local prefs when signing keys differ. Gradle wrapper 8.7 is
-   committed. A debug APK can assemble with SDK 34; still blocked on owner-device
-   sign-in. Do not submit to Play.
+   exports/imports local prefs when signing keys differ. The verified source baseline
+   uses Gradle 8.11.1, Android Gradle Plugin 8.10.1 and SDK/build-tools 36. The retained
+   code-2 package is already installed; preserve its signer and sandbox. A future
+   code-3+ candidate still needs owner-device sign-in/acceptance. Do not submit to Play.
 7. **iOS WKWebView scaffold (local source only).** Same owner URL, offline page,
    network restore, and local-prefs helper. Linux cannot produce an IPA. Do not
    submit to the App Store.
 8. **Expo native shell** — chat + approvals + feed, reusing the backend, only when native
    camera/share/biometric/notification value justifies another client. This checkout
-   does not start that rewrite.
+   does not start that rewrite. PR14's wildcard-dependency prototype is not a release
+   baseline; follow the [native/feed/push security design](../docs/PR14-NATIVE-FEED-PUSH-SECURITY-DESIGN.md)
+   before selecting or adding another client.
 9. **Meta hardening release** — owner-asset publishing is proven; ship migration 035 and the
    guarded code first. App Review is needed only when posting for other users becomes a goal.
 
