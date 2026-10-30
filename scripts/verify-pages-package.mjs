@@ -6,13 +6,19 @@ import { pathToFileURL } from 'node:url';
 const privateName = /(^|\/)(?:status-handoff\.md|\.env(?:\..*)?|[^/]*\.(?:pem|key|p12|pfx|jks|keystore|sqlite(?:3)?|db|bundle)|(?:credentials|casting-tracker|owner-mobile-prefs)\.[^/]+)$/i;
 
 export function includesFromWorkflow(text) {
-  const rules = [...text.matchAll(/--include '\/([^']+)'/g)].map(m => m[1]);
-  if (!rules.length || !text.includes("--exclude '*'")) throw new Error('Missing deny-by-default Pages allowlist');
+  const rules = [...text.matchAll(/--(include|exclude) '([^']+)'/g)].map(m => ({ action: m[1], pattern: m[2].replace(/^\//, '') }));
+  if (!rules.some(r => r.action === 'include') || !rules.some(r => r.action === 'exclude' && r.pattern === '*')) throw new Error('Missing deny-by-default Pages allowlist');
   return rules;
 }
 
 export function isIncluded(name, rules) {
-  return rules.some(rule => rule.endsWith('/***') ? name.startsWith(rule.slice(0, -3)) : name === rule);
+  for (const rule of rules) {
+    const matches = rule.pattern === '*'
+      || (rule.pattern.endsWith('/***') ? name.startsWith(rule.pattern.slice(0, -3))
+        : !rule.pattern.endsWith('/') && name === rule.pattern);
+    if (matches) return rule.action === 'include';
+  }
+  return false;
 }
 
 async function files(root, prefix = '') {

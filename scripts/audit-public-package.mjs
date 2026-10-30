@@ -7,17 +7,22 @@ import { fileURLToPath } from 'node:url';
 export function parseIncludes(workflow) {
   const block = workflow.match(/rsync -a --delete[\s\S]*?"\$\{SITE_DIR\}\/" \.pages-artifact\//)?.[0];
   if (!block || !block.includes("--exclude '*'")) throw new Error('Unrecognized Pages packaging rule');
-  const rules = [...block.matchAll(/--include '([^']+)'/g)].map(m => m[1]);
-  if (!rules.length || rules.some(r => !/^\/[A-Za-z0-9_.\/-]+(?:\*\*\*)?$/.test(r) || r.includes('..'))) {
+  const rules = [...block.matchAll(/--(include|exclude) '([^']+)'/g)].map(m => ({ action: m[1], pattern: m[2] }));
+  if (!rules.some(r => r.action === 'include') || rules.some(r => r.pattern !== '*' && (!/^\/[A-Za-z0-9_.\/-]+(?:\*\*\*)?$/.test(r.pattern) || r.pattern.includes('..')))) {
     throw new Error('Unsupported include rule');
   }
   return rules;
 }
 
 export function selected(relative, rules) {
-  return rules.some(rule => rule.endsWith('/***')
-    ? relative.startsWith(rule.slice(1, -3))
-    : !rule.endsWith('/') && relative === rule.slice(1));
+  for (const rule of rules) {
+    const pattern = rule.pattern;
+    const matches = pattern === '*'
+      || (pattern.endsWith('/***') ? relative.startsWith(pattern.slice(1, -3))
+        : !pattern.endsWith('/') && relative === pattern.slice(1));
+    if (matches) return rule.action === 'include';
+  }
+  return false;
 }
 
 export function risks(relative) {
@@ -61,8 +66,8 @@ export async function audit({ source, workflow, artifact }) {
   const workflowBytes = await readFile(workflow);
   const rules = parseIncludes(workflowBytes.toString('utf8'));
   const files = await inventory(source, relative => selected(relative, rules));
-  const missingRequired = rules.filter(r => !r.endsWith('/') && !r.endsWith('/***'))
-    .map(r => r.slice(1)).filter(r => !files.some(f => f.path === r));
+  const missingRequired = rules.filter(r => r.action === 'include' && !r.pattern.endsWith('/') && !r.pattern.endsWith('/***'))
+    .map(r => r.pattern.slice(1)).filter(r => !files.some(f => f.path === r));
   const failures = files.filter(f => f.blocked).map(f => `Forbidden package data: ${f.path}`);
   failures.push(...missingRequired.map(p => `Missing source member: ${p}`));
   if (artifact) {

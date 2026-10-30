@@ -75,6 +75,21 @@ At main `813126414fa7554e78f38f6944014b011f5c84cc`, the Pages rules select
 download and bundled persona/marketing imagery. They require their own review;
 this inventory does not recertify them or change any publication decision.
 
+## Exact-final-main package: October 30, 2026
+
+The hardened candidate based on main `35ee29c102321c810d1e5c9a06a5fa12090fc9b8`
+excludes `assets/personas/brother_karunya/***` because that identity is explicitly
+retired. It also excludes the exact historical `Personas_v0.5.zip`; read-only
+inspection found 17 source files, no executable members, and a separate Personas
+desktop application lineage. Source history is retained. The private Pages artifact contains 122
+allowlisted files / 79,613,797 bytes. Both verification commands report exact byte
+parity with zero failures. The ZIP SHA-256 is
+`bde2f4951f0e7e2a469301def8a659dfcc8c360b2fa74fd8d4a3ab1d1fb2fcc1`.
+The audit still identifies 37 pre-existing images for separate
+provenance and payload review. This is package evidence only: it is not a
+deployment, installation, content-consent decision, secret-content certification,
+backend acceptance or signed-in canary receipt.
+
 ## Remaining roadmap acceptance
 
 1. Reconcile each feature branch against the intended product; preserve unique
