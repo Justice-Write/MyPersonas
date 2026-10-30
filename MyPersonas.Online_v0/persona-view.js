@@ -308,7 +308,7 @@ async function personaModeRequestFriend(targetId) {
   const actor = await resolveSocialActor(publicInteractionPersonas(), "send a friend request");if (!actor) return;
   const policy = await sb.rpc("public_persona_friend_policy", { p_persona_id: targetId });if (!socialActionSnapshotCurrent(actor)) return;
   const mode = policy.data?.[0]?.request_mode || "open";if (policy.error) { toast(policy.error.message);return; }if (mode === "contact_proof") { toast("Private contact proof is not configured yet");return; }
-  let inviteToken = "";if (mode === "invite_proof") { inviteToken = (prompt("Enter the owner-issued invite proof. It is sent only to the database verifier and is never saved in this browser.") || "").trim();if (!inviteToken || !socialActionSnapshotCurrent(actor)) return; }
+  let inviteToken = "";if (mode === "invite_proof") { inviteToken = (await appPrompt("Enter the owner-issued invite proof. It is sent only to the database verifier and is never saved in this browser.", "", { title: "Enter friendship invite proof", confirmLabel: "Send friend request" }) || "").trim();if (!inviteToken || !socialActionSnapshotCurrent(actor)) return; }
   const result = await sb.rpc("persona_mode_request_friendship", { p_actor_persona_id: actor.id, p_target_persona_id: targetId, p_invite_token: inviteToken || null });inviteToken = "";
   if (!socialActionSnapshotCurrent(actor)) return;if (result.error) { toast(result.error.message);return; }toast(result.data?.message || "Friend request could not be completed");if (result.data?.ok) route();
 }
