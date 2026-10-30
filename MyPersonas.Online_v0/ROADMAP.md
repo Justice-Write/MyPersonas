@@ -12,13 +12,15 @@
 
 > October 29 release continuation: Pages package verification is implemented and tested (533 tests pass; 81 exact-source website members). Deployment still needs the workflow's current migration, backend-artifact and private-canary evidence. Android owner-shell packaging and physical-phone acceptance are separate from website release. See `../docs/RELEASE-PACKAGE-20261029.md`; AliaSpaces/Akasha is owned by the parallel release chat.
 
-**October 24 private owner documentation slice (source only):**
-`OWNER-PRIVATE-DRAFT-GUIDE.md` maps the main8131264 private four-channel composer and
-saved exact-preview approval/manual-plan flow. The command-center contract links
-the operator steps and no longer presents migration077's old unapplied snapshot as
-current linked proof. No workflow, SQL, provider or installed application changed.
-Signed-in two-account/device/deployment acceptance and the full four-product manual
-requirement remain open; publishing_enabled remains false.
+**October 30 owner and surface manual reconciliation (source only):**
+`OWNER-PRIVATE-DRAFT-GUIDE.md` remains the detailed, dated private four-channel
+composer and exact-preview/manual-plan walkthrough. The current
+[owner acceptance guide](../docs/OWNER-USER-AND-ACCEPTANCE-GUIDE.md) and
+[surface/manual index](../docs/SURFACE-RELEASE-AND-MANUAL-INDEX.md) now provide
+stable sign-in, sign-out, recovery, cross-account and product-authority boundaries
+without treating a branch, test, package or installed application as production.
+No workflow, SQL, provider or application changed. Signed-in two-account, device,
+backend and deployment acceptance remain open; `publishing_enabled` remains false.
 
 
 > October 13: the existing Soul Concept Persona Studio was inspected before building the website creative workspace. See ../docs/CREATIVE-WORKSPACE-2026-10-13.md for implemented website/library/OpenArt scope, tests, and release boundaries. Do not build a duplicate desktop studio from this document.
@@ -559,3 +561,11 @@ larger product phase remains.
     until server-verifiable age assurance exists.
 17. **Google consent screen shows the Supabase domain** — cosmetic; fixed by the
     paid Supabase custom domain when it matters.
+
+## Surface documentation reconciliation — 2026-10-30
+
+- [x] Added a stable [surface/manual index](../docs/SURFACE-RELEASE-AND-MANUAL-INDEX.md)
+      and practical [owner use, recovery and acceptance guide](../docs/OWNER-USER-AND-ACCEPTANCE-GUIDE.md).
+      Documentation completion does not activate publishing, implement the three-way
+      memory contract, migrate an account, deploy a backend/site or establish
+      signed-in two-account/device/provider acceptance.
