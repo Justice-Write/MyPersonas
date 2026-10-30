@@ -54,7 +54,7 @@ Integrated release/audit candidate; backend evidence and private canary remain u
 
 PR28 records a newer installed Android shell than the rebuilt candidate: preserve it; do not downgrade. Read-only device readback confirms MyPersonas code 2 / `0.1.1-debug`, while this repository reproduces only code 1 / `0.1.0-debug`. No MyPersonas/AliaSpaces Windows install or confirmed PWA is evidenced. Separate Personas and Soul Concept applications are installed; their data and release lanes are not MyPersonas package contents.
 
-The family private-handoff/owner-guide review is reconciled with current main in PR29. Its historical receipt now binds all seals to revision `26c712e` and records raw-Git-blob versus CRLF-checkout byte domains. Complete local suite: 556/556 passing; hosted review remains the merge authority.
+The family private-handoff/owner-guide review is reconciled with current main in PR29. Its historical receipt now binds all seals to revision `26c712e` and records raw-Git-blob versus CRLF-checkout byte domains. Complete local suite: 556/556 passing. Hosted CI run `41034208070` passed all five substantive jobs, and independent review reproduced 9/9 declared receipt hashes and found no functional, privacy or provenance defect. GitHub reported the reviewed head clean and mergeable; the only review nit was this documentation-only EOF cleanup.
 
 Noo public-source mirror reconciliation is complete on focused branch `codex/noo-source-sync-20261030`: 30/30 public files are byte-for-byte identical to canonical `Justice-Write/nooyouniverse` main `73035f0`, including the later disclosure/accessibility/cache changes. The deploy helper remains preview-only by default and reported 30 unchanged / 0 differences. Private `outputs/` material was not touched. Merging this source mirror does not deploy either website.
 
@@ -62,7 +62,7 @@ Public-safe project/release/data boundaries are recorded in `docs/PROJECT-STOCKT
 
 ## Next steps
 
-1. Read back PR29 hosted CI and independent review; merge only if current-main reconciliation remains clean.
+1. Merge PR29 after its final documentation-only cleanup checks remain green, then clear this active handoff entry from exact merged `main`.
 2. Reconcile/close older conflicting PRs by unique change and recorded supersession; do not bulk-close or discard history.
 3. Reconcile MyPersonas Android code-2 source and signing identity, then build an equal-or-newer data-preserving upgrade before any install.
 4. Confirm the authenticated migration/provider ledger, run the image-caption backend release for the exact intended main revision, retain its artifact, and complete owner sign-in/MFA plus the signed-in private canary.
@@ -77,6 +77,7 @@ Public-safe project/release/data boundaries are recorded in `docs/PROJECT-STOCKT
 - No production migration, backend/Pages deploy, provider connection change, social publication, training, owner-media move or account change is claimed by this stocktake.
 - The historical workspace root is gone. Use the canonical repository through isolated worktrees and preserve the dirty owner checkout.
 ## Work log
+- 2026-10-30 UTC · Codex project stocktake final review: hosted CI run `41034208070` passed all five substantive jobs; independent review reproduced 9/9 historical receipt hashes, reran 556/556 tests and frontend syntax, and found no functional, privacy or provenance defect. Materialized a private 81-member website package candidate (ZIP SHA-256 `837d7d320244f48d8b36c366206ec11bc929e77a44a81439071ea0d40b7ce143`; manifest SHA-256 `9ade1bad42b855f561b42a36ef6326ad91f8df9be5a734e29e61b08b3cbb305c`). It is verified local evidence, not a deployment or installation receipt.
 - 2026-10-30 UTC · Codex project stocktake: reconciled PR29 with current main/PR30/PR31/PR32; clarified the historical receipt's exact revision and newline/hash domains; added the public-safe product/release/data inventory and package/content/runtime separation; corrected README's Pages trigger description; retained exact chat/device/data evidence only in private local stocktake. Local full suite 556/556, frontend syntax, package audit and diff checks passed before final push. No production/provider/account/media/training/device mutation.
 - 2026-10-30 UTC · Codex GPT-6: corrected the root repository identity to `Justice-Write/MyPersonas`, added a mandatory `status-handoff.md` pointer for all AI models, and added a public-safe `CLAUDE.md` entry point that preserves state/evidence/data boundaries. No product code or external system changed.
 - 2026-10-30 UTC · Codex GPT-6: added fail-safe ignore coverage for `.env*`, `.dev.vars*`, Java/PKCS signing stores and PEM/key files while retaining explicit example-file exceptions. Verified every protected sample path resolves to the intended rule and both examples remain allowed; `git diff --check` passed. No tracked file was removed or secret content inspected.

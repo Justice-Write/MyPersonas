@@ -104,4 +104,3 @@ must never be promoted as release artifacts.
 
 No provider post, production migration, account change, owner-media move, training
 job, downgrade, uninstall or production deployment is authorized by this document.
-
