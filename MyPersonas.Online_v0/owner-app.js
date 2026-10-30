@@ -238,6 +238,35 @@ function ownerAppPerspectiveSnapshotCurrent(snapshot) {
   return snapshot.viewMode !== "persona" || ownerAppPersonaModeActor()?.id === snapshot.actorId;
 }
 
+function ownerAppDialogSnapshot() {
+  return {
+    uid: session?.user?.id || "",
+    authGeneration: typeof authLoadGeneration === "number" ? authLoadGeneration : -1,
+    renderEpoch: typeof renderEpoch === "number" ? renderEpoch : -1,
+    requestId: ownerAppState.requestId,
+    perspectiveGeneration: ownerAppState.perspectiveGeneration,
+    view: ownerAppView(),
+  };
+}
+
+function ownerAppDialogSnapshotCurrent(snapshot) {
+  if (!snapshot?.uid || session?.user?.id !== snapshot.uid || ownerAppState.uid !== snapshot.uid) return false;
+  if (typeof authLoadGeneration === "number" && authLoadGeneration !== snapshot.authGeneration) return false;
+  if (typeof renderEpoch === "number" && renderEpoch !== snapshot.renderEpoch) return false;
+  return ownerAppState.requestId === snapshot.requestId
+    && ownerAppState.perspectiveGeneration === snapshot.perspectiveGeneration
+    && ownerAppView() === snapshot.view;
+}
+
+function ownerAppDialogEntityCurrent(snapshot, collection, id, expected) {
+  return ownerAppDialogSnapshotCurrent(snapshot)
+    && ownerAppState[collection]?.find((row) => row.id === id) === expected;
+}
+
+function ownerAppDialogStale() {
+  toast("That owner view changed while the dialog was open. Review the current state and try again.");
+}
+
 function ownerAppSelectRoutePersona(view, arg) {
   if (ownerAppIsPersonaMode()) return "";
   const personaId = view === "edit" ? arg
@@ -1205,10 +1234,14 @@ async function ownerAppSaveComment(briefId) {
 }
 
 async function ownerAppAddImage(briefId) {
-  const value = prompt("Paste the public HTTPS image or figure URL to include as a reference:", "")?.trim() || "";
-  if (!safeHttpUrl(value) || !value.startsWith("https://")) { if (value) toast("Use a public HTTPS image URL"); return; }
-  const comment = prompt("Optional note about how this image should influence the post:", "") || "";
   const brief = ownerAppState.briefs.find((row) => row.id === briefId);
+  if (!brief) return;
+  const dialog = ownerAppDialogSnapshot();
+  const value = (await appPrompt("Paste the public HTTPS image or figure URL to include as a reference:", "", { title: "Add an image reference" }))?.trim() || "";
+  if (!ownerAppDialogEntityCurrent(dialog, "briefs", briefId, brief)) { ownerAppDialogStale(); return; }
+  if (!safeHttpUrl(value) || !value.startsWith("https://")) { if (value) toast("Use a public HTTPS image URL"); return; }
+  const comment = await appPrompt("Optional note about how this image should influence the post:", "", { title: "Add owner guidance" }) || "";
+  if (!ownerAppDialogEntityCurrent(dialog, "briefs", briefId, brief)) { ownerAppDialogStale(); return; }
   const result = await sb.rpc("save_owner_research_annotation", {
     p_annotation_id: null, p_brief_id: briefId, p_topic_id: null,
     p_annotation_type: "image", p_selected_text: "", p_context_before: "",
@@ -1240,7 +1273,9 @@ async function ownerAppApproveTopic(id) {
 async function ownerAppRejectTopic(id) {
   const topic = ownerAppState.topics.find((row) => row.id === id);
   if (!topic) return;
-  const reason = prompt("Why should this topic stay out of future posts?", topic.rejection_reason || "") ?? "";
+  const dialog = ownerAppDialogSnapshot();
+  const reason = await appPrompt("Why should this topic stay out of future posts?", topic.rejection_reason || "", { title: "Reject this research topic" }) ?? "";
+  if (!ownerAppDialogEntityCurrent(dialog, "topics", id, topic)) { ownerAppDialogStale(); return; }
   if (!reason.trim()) return;
   const result = await sb.rpc("reject_research_topic", { p_topic_id: id, p_reason: reason.slice(0, 2000) });
   if (result.error) { toast(result.error.message); return; }
@@ -1607,7 +1642,13 @@ function ownerAppCloseFanThread(clearRoute = true) {
 }
 
 async function ownerAppStartFanLive(id, minutes) {
-  if (!confirm(`Talk directly as the human owner for ${minutes} minutes? AI replies pause, and every human message is labeled Owner.`)) return;
+  const thread = ownerAppFanSession(id);
+  if (!thread) return;
+  const dialog = ownerAppDialogSnapshot();
+  const threadState = JSON.stringify([thread.owner, thread.persona_id, thread.owner_live_until, thread.last_seen_at]);
+  if (!await appConfirm(`Talk directly as the human owner for ${minutes} minutes? AI replies pause, and every human message is labeled Owner.`, { title: "Start live owner chat", confirmLabel: "Start live chat", destructive: false })) return;
+  const current = ownerAppFanSession(id);
+  if (!ownerAppDialogSnapshotCurrent(dialog) || !current || JSON.stringify([current.owner, current.persona_id, current.owner_live_until, current.last_seen_at]) !== threadState) { ownerAppDialogStale(); return; }
   const result = await sb.rpc("start_fan_chat_live", { p_session_id: id, p_minutes: minutes });
   if (result.error) { toast(result.error.message); return; }
   await ownerAppRefreshFanThread(id, false); toast(`Live owner chat started for ${minutes} minutes`);
@@ -1636,7 +1677,13 @@ async function ownerAppMarkFanRead(id) {
 }
 
 async function ownerAppDeleteFanThread(id) {
-  if (!confirm("Delete this full fan conversation and transcript? This cannot be undone and will end any live chat.")) return;
+  const thread = ownerAppFanSession(id);
+  if (!thread) return;
+  const dialog = ownerAppDialogSnapshot();
+  const threadState = JSON.stringify([thread.owner, thread.persona_id, thread.owner_live_until, thread.last_seen_at]);
+  if (!await appConfirm("Delete this full fan conversation and transcript? This cannot be undone and will end any live chat.", { title: "Delete this conversation?", confirmLabel: "Delete conversation", destructive: true })) return;
+  const current = ownerAppFanSession(id);
+  if (!ownerAppDialogSnapshotCurrent(dialog) || !current || JSON.stringify([current.owner, current.persona_id, current.owner_live_until, current.last_seen_at]) !== threadState) { ownerAppDialogStale(); return; }
   const result = await sb.rpc("delete_my_fan_chat_session", { p_session_id: id });
   if (result.error || result.data !== true) { toast(result.error?.message || "Conversation could not be deleted"); return; }
   ownerAppCloseFanThread(false); ownerAppState.loadedAt = 0; await ownerAppLoad(true); ownerAppRenderFanInboxLoaded(); toast("Fan conversation deleted");
@@ -1772,7 +1819,11 @@ async function ownerAppGenerateVariantImageText(variantId, field) {
   if (!variant || !input || !button || !binding || typeof requestRegisteredImageText !== "function") return;
   const originalValue = input.value;
   const originalImage = ownerAppVariantImage(variant);
-  if (originalValue.trim() && !confirm("Replace the current text with a new AI suggestion based on this image?")) return;
+  const dialog = ownerAppDialogSnapshot();
+  if (originalValue.trim() && !await appConfirm("Replace the current text with a new AI suggestion based on this image?", { title: "Replace the current text?", confirmLabel: "Replace text", destructive: true })) return;
+  const currentVariant = ownerAppState.variants.find((row) => row.id === variantId);
+  const currentBinding = ownerAppVariantImageBinding(currentVariant);
+  if (!ownerAppDialogSnapshotCurrent(dialog) || currentVariant !== variant || !document.contains(input) || input.value !== originalValue || ownerAppVariantImage(currentVariant) !== originalImage || currentBinding?.assetId !== binding.assetId || currentBinding?.url !== binding.url) { ownerAppDialogStale(); return; }
   const original = button.textContent;
   button.disabled = true;
   button.textContent = "Generating…";
@@ -1878,17 +1929,25 @@ function ownerAppClosePackage() {
 async function ownerAppRejectPackage(id) {
   const workflow = ownerAppWorkflow();
   const pack = ownerAppState.packages.find((row) => row.id === id);
+  if (!pack) return;
+  const approvalDecision = () => workflow?.approvalDecision({
+    ownerId: session?.user?.id || "",
+    pack,
+    action: "reject",
+    publishingEnabled: false,
+    online: ownerAppNetworkOnline(),
+  });
   if (workflow) {
-    const decision = workflow.approvalDecision({
-      ownerId: session?.user?.id || "",
-      pack,
-      action: "reject",
-      publishingEnabled: false,
-      online: ownerAppNetworkOnline(),
-    });
+    const decision = approvalDecision();
     if (!decision.ok) { toast(decision.error); return; }
   }
-  if (!confirm("Delete this owner-review draft? Nothing is published. This cannot be undone.")) return;
+  const dialog = ownerAppDialogSnapshot();
+  if (!await appConfirm("Delete this owner-review draft? Nothing is published. This cannot be undone.", { title: "Delete this private draft?", confirmLabel: "Delete draft", destructive: true })) return;
+  if (!ownerAppDialogEntityCurrent(dialog, "packages", id, pack)) { ownerAppDialogStale(); return; }
+  if (workflow) {
+    const decision = approvalDecision();
+    if (!decision.ok) { toast(decision.error); return; }
+  }
   if (typeof sb?.rpc !== "function") { toast("Signed-in owner RPCs are unavailable"); return; }
   const result = await sb.rpc("delete_owner_content_package_draft", { p_package_id: id });
   if (result.error) { toast(result.error.message); return; }
@@ -2014,7 +2073,11 @@ async function ownerAppCommitPackagePreview(id, snapshot) {
 }
 
 async function ownerAppUnschedulePackage(id) {
-  if (!confirm("Remove this kit from the manual schedule and clear its approval?")) return;
+  const pack = ownerAppState.packages.find((row) => row.id === id);
+  if (!pack) return;
+  const dialog = ownerAppDialogSnapshot();
+  if (!await appConfirm("Remove this kit from the manual schedule and clear its approval?", { title: "Unschedule this kit?", confirmLabel: "Unschedule and clear approval", destructive: true })) return;
+  if (!ownerAppDialogEntityCurrent(dialog, "packages", id, pack)) { ownerAppDialogStale(); return; }
   const result = await sb.rpc("unschedule_content_package", { p_package_id: id });
   if (result.error) { toast(result.error.message); return; }
   toast("Kit returned to owner review");
@@ -2047,7 +2110,11 @@ function ownerAppOpenChannel(id) {
 async function ownerAppMarkVariantPosted(id) {
   if (!ownerAppRequireSavedPackage()) return;
   const variant = ownerAppState.variants.find((row) => row.id === id);
-  if (!variant || !confirm(`Confirm that you personally posted the ${variant.channel} variant? This records your attestation, not a provider receipt.`)) return;
+  if (!variant) return;
+  const dialog = ownerAppDialogSnapshot();
+  if (!await appConfirm(`Confirm that you personally posted the ${variant.channel} variant? This records your attestation, not a provider receipt.`, { title: "Record manual-post attestation?", confirmLabel: "Record attestation", destructive: true })) return;
+  if (!ownerAppDialogEntityCurrent(dialog, "variants", id, variant)) { ownerAppDialogStale(); return; }
+  if (!ownerAppRequireSavedPackage()) return;
   const result = await sb.rpc("mark_owner_content_variant_manually_posted", { p_variant_id: id });
   if (result.error) { toast(result.error.message); return; }
   toast("Owner manual-post attestation recorded; no provider receipt was claimed");

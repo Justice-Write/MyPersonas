@@ -145,6 +145,7 @@ input[type=checkbox]{width:auto}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1c1e21;color:#fff;padding:12px 24px;border-radius:8px;display:none;z-index:200;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.3)}
 .empty{text-align:center;color:var(--dim);padding:48px 0;font-size:16px}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:150;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;padding:20px}
+#appDialogOv{z-index:500}.appdialogbox{max-width:620px}.appdialogmessage{white-space:pre-wrap;overflow-wrap:anywhere}.appdialogactions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:18px}
 .linkrow{display:flex;gap:8px;align-items:center;margin-bottom:6px}
 .gate h2{font-size:24px;font-weight:800;margin-bottom:10px}
 a{color:var(--accent)}
@@ -642,6 +643,80 @@ async function reportError(){
   }catch(e){toast("Couldn't send report: "+e.message)}
 }
 function esc(s){return (s||"").toString().replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+let appDialogChain=Promise.resolve(),appDialogEpoch=0,activeAppDialog=null;
+function abortAppDialogs(){
+  appDialogEpoch+=1;
+  activeAppDialog?.cancel();
+}
+function appDialog(kind,message,defaultValue="",options={}){
+  const requestedEpoch=appDialogEpoch;
+  const run=()=>{
+    if(requestedEpoch!==appDialogEpoch)return null;
+    return new Promise(resolve=>{
+      const destructive=kind==="confirm"&&options.destructive===true;
+      const title=String(options.title||(kind==="prompt"?"Enter a value":destructive?"Confirm destructive action":"Confirm action"));
+      const confirmLabel=String(options.confirmLabel||(kind==="prompt"?"Continue":destructive?"Confirm":"OK"));
+      const cancelLabel=String(options.cancelLabel||"Cancel");
+      const priorFocus=document.activeElement;
+      const overlay=document.createElement("div");
+      overlay.className="overlay appdialog";overlay.id="appDialogOv";
+      overlay.innerHTML=`<div class="wizbox appdialogbox" role="dialog" aria-modal="true" aria-labelledby="appDialogTitle" aria-describedby="appDialogMessage" tabindex="-1"><h2 id="appDialogTitle">${esc(title)}</h2><p id="appDialogMessage" class="appdialogmessage">${esc(message)}</p>${kind==="prompt"?`<label for="appDialogInput">Response</label><textarea id="appDialogInput" autocomplete="off">${esc(defaultValue)}</textarea>`:""}<div class="appdialogactions"><button type="button" class="btn sec" id="appDialogCancel">${esc(cancelLabel)}</button><button type="button" class="btn${destructive?" danger":""}" id="appDialogOk">${esc(confirmLabel)}</button></div></div>`;
+      document.body.appendChild(overlay);
+      const background=[...document.body.children].filter(element=>element!==overlay).map(element=>({
+        element,
+        inert:!!element.inert,
+        hadInert:element.hasAttribute("inert"),
+        inertAttribute:element.getAttribute("inert"),
+        hadAriaHidden:element.hasAttribute("aria-hidden"),
+        ariaHidden:element.getAttribute("aria-hidden"),
+      }));
+      background.forEach(({element})=>{element.inert=true;element.setAttribute("aria-hidden","true")});
+      let settled=false;
+      const finish=value=>{
+        if(settled)return;
+        settled=true;
+        document.removeEventListener("keydown",onKeyDown,true);
+        background.forEach(snapshot=>{
+          const{element}=snapshot;
+          if(snapshot.hadInert)element.setAttribute("inert",snapshot.inertAttribute??"");else element.removeAttribute("inert");
+          element.inert=snapshot.inert;
+          if(snapshot.hadAriaHidden)element.setAttribute("aria-hidden",snapshot.ariaHidden??"");else element.removeAttribute("aria-hidden");
+        });
+        overlay.remove();
+        if(activeAppDialog?.overlay===overlay)activeAppDialog=null;
+        if(priorFocus?.isConnected&&!priorFocus.inert)priorFocus.focus?.();
+        resolve(value);
+      };
+      const onKeyDown=event=>{
+        if(event.key==="Escape"){
+          event.preventDefault();event.stopPropagation();finish(null);return;
+        }
+        if(event.key!=="Tab")return;
+        event.stopPropagation();
+        const dialog=overlay.querySelector('[role="dialog"]');
+        const focusable=[...dialog.querySelectorAll('button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')];
+        if(!focusable.length){event.preventDefault();dialog.focus();return}
+        const first=focusable[0],last=focusable[focusable.length-1];
+        if(event.shiftKey&&(document.activeElement===first||!dialog.contains(document.activeElement))){event.preventDefault();last.focus()}
+        else if(!event.shiftKey&&(document.activeElement===last||!dialog.contains(document.activeElement))){event.preventDefault();first.focus()}
+      };
+      activeAppDialog={overlay,cancel:()=>finish(null)};
+      document.addEventListener("keydown",onKeyDown,true);
+      overlay.addEventListener("keydown",event=>event.stopPropagation());
+      overlay.addEventListener("click",event=>{
+        if(event.target===overlay||event.target.id==="appDialogCancel"){event.preventDefault();event.stopPropagation();finish(null);return}
+        if(event.target.id==="appDialogOk"){event.preventDefault();event.stopPropagation();finish(kind==="prompt"?overlay.querySelector("#appDialogInput")?.value??"":true)}
+      });
+      const initial=kind==="prompt"?overlay.querySelector("#appDialogInput"):destructive?overlay.querySelector("#appDialogCancel"):overlay.querySelector("#appDialogOk");
+      initial?.focus();
+    });
+  };
+  const result=appDialogChain.then(run,run);
+  appDialogChain=result.then(()=>undefined,()=>undefined);
+  return result;
+}
+function appConfirm(message,options={}){return appDialog("confirm",message,"",options).then(value=>value===true)}
+function appPrompt(message,defaultValue="",options={}){return appDialog("prompt",message,defaultValue,options)}
 const PERSONA_FIELD_GUIDES=Object.freeze({
   name:{help:"The public display name. Keep it memorable, pronounceable, and stable so fans and the AI refer to the persona consistently.",template:"Maya Hart"},
   handle:{help:"The unique public URL name. Use a short, durable identifier rather than a campaign or temporary project name.",template:"maya.hart"},
@@ -843,7 +918,7 @@ function startAuthBootstrap(uid,accountChanged=false,force=false){
   mfaLoginGate={active:false,checking:!!uid,uid:uid||"",factors:[],error:""};
   if(accountChanged){
     renderEpoch++;mineLoadRequest++;localStorage.removeItem("ps_filters");closeChat();closePublicFanChat();
-    document.querySelectorAll(".overlay").forEach(o=>o.remove());resetPrivateUiState();resetMineState();
+    abortAppDialogs();document.querySelectorAll(".overlay").forEach(o=>o.remove());resetPrivateUiState();resetMineState();
   }
   app.innerHTML=`<div class="empty">${uid?"Checking sign-in security…":"Loading…"}</div>`;
   (async()=>{
@@ -1658,7 +1733,7 @@ async function renderPersonaPage(handle,skipGate,epoch=++renderEpoch){
       <button class="btn sec" style="margin-left:8px" onclick="location.hash=''">Take me back</button></div></div>`;
     document.body.appendChild(o);return;
   }
-  document.querySelectorAll(".overlay").forEach(o=>o.remove());
+  abortAppDialogs();document.querySelectorAll(".overlay").forEach(o=>o.remove());
   const isOwner=!!myPersonas.some(x=>x.id===p.id);
   const[{data:links},{data:posts,error:postsError},{data:fr},{data:albums},fanRes,layoutRes,relationRes,revenueRes]=await Promise.all([
     sb.from("persona_links").select("*").eq("persona_id",p.id).order("sort"),
