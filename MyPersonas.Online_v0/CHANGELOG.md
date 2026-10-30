@@ -1,5 +1,11 @@
 # Changelog — AliaSpaces / MyPersonas
 
+## Release package verification (2026-10-29)
+
+- Verify Pages artifact membership and exact source bytes before upload; reject symlinks and known private filenames even under public asset directories.
+- Emit per-file SHA-256 evidence outside the public package. Six regression cases and the complete 533-test suite pass.
+- See `../docs/RELEASE-PACKAGE-20261029.md` for current source, deployment and personal-data boundaries. Deployment remains pending its existing exact-revision evidence.
+
 Versioning per VERSIONING.md: majors are milestones, `.x` are roadmap items,
 trailing letters are hotfixes. Releases are git tags.
 
