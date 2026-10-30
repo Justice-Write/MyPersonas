@@ -241,6 +241,10 @@ test("the app head and Pages artifact include the complete PWA shell", async () 
   for (const releasePath of [
     "/assets/",
     "/assets/***",
+    "/src/",
+    "/src/assets/",
+    "/src/assets/platform-icons/",
+    "/src/assets/platform-icons/***",
     "/favicon.ico",
     "/icon.svg",
     "/icon-180.png",
@@ -256,6 +260,8 @@ test("the app head and Pages artifact include the complete PWA shell", async () 
   ]) {
     assert.ok(workflow.includes(`--include '${releasePath}'`), `Pages artifact must include ${releasePath}`);
   }
+
+  assert.match(html, /<script src="\.\/src\/assets\/platform-icons\/index\.js\?v=\d{8}-\d"><\/script>/);
 
   assert.doesNotMatch(
     workflow,

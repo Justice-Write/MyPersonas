@@ -201,7 +201,7 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .astblk{border-top:1px solid var(--border);margin-top:14px;padding-top:6px}
 .ledgerrow{display:grid;grid-template-columns:minmax(130px,.8fr) minmax(150px,1fr) minmax(170px,1.1fr) minmax(180px,1.2fr) auto;gap:8px;align-items:end;background:var(--bg);border-radius:10px;padding:10px;margin-bottom:8px}
 .ledgerrow label{margin-top:0}.ledgernew{grid-column:1/-1;display:none}.ledgernew.on{display:flex;gap:8px;flex-wrap:wrap}.ledgernew>*{flex:1;min-width:170px}
-.ledgerlist{display:grid;gap:8px;margin:10px 0}.ledgerprovider{border:1px solid var(--border);border-radius:12px;background:var(--bg);overflow:hidden}.ledgerprovider>summary{display:flex;gap:10px;align-items:center;min-height:48px;padding:10px 12px;cursor:pointer;list-style:none}.ledgerprovider>summary::-webkit-details-marker{display:none}.ledgerprovider>summary::after{content:"▾";color:var(--dim);font-size:15px;transition:transform .15s ease}.ledgerprovider[open]>summary::after{transform:rotate(180deg)}.ledgerprovider>summary:focus-visible{outline:3px solid rgba(24,119,242,.25);outline-offset:-3px}.ledgerprovider[open]>summary{background:#fff;border-bottom:1px solid var(--border)}.ledgerprovidericon{font-size:20px;line-height:1}.ledgerprovidersummary{display:flex;gap:8px;align-items:center;justify-content:space-between;flex:1;min-width:0;flex-wrap:wrap}.ledgerprovidersummary b{font-size:15px}.ledgerprovidercounts{font-size:12px;color:var(--dim);font-weight:600}.ledgerproviderbody{padding:10px}.ledgerproviderpickerrow{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}.ledgerproviderpickerrow label{margin:0;white-space:nowrap}.ledgerproviderpicker{flex:1;min-width:220px}.ledgeraccountpanel[hidden]{display:none!important}.ledgeritem{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;border-radius:10px;padding:10px 12px}.ledgeritem .ledgerwho{min-width:180px;flex:1}.ledgeritem select{width:auto;min-width:170px}
+.ledgerlist{display:grid;gap:8px;margin:10px 0}.ledgerprovider{border:1px solid var(--border);border-radius:12px;background:var(--bg);overflow:hidden}.ledgerprovider>summary{display:flex;gap:10px;align-items:center;min-height:48px;padding:10px 12px;cursor:pointer;list-style:none}.ledgerprovider>summary::-webkit-details-marker{display:none}.ledgerprovider>summary::after{content:"▾";color:var(--dim);font-size:15px;transition:transform .15s ease}.ledgerprovider[open]>summary::after{transform:rotate(180deg)}.ledgerprovider>summary:focus-visible{outline:3px solid rgba(24,119,242,.25);outline-offset:-3px}.ledgerprovider[open]>summary{background:#fff;border-bottom:1px solid var(--border)}.ledgerprovidericon{display:grid;place-items:center;width:28px;height:28px;flex:0 0 28px}.ledgerprovidericon .ico{width:20px;height:20px;margin:0}.ledgerprovidersummary{display:flex;gap:8px;align-items:center;justify-content:space-between;flex:1;min-width:0;flex-wrap:wrap}.ledgerprovidersummary b{font-size:15px}.ledgerprovidercounts{font-size:12px;color:var(--dim);font-weight:600}.ledgerproviderbody{padding:10px}.ledgerproviderpickerrow{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}.ledgerproviderpickerrow label{margin:0;white-space:nowrap}.ledgerproviderpicker{flex:1;min-width:220px}.ledgeraccountpanel[hidden]{display:none!important}.ledgeritem{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;border-radius:10px;padding:10px 12px}.ledgeritem .ledgerwho{min-width:180px;flex:1}.ledgeritem select{width:auto;min-width:170px}
 .ledgerstate{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:5px}.pill.recorded{background:#fff4cc;color:#795d00}.pill.verified{background:#e7f6ec;color:#23733b}.pill.connected{background:#dff7f5;color:#086c66}.pill.attention{background:#fde8ec;color:#a52744}
 .ledgersaved{grid-column:1/-1;background:#fff;border:1px solid var(--border);border-radius:9px;padding:9px 10px}.ledgersaved .muted{display:block;margin-top:4px}
 .ledgerassignnew,.ledgerauth,.ledgeredit{display:none;flex:1 0 100%;width:100%;background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px}.ledgerassignnew.on,.ledgerauth.on,.ledgeredit.on{display:flex;gap:8px;align-items:end;flex-wrap:wrap}.ledgerassignnew>div,.ledgeredit>div{flex:1;min-width:170px}.ledgerauth.on{align-items:center}.ledgerauth p{flex:1 1 420px;margin:0}.ledgeredit .ledgereditactions{flex:1 0 100%;display:flex;gap:8px;flex-wrap:wrap}
@@ -381,7 +381,50 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
   <symbol id="i-bug" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 1 4 4v3a4 4 0 0 1-8 0v-3a4 4 0 0 1 4-4Z"/><path d="M9 6L8 4M15 6l1-2M8 13H4M20 13h-4M6 19l2.5-2M18 19l-2.5-2"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.5 5.6L20.5 9.4l-4.3 4.1 1 5.9L12 16.6l-5.2 2.8 1-5.9L3.5 9.4l6-.8Z"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.6A8 8 0 1 1 9.4 4 6.5 6.5 0 0 0 20 14.6Z"/></symbol>
-  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol></svg>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+  <symbol id="i-plat-twitter" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></symbol>
+  <symbol id="i-plat-instagram" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.4"/><circle cx="17" cy="7" r="0.8"/></symbol>
+  <symbol id="i-plat-facebook" viewBox="0 0 24 24"><path d="M14 4h-2.4A3.6 3.6 0 0 0 8 7.6V10H6v3h2v7h3v-7h2.2l.8-3H11V7.8c0-.7.3-1.2 1.1-1.2H15V4Z"/></symbol>
+  <symbol id="i-plat-tiktok" viewBox="0 0 24 24"><path d="M10 18V7.2L18 6v5.2"/><circle cx="7.6" cy="18" r="2.4"/></symbol>
+  <symbol id="i-plat-onlyfans" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="11" r="2"/><path d="M12 13v3.4"/></symbol>
+  <symbol id="i-plat-patreon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M9.5 16.2V7.8h2.6a2.8 2.8 0 0 1 0 5.6H9.5"/></symbol>
+  <symbol id="i-plat-snapchat" viewBox="0 0 24 24"><path d="M8 10.2a4 4 0 0 1 8 0V16l-1.5-1.1L13 16.4 12 15.2 11 16.4 9.5 14.9 8 16Z"/></symbol>
+  <symbol id="i-plat-discord" viewBox="0 0 24 24"><path d="M7.2 8.4c1.8-1.4 7.8-1.4 9.6 0 1 2.6.6 5.2-1.1 6.4l-1.3-1.5"/><path d="M7.2 8.4C6 11 6.2 13.6 8 14.8l1.3-1.5"/><circle cx="9.6" cy="12.4" r="0.8"/><circle cx="14.4" cy="12.4" r="0.8"/></symbol>
+  <symbol id="i-plat-reddit" viewBox="0 0 24 24"><circle cx="12" cy="13" r="6"/><circle cx="9.6" cy="12.4" r="0.8"/><circle cx="14.4" cy="12.4" r="0.8"/><path d="M10 15.6c.7.7 3.3.7 4 0M14.2 8.2 16.4 5"/><circle cx="17.2" cy="4.2" r="1"/></symbol>
+  <symbol id="i-plat-youtube" viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="11" rx="3"/><path d="M11 9.6v4.8l4.2-2.4Z"/></symbol>
+  <symbol id="i-plat-twitch" viewBox="0 0 24 24"><path d="M5 5h14v9.2L15.2 18v-3.8H5Z"/><path d="M9 8.4v4.2M12.4 8.4v4.2"/></symbol>
+  <symbol id="i-plat-kick" viewBox="0 0 24 24"><path d="M7 4.5v15M7 12l7-7.2M7 12l7 7.2"/></symbol>
+  <symbol id="i-plat-rumble" viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="10" rx="2"/><path d="M15 10.2 21 7.2v9.6l-6-3Z"/></symbol>
+  <symbol id="i-plat-steam" viewBox="0 0 24 24"><circle cx="10" cy="14.2" r="4"/><circle cx="16.4" cy="8" r="2.4"/><path d="M13.2 11.4 15.4 9.6"/></symbol>
+  <symbol id="i-plat-psn" viewBox="0 0 24 24"><path d="M12 4.2 20 18.4H4Z"/></symbol>
+  <symbol id="i-plat-xbox" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 8l8 8M16 8l-8 8"/></symbol>
+  <symbol id="i-plat-nintendo" viewBox="0 0 24 24"><rect x="3" y="6" width="7" height="12" rx="3.2"/><rect x="14" y="6" width="7" height="12" rx="3.2"/><path d="M6.5 10v4M4.6 12h3.8"/></symbol>
+  <symbol id="i-plat-epic" viewBox="0 0 24 24"><path d="M4 19.5V9.2L7 7l2.2 2.2L12 6l2.8 3.2L17 7l3 2.2v10.3Z"/></symbol>
+  <symbol id="i-plat-battlenet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 8.2h4.6a2 2 0 0 1 0 4H8h4.6a2 2 0 0 1 0 4H8"/></symbol>
+  <symbol id="i-plat-linkedin" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 11v5M8 8h.1M12 16v-3a2 2 0 0 1 4 0v3"/></symbol>
+  <symbol id="i-plat-signal" viewBox="0 0 24 24"><path d="M5 7h10.5A2.5 2.5 0 0 1 18 9.5v4A2.5 2.5 0 0 1 15.5 16H9l-4 3V9.5A2.5 2.5 0 0 1 7.5 7"/></symbol>
+  <symbol id="i-plat-whatsapp" viewBox="0 0 24 24"><path d="M6.2 17.8 7.6 15A6.4 6.4 0 1 1 9.2 16.6Z"/><path d="M10 10.4c.5 1.3 1.7 2.3 3 2.7"/></symbol>
+  <symbol id="i-plat-telegram" viewBox="0 0 24 24"><path d="M3.8 11.6 20.2 5l-3.6 14.2-5.2-4.6Z"/><path d="M11.4 14.6 12.6 11l5.2-4.6"/></symbol>
+  <symbol id="i-plat-bluesky" viewBox="0 0 24 24"><path d="M5.5 8.6c2.2 2.6 4.2 3.8 6.5 3.8s4.3-1.2 6.5-3.8c-.8 4.6-2.8 7.4-6.5 7.4s-5.7-2.8-6.5-7.4Z"/></symbol>
+  <symbol id="i-plat-threads" viewBox="0 0 24 24"><circle cx="12" cy="12.2" r="2.8"/><path d="M14.8 12.2c0 3.2-1.5 6-4.6 6A6.2 6.2 0 1 1 15 8.4v4.2"/></symbol>
+  <symbol id="i-plat-legalzoom" viewBox="0 0 24 24"><path d="M7 3.5h7.2L18 7.2V20.5H7Z"/><circle cx="12" cy="14" r="2.3"/></symbol>
+  <symbol id="i-plat-wix" viewBox="0 0 24 24"><path d="M4 7.2 7.2 18l3.2-7.4L13.4 18 16.6 7.2"/></symbol>
+  <symbol id="i-plat-wordpress" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M7.2 9.2 9.4 16 12 9.2l2.6 6.8 2.2-6.8"/></symbol>
+  <symbol id="i-plat-fiverr" viewBox="0 0 24 24"><circle cx="8" cy="8" r="1.3"/><circle cx="12" cy="8" r="1.3"/><circle cx="16" cy="8" r="1.3"/><circle cx="8" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/></symbol>
+  <symbol id="i-plat-amazon" viewBox="0 0 24 24"><rect x="7" y="5" width="10" height="7" rx="1.2"/><path d="M6 15.2c2.2 2.6 9.8 2.6 12 0"/><path d="M16.2 15.2 18 13.8"/></symbol>
+  <symbol id="i-plat-etsy" viewBox="0 0 24 24"><path d="M4 12.2 12 4.2h7.2V11l-8 8.2Z"/><circle cx="16.2" cy="8" r="1"/></symbol>
+  <symbol id="i-plat-yelp" viewBox="0 0 24 24"><path d="M12 4.2v8M12 12.2 7 18.4M12 12.2l5 6.2"/></symbol>
+  <symbol id="i-plat-trustpilot" viewBox="0 0 24 24"><path d="M12 3.4 14.2 8l5 .7-3.6 3.4.9 5L12 14.8 7.5 17.1l.9-5L4.8 8.7l5-.7Z"/></symbol>
+  <symbol id="i-plat-gmail" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3.5 8 12 13.2 20.5 8"/></symbol>
+  <symbol id="i-plat-outlook" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1.4"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-plat-yahoo" viewBox="0 0 24 24"><path d="M6 5.2 12 13l6-7.8M12 13v6"/></symbol>
+  <symbol id="i-plat-icloud" viewBox="0 0 24 24"><path d="M8 17.2h8.2a3.4 3.4 0 0 0 .3-6.8 5 5 0 0 0-9.5 1.6A3 3 0 0 0 8 17.2Z"/></symbol>
+  <symbol id="i-plat-proton" viewBox="0 0 24 24"><path d="M12 3.2 19 6.2v5.2c0 4.2-3 6.8-7 8-4-1.2-7-3.8-7-8V6.2Z"/><circle cx="12" cy="11" r="1.5"/><path d="M12 12.5v2.6"/></symbol>
+  <symbol id="i-plat-family" viewBox="0 0 24 24"><circle cx="9" cy="8" r="2.2"/><circle cx="16" cy="9" r="1.8"/><path d="M4.4 19c.5-3 2.3-4.6 4.6-4.6s4.1 1.6 4.6 4.6M14 14.8c1.6-.3 3.2.5 3.8 2.6"/></symbol>
+  <symbol id="i-plat-website" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c2.4 2.5 2.4 11.5 0 16M12 4c-2.4 2.5-2.4 11.5 0 16"/></symbol>
+  <symbol id="i-plat-email" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7.2 12 13l8-5.8"/></symbol>
+  <symbol id="i-plat-other" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><ellipse cx="12" cy="12" rx="8" ry="3.6" transform="rotate(-20 12 12)"/></symbol>
+</svg>
 <header>
   <h1 id="siteIdentity" onclick="go('')">MyPersonas</h1>
   <input id="gsearch" placeholder="find personas..." onkeydown="if(event.key==='Enter')go('search/'+encodeURIComponent(this.value))">
@@ -474,6 +517,7 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
     </div>
   </aside>
 </div>
+<script src="./src/assets/platform-icons/index.js?v=20261030-1"></script>
 <script src="./mobile-owner-workflow.js?v=20260920-2"></script>
 <script src="./image-caption-drafting.js?v=20261009-1"></script>
 <script src="./creative-media.js?v=20261013-1"></script>
@@ -725,6 +769,7 @@ function go(h){if(typeof ownerAppToggleMore==="function")ownerAppToggleMore(fals
 function copyText(t){navigator.clipboard.writeText(t).then(()=>toast("Copied ✓"))}
 function pageUrl(handle){return location.host+location.pathname.replace(/index\.html$/,"")+"#/p/"+handle}
 function ico(n){return `<svg class="ico" aria-hidden="true"><use href="#i-${n}"/></svg>`}
+function platformGlyph(id){const key=id&&Object.prototype.hasOwnProperty.call(PLATS,id)?id:"other";return PLATFORM_ICONS[key]()}
 function sharePage(handle){copyText(location.origin+location.pathname.replace(/index\.html$/,"")+"#/p/"+handle)}
 function setMeta(title,desc){
   document.title=title;
@@ -1688,7 +1733,7 @@ async function renderPersonaPage(handle,skipGate,epoch=++renderEpoch){
       <div style="margin-top:10px;padding:10px;border:1px solid #cbd8e9;border-radius:10px;background:#f6f9fd"><b>AI transparency</b><div class="muted" style="margin-top:3px">${esc(p.ai_disclosure||"This is an AI-assisted persona. Public content may be drafted with AI and is owner-reviewed unless stated otherwise.")}</div></div>
       ${p.topics?`<div style="margin-top:8px">${p.topics.split(",").filter(t=>t.trim()).map(t=>`<span class="tag2" data-page-search="${esc(t.trim())}" onclick="pageSearch(this.dataset.pageSearch)">${esc(t.trim())}</span>`).join("")}</div>`:""}</div></section>`:""}
     ${fanAvailable?`<section class="${personaLayoutItemClass(pageLayout,"fan_chat")}" style="${personaLayoutItemStyle(pageLayout,"fan_chat")}"><div class="card"><h3>${ico("spark")}Chat with ${esc(p.name)}'s AI</h3><p class="muted">This is a disclosed AI assistant, not the human owner. The owner can see saved chats and open private-session chats. If the owner joins live, every human reply is labeled Owner.</p><button class="btn sm" onclick="openPublicFanChat('${p.id}')">Start fan chat</button></div></section>`:""}
-    ${M("links")&&(links||[]).length?`<section class="${personaLayoutItemClass(pageLayout,"links")}" style="${personaLayoutItemStyle(pageLayout,"links")}"><div class="card"><h3>${ico("link")}Find me on</h3>${links.map(l=>{const pl=PLATS[l.platform]||PLATS.other,url=safeHttpUrl(l.url);return url?`<a class="chip" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${ico("node")}${esc(l.handle||pl.name)}</a>`:`<span class="chip">${ico("node")}${esc(l.handle||pl.name)}</span>`}).join("")}</div></section>`:""}
+    ${M("links")&&(links||[]).length?`<section class="${personaLayoutItemClass(pageLayout,"links")}" style="${personaLayoutItemStyle(pageLayout,"links")}"><div class="card"><h3>${ico("link")}Find me on</h3>${links.map(l=>{const pl=PLATS[l.platform]||PLATS.other,url=safeHttpUrl(l.url);return url?`<a class="chip" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${platformGlyph(l.platform)}${esc(l.handle||pl.name)}</a>`:`<span class="chip">${platformGlyph(l.platform)}${esc(l.handle||pl.name)}</span>`}).join("")}</div></section>`:""}
     ${M("top8")&&top8.length?`<section class="${personaLayoutItemClass(pageLayout,"top8")}" style="${personaLayoutItemStyle(pageLayout,"top8")}"><div class="card"><h3>${ico("crown")}Top ${top8.length}</h3><div class="top8grid">${top8.map(t=>{const mark=MyPersonasAiProvenance.publicMarkerHtml(safeHttpUrl(t.avatar_url),"image");return`<div class="t8" data-handle="${esc(t.handle)}" onclick="go('p/'+this.dataset.handle)"><div class="av8 ai-asset-shell${mark?" has-ai-provenance":""}" style="${safeBgStyle(t.avatar_url)}">${mark}</div>${esc(t.name)}</div>`}).join("")}</div></div></section>`:""}
     ${M("linked")&&linkedP.length?`<section class="${personaLayoutItemClass(pageLayout,"linked")}" style="${personaLayoutItemStyle(pageLayout,"linked")}"><div class="card"><h3>${ico("mask")}More of me</h3>${linkedP.map(t=>`<div class="t8pick" style="cursor:pointer" data-handle="${esc(t.handle)}" onclick="go('p/'+this.dataset.handle)">${personaRelationAvatarHtml(t.avatar_url)}<div><b>${esc(t.name)}</b><br><span class="muted">${esc(t.tagline||"@"+t.handle)}</span></div></div>`).join("")}</div></section>`:""}
     ${M("family")&&familyP.length?`<section class="${personaLayoutItemClass(pageLayout,"family")}" style="${personaLayoutItemStyle(pageLayout,"family")}"><div class="card"><h3>${ico("user")}Family</h3>${familyP.map(t=>`<div class="t8pick" style="cursor:pointer" data-handle="${esc(t.handle)}" onclick="go('p/'+this.dataset.handle)">${personaRelationAvatarHtml(t.avatar_url)}<div><b>${esc(t.name)}</b><br><span class="muted">${esc(t.relationship_label||"family")}</span></div></div>`).join("")}</div></section>`:""}
@@ -3224,7 +3269,7 @@ async function deleteAlbumItem(id){const{error}=await sb.rpc("delete_persona_alb
 function renderEditLinks(){
   document.getElementById("eLinks").innerHTML=editLinks.map((l,i)=>{
     const pl=PLATS[l.platform]||PLATS.other;
-    return `<div class="linkrow"><span class="chip">${ico("node")}${esc(l.handle||pl.name)}</span>
+    return `<div class="linkrow"><span class="chip">${platformGlyph(l.platform)}${esc(l.handle||pl.name)}</span>
     <span class="muted" style="flex:1;overflow:hidden;text-overflow:ellipsis">${esc(l.url)}</span>
     <button class="btn danger sm" onclick="editLinks.splice(${i},1);renderEditLinks()">✕</button></div>`}).join("")||'<p class="muted">No links yet.</p>';
 }
@@ -5104,7 +5149,7 @@ function ledgerProviderGroupHtml(provider,accounts){
   const picker=count>1?`<div class="ledgerproviderpickerrow"><label for="${pickerId}">Account</label><select class="ledgerproviderpicker" id="${pickerId}" data-provider="${esc(provider)}" onchange="selectLedgerProviderAccount(this)">${accounts.map(account=>`<option value="${account.id}" ${account.id===selectedId?"selected":""}>${esc(ledgerSavedAccountLabel(account))}</option>`).join("")}</select></div>`:"";
   const panels=accounts.map(account=>`<div class="ledgeraccountpanel" data-ledger-id="${account.id}" ${account.id===selectedId?"":"hidden"}>${ledgerAccountItemHtml(account)}</div>`).join("");
   return `<details class="ledgerprovider" data-provider="${esc(provider)}" ontoggle="rememberLedgerProvider(this)" ${ledgerOpenProvider===provider?"open":""}>
-    <summary><span class="ledgerprovidericon" aria-hidden="true">${esc(meta.icon||"🔗")}</span><span class="ledgerprovidersummary"><b>${esc(name)}</b><span class="ledgerprovidercounts">${count} ${count===1?"account":"accounts"} · ${esc(ledgerProviderStatusSummary(accounts))}</span></span></summary>
+    <summary><span class="ledgerprovidericon" aria-hidden="true">${platformGlyph(provider)}</span><span class="ledgerprovidersummary"><b>${esc(name)}</b><span class="ledgerprovidercounts">${count} ${count===1?"account":"accounts"} · ${esc(ledgerProviderStatusSummary(accounts))}</span></span></summary>
     <div class="ledgerproviderbody">${picker}${panels}</div>
   </details>`;
 }

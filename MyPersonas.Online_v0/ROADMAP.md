@@ -281,7 +281,10 @@ larger product phase remains.
       verify request/accept events plus reconnect/focus fallback under RLS.
 - [x] Comments and reactions on feed posts
 - [x] Feed pagination + hashtag browse pages
-- [ ] Per-platform branded icons (extend the hologram icon bank beyond the orbit node)
+- [~] Per-platform glyph bank: all 42 current `PLATS` entries have bounded inline and
+      standalone SVG glyphs, a typed component map, current link/ledger/owner-portal
+      consumers, exact Pages packaging rules and focused source tests. This is a local
+      source slice from PR20; release and signed-in visual acceptance remain unverified.
 - [x] Proper "act as persona" picker modal for social actions
 - [~] Extensions page: full escaped/bounded catalog cards, GitHub release history, and
       checked-in fallbacks for Concept + Personas are complete locally. Publish real GitHub
