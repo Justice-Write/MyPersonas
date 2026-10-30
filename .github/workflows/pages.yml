@@ -137,6 +137,8 @@ jobs:
             --include '/PROVIDER-SETUP-GUIDE.md' \
             --exclude '*' \
             "${SITE_DIR}/" .pages-artifact/
+      - name: Verify public package membership and exact source bytes
+        run: node scripts/verify-pages-package.mjs .pages-artifact > pages-package-manifest.json
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
           path: .pages-artifact

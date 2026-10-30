@@ -1,6 +1,4 @@
-# Personas release and data documentation handoff
-
-Client date: 2026-10-29. Package-audit tooling and documentation isolated branch based on origin/main 8131264. Canonical shared handoff remains in the MyPersonas checkout; do not copy its private machine/account history into this public repository.
+# MyPersonas release preflight — 2026-10-29
 
 ## 0. Operating rule — every agent, every time (mandatory)
 
@@ -47,28 +45,29 @@ Client date: 2026-10-29. Package-audit tooling and documentation isolated branch
 
 
 
-
-
-
-
-## Current state
-Read-only public-package auditor and data-boundary verification guide added. All 530 Node tests and frontend syntax pass. The main-source local artifact has 81 files / 83,955,756 bytes with exact byte parity. Audit implementation is published on PR26. Existing PR24 dependency remediation is incorporated unchanged as 118b5a1 after the inherited audit failure. All 531 local tests pass after a regression-tested PostgreSQL startup fix; final hosted checks are tracked on the PR. Production deployment and installation are not claimed.
-
 ## In progress
-- None.
-
-## Verification
-Check Git diff, documentation links and absence of personal paths/data. No runtime changes planned.
-
-## Blockers
-Phone disconnected. Website signed-in canary remains unverified. Other source lanes retain ownership.
-
-## Next steps
-Run the auditor on release artifacts, complete bundled media/archive review, and retain existing exact-main backend/canary gates. Connected-device acceptance remains separate. See docs/PACKAGE-BOUNDARY-VERIFICATION.md.
-
+- Release increment complete locally; committing/pushing review branch.
+## Current state
+Clean main-derived release candidate; backend evidence and private canary not yet verified; no connected phone.
 ## Work log
-- 2026-10-29 Codex: repeated hosted PostgreSQL socket startup failure fixed by waiting for the final TCP listener and using it for SQL execution. Added a mocked PowerShell/Docker lifecycle regression that rejects the temporary initialization server. Full531tests, frontend syntax and diff checks pass; no product SQL or deployment-gate changes. Real SQL acceptance remains the hosted CI job.
+- Worktree created at C:/mp-release29 from origin/main.
 
-- 2026-10-29 Codex: incorporated exact dependency fix45d7fa5 from existing PR24 as118b5a1, preserving attribution and validation notes; no new dependency resolution or local installation. Full530tests and Workroom syntax pass. Earlier database-isolation CI failed during PostgreSQL startup and passed on one retry; no SQL gate was suppressed. Final hosted CI follows on PR26.
 
-- 2026-10-29 Codex: added read-only inventory/parity tool, three regression tests covering deny-default rules, private-store/key/model exclusion, and extra/missing/changed artifact bytes, plus package-boundary documentation. Full suite 530/530, zero skips/failures; frontend syntax and local 81-file parity passed. No application runtime, release workflow, production data or installation changes.
+## Verification checkpoint 2026-10-29
+- Added verify-pages-package.mjs and workflow step; six regressions/full 533 tests pass, frontend syntax and diff-check pass. Public website package: 81 exact source members; ZIP SHA256 3d18c416d742bf98b92728371127ecd9ea2b58d50acd5852a0c63cf63b1ba915. Package itself is outside repo.
+- Android offline assembleDebug failed before compilation: java.io.IOException Unable to establish loopback connection. No APK built/installed by this lane. No phone connected.
+- Deployment remains gated on current migration evidence, exact-main image-caption artifact and signed-in private canary. Backend run success alone is insufficient. Latest recorded successful Pages run remains September24.
+- AliaSpaces/Akasha release belongs to chat 01a1290c-ed8c; project-state PR25, Meta and Soulular lanes preserved. No provider posting, migrations or owner data changes.
+
+- CI found the pre-existing two-high Workroom dependency audit failure. Reused reviewed PR24 commit45d7fa5 on this release branch (Electron44.9.3, undici7.30.1); no duplicate dependency fix invented. Original PR24 retained. Current exact-main backend run38448350086 has zero retained artifacts; Pages remains blocked until fresh exact-revision deployment receipt/canary evidence exists.
+
+
+- Follow-up: current CI advisory range requires Electron44.10.0. Updated exact Electron pin/lockfile with scripts disabled, preserving reviewed undici resolution. Fresh npm audit --package-lock-only --audit-level=low reports zero vulnerabilities. No desktop binary installed.
+
+## Package inventory and CI startup follow-through
+
+PR26 adds a standalone read-only inventory/parity command and a data-boundary guide at docs/PACKAGE-BOUNDARY-VERIFICATION.md. Its source/package checks supplement the deployment verifier above; media and embedded archives still require separate content/provenance review. Private machine and task inventories stay outside this public checkout.
+
+The creative-library SQL test now waits for the final PostgreSQL TCP listener instead of the image's temporary initialization socket. A mocked lifecycle test reproduces the old failure without Docker; the real hosted SQL check passed at01ea421. Product SQL and production gates were not changed.
+
+Current integration: merged main35c6db9 into this branch, retaining its newer Electron/undici lockfile and workflow verifier. Combined checks are being verified; no production deployment or device installation is claimed. Older audit-branch dependency pins are superseded by current main.
