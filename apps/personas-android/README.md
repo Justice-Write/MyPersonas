@@ -21,7 +21,7 @@ It is **not** a local social publisher, Play Store build, or replacement for the
 
 ## Reproducible debug build
 
-Requirements: JDK 17+, Android SDK platform 34, and Android build-tools 34.0.0. The committed Gradle wrapper (`./gradlew`, Gradle 8.7) is preferred. A system Gradle 8.7+ binary is only a fallback. The debug shell uses the platform WebView and Activity classes only (no AndroidX / Kotlin stdlib). This is not an Expo/React Native rewrite.
+Requirements: JDK 17+, Android SDK platform 36, and Android build-tools 36.0.0. The committed Gradle wrapper (`./gradlew`, Gradle 8.11.1) and Android Gradle Plugin 8.10.1 are the verified toolchain. A system Gradle 8.11.1+ binary is only a fallback. The debug shell uses the platform WebView and Activity classes only (no AndroidX / Kotlin stdlib). This is not an Expo/React Native rewrite.
 
 ```bash
 # from the repository root
@@ -36,7 +36,7 @@ This APK is **debuggable**, unsigned for Play, and must not be submitted to a st
 If the Android SDK is not installed:
 
 1. Install Android command-line tools and accept licenses.
-2. Install `platforms;android-34` and `build-tools;34.0.0`.
+2. Install `platforms;android-36` and `build-tools;36.0.0`.
 3. Re-run the script.
 
 Store accounts (Google personal / later submissions) are owner actions. This milestone does not submit, promote, or change Play permissions.

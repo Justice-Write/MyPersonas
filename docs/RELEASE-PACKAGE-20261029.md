@@ -18,7 +18,7 @@ The Pages workflow requires migration 060 and provider migrations 065–076 veri
 
 The website package contains frontend code, public shell/icons and allowlisted public assets. It excludes SQL, developer tooling, tests, root handoff, outputs, Git history, credentials, local databases and private libraries. Authorized browser sessions and remote account/draft/media records are runtime data rather than installer contents. Preserve them during updates. The service worker caches only its explicit public shell; it does not store private workflow/API responses.
 
-The Android owner shell is a distinct debug application, `online.mypersonas.owner.debug.local`, versionCode 1. It points to the real owner command center, and therefore does not make undeployed frontend features available. Its preference export is an origin preference, not an account or draft backup. Android automatic backup is disabled. Never uninstall an existing app to get around a signer mismatch; inspect device package/signing state first. No connected phone was available for this run.
+The Android owner shell is a distinct debug application, `online.mypersonas.owner.debug.local`. Its proven canonical baseline is now version code 2 / `0.1.1-debug`, targeting SDK 36. It points to the real owner command center, and therefore does not make undeployed frontend features available. Its preference export is an origin preference, not an account or draft backup. Android automatic backup is disabled. Never uninstall an existing app to get around a signer mismatch; inspect device package/signing state first.
 
 Soulular desktop releases, model archives, persona libraries, training data and local media are separate products/data stores; they are not needed inside this website or thin Android shell package. Preserve them and their existing release ownership.
 
@@ -27,7 +27,10 @@ Soulular desktop releases, model archives, persona libraries, training data and 
 1. Review and merge the verifier increment through its PR after CI.
 2. Retrieve current migration and exact-main backend artifact evidence plus signed-in private canary evidence. Run only the approved deployment workflows once their factual prerequisites are satisfied.
 3. Compare deployed assets with the release manifest and verify signed-in owner behavior.
-4. Connect the phone; inspect existing package/version/signer, install the compatible APK, then check launch, sign-in and reconnect behavior. App installation is not provider posting permission.
+4. Preserve the existing verified code-2 phone installation. Before a future code-3+
+   update, export supported app preferences, verify the candidate package/version/signer,
+   perform a data-preserving upgrade, then check launch, sign-in and reconnect behavior.
+   App installation is not provider posting permission.
 
 Private local package manifests and build output live under the portfolio stock-take evidence directory. They are not uploaded into the public Pages payload.
 
@@ -47,4 +50,20 @@ PR27 merged as main35c6db9fd61d9f87b90eff9b0b25bb168bfc815d. All five PR checks 
 
 Android offline packaging SUCCEEDED (34tasks) after setting JAVA_TOOL_OPTIONS to short existing java.io.tmpdir and jdk.net.unixdomain.tmpdir directories. Initial failures are retained in private logs. Candidate APK SHA256a3842919112a733ac25c97fc9c7dd25d4daa79c92c024d2fb43e08712454906b: online.mypersonas.owner.debug.local, versionCode1,0.1.0-debug,targetSDK34. It was NOT installed because the authorized phone already has the SAME package at versionCode2,0.1.1-debug,targetSDK36,lastupdatedSeptember30. Preserve newer installation and data; reconcile its source before an upgrade. No downgrade/uninstall or private-account writes. The installed base APK was read back for program/signature verification, without reading app sandbox/user records.
 
-Remaining: current exact-main backend artifact/private canary for production Pages and signed-in acceptance; canonical source reconciliation for the newer installed owner shell. Public website ZIP remains81exact-source files, private/local, not deployed. AliaSpaces/Akasha remains in its separate active release chat; Soulular/personal/model/media stores unchanged.
+Remaining: current exact-main backend artifact/private canary for production Pages and signed-in acceptance. Public website ZIP remains81exact-source files, private/local, not deployed. AliaSpaces/Akasha remains in its separate active release chat; Soulular/personal/model/media stores unchanged.
+
+## Android code-2 provenance readback — October 30, 2026
+
+The retained code-2 source inputs are reconciled into the canonical Android tree.
+Unit tests, lint and assembly pass. The clean candidate is
+`online.mypersonas.owner.debug.local`, code 2, `0.1.1-debug`, min SDK 26 and
+target/compile SDK 36. APK Signature Scheme v2 verifies with the same single signer
+certificate as the retained/live package. All 15 ZIP entries match in name, payload
+hash, uncompressed/compressed length and timestamp.
+
+The whole APK is **not** byte-identical: the clean candidate is 32,096 bytes with
+SHA-256 `b5c3d3f971efd8f846685ac039c73c8a7989aa3e494ff2590e24f056018b164e`;
+the retained/live package is 31,360 bytes with SHA-256
+`2c1567830c75e6ffd7f1c6e03c9331d4911f2ef9835c04f1a1b435e5abe621e5`.
+The difference is outside the identical ZIP entry payloads. The installed package
+was not replaced, downgraded, cleared or otherwise changed.

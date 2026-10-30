@@ -1,0 +1,4 @@
+# The installed Android code-2 APK bundles this asset with CRLF bytes. Keep the
+# payload stable on every checkout so Linux and Windows builds use the same asset.
+apps/personas-android/app/src/main/assets/app-guide.json text eol=crlf
+apps/personas-android/app/src/main/assets/offline-limitations.html text eol=crlf

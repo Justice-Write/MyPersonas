@@ -6,7 +6,7 @@ app="$root/apps/personas-android"
 sdk="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
 
 if [[ -z "$sdk" || ! -d "$sdk" ]]; then
-  echo "Android SDK not found. Set ANDROID_HOME and install platforms;android-34 plus build-tools."
+  echo "Android SDK not found. Set ANDROID_HOME and install platforms;android-36 plus current build-tools."
   echo "This script will not invent a fake publisher APK."
   exit 2
 fi
@@ -19,7 +19,7 @@ else
   gradle_bin="$(command -v gradle || true)"
   if [[ -z "$gradle_bin" ]]; then
     echo "Gradle is not on PATH and apps/personas-android/gradlew is missing."
-    echo "Install Gradle 8.7+ or open apps/personas-android in Android Studio and assemble the debug variant."
+    echo "Install Gradle 8.11.1+ or open apps/personas-android in Android Studio and assemble the debug variant."
     exit 3
   fi
   (cd "$app" && "$gradle_bin" :app:assembleDebug --no-daemon)
