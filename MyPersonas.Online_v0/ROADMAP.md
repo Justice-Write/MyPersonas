@@ -1,5 +1,7 @@
 # MyPersonas automation control plane — Roadmap
 
+> October 29 release continuation: Pages package verification is implemented and tested (533 tests pass; 81 exact-source website members). Deployment still needs the workflow's current migration, backend-artifact and private-canary evidence. Android owner-shell packaging and physical-phone acceptance are separate from website release. See `../docs/RELEASE-PACKAGE-20261029.md`; AliaSpaces/Akasha is owned by the parallel release chat.
+
 
 > October 13: the existing Soul Concept Persona Studio was inspected before building the website creative workspace. See ../docs/CREATIVE-WORKSPACE-2026-10-13.md for implemented website/library/OpenArt scope, tests, and release boundaries. Do not build a duplicate desktop studio from this document.
 
