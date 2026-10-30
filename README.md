@@ -28,8 +28,9 @@ product ownership. See [PROJECT-BOUNDARY.md](PROJECT-BOUNDARY.md).
 - `node scripts/check-frontend-syntax.mjs` — parse-check the single-file app.
 - `.github/workflows/ci.yml` — tests + `deno check` on all edge functions +
   frontend syntax on every PR/push.
-- `.github/workflows/supabase-deploy.yml` — deploys edge functions on merge to
-  `main` (needs the `SUPABASE_ACCESS_TOKEN` secret). See `CI-CD-SETUP.md`.
+- `.github/workflows/supabase-deploy.yml` — owner-triggered, scoped Edge Function
+  deployment from `main`; it does not apply migrations automatically. The protected
+  environment supplies its managed secret. See `CI-CD-SETUP.md` and the workflow.
 
 ## Key docs
 
@@ -44,6 +45,10 @@ product ownership. See [PROJECT-BOUNDARY.md](PROJECT-BOUNDARY.md).
   release-state matrix, data separation and prioritized continuation.
 - `docs/PACKAGE-BOUNDARY-VERIFICATION.md` — repeatable package inventory and
   application/content/runtime-state boundaries.
+- `docs/SURFACE-RELEASE-AND-MANUAL-INDEX.md` — stable source authority, manual and
+  acceptance boundary for each related surface.
+- `docs/OWNER-USER-AND-ACCEPTANCE-GUIDE.md` — owner sign-in, exact-review,
+  sign-out/recovery and unrelated-account acceptance contract.
 
 ## Deployment
 
