@@ -1,5 +1,5 @@
 "use strict";
-// Owner-only website orchestration. Local engines and .persona packages remain in Persona Studio.
+// Owner-only website orchestration. Local engines and identity packages remain in Soulular.
 const creativeState = { generation: 0, revision: 0, formRequest: 0, owner: "", assets: [], jobs: [], projects: [], modes: [], creations: [], quote: null, form: null, selectedMode: null, urls: [], page: 0, more: false };
 function creativeReset() {
   creativeState.generation++;
@@ -15,7 +15,9 @@ function creativeCurrent(ctx) { return session?.user?.id === ctx.owner && privat
 function creativeAssert(ctx) { if (!creativeCurrent(ctx)) throw new Error("The workspace changed. Reopen it before continuing."); }
 function creativeStatus(message) { const node = document.getElementById("creativeStatus"); if (node) node.textContent = message; }
 async function creativeAction(button, task) {
-  const ctx = creativeContext();
+  let ctx;
+  try { ctx = creativeContext(); }
+  catch (error) { creativeStatus(error.message || "Reopen your signed-in private workspace before continuing."); return; }
   if (button) button.disabled = true;
   try { await task(ctx); } catch (e) { if (creativeCurrent(ctx)) creativeStatus(e.message || "The operation could not finish. Refresh before trying again."); }
   finally { if (button?.isConnected && creativeCurrent(ctx)) button.disabled = false; }
@@ -37,7 +39,7 @@ function creativeNav(view) {
   return `<nav class="cw-nav" aria-label="Creative workspace"><a href="#/owner">Personas</a><a href="#/create" ${view === "create" ? 'aria-current="page"' : ""}>Create</a><a href="#/library" ${view === "library" ? 'aria-current="page"' : ""}>Library</a><a href="#/schedule">Review drafts</a></nav>`;
 }
 function creativePersonaOptions(selected = "") { return '<option value="">Unassigned</option>' + (myPersonas || []).filter(p => p.owner === session.user.id).map(p => `<option value="${esc(p.id)}" ${p.id === selected ? "selected" : ""}>${esc(p.name)}</option>`).join(""); }
-function creativeSources() { return CreativeMedia.SOURCES.map(x => `<option value="${x}">${esc(x.replaceAll("_", " "))}</option>`).join(""); }
+function creativeSources() { return CreativeMedia.SOURCES.map(x => `<option value="${x}">${esc(CreativeMedia.sourceLabel(x))}</option>`).join(""); }
 function renderCreativeLanding() {
   app.innerHTML = `<div class="cw-shell cw-landing"><section class="cw-hero"><div><span class="cw-kicker">MyPersonas · Your creative home</span><h2>Every persona.<br>A place to create.</h2><p>Bring your ideas, references, and creative work together. Keep each persona's voice in focus as you move from an early concept to a carefully reviewed draft.</p><div class="cw-actions"><button class="cw-primary" onclick="go('signin')">Open your workspace</button><button onclick="go('search/')">Explore AliaSpaces personas</button></div></div><div class="cw-orbit" aria-hidden="true"><span>IDEA</span><b>Make it<br>your own.</b><span>CREATE · COLLECT · REVIEW</span></div></section><div class="cw-dashboard"><a href="#/signin"><b>Choose your persona</b><small>Your owned roster, voice, and references.</small></a><a href="#/signin"><b>Bring your creative work</b><small>Images, video, and audio from the tools you use.</small></a><a href="#/signin"><b>Review with intention</b><small>Private drafts and exact previews. Approval never sends a post.</small></a></div><section class="cw-panel"><h3>Your tools. A connected workflow.</h3><p class="cw-muted">MyPersonas is your private owner workspace. AliaSpaces is the persona-facing social experience. Local creative assets and generation stay in your desktop studio unless you explicitly choose to import a file.</p><p class="cw-muted">Creative workspace availability depends on your account and the installed release. Sign in to check your connections.</p></section></div>`;
 }
@@ -52,7 +54,7 @@ function creativeImportForm() {
 }
 function creativeAssetCards() {
   const rows = CreativeMedia.filter(creativeState.assets, { query: document.getElementById("creativeSearch")?.value, kind: document.getElementById("creativeKind")?.value, source: document.getElementById("creativeSource")?.value, persona: document.getElementById("creativePersona")?.value });
-  document.getElementById("creativeAssets").innerHTML = rows.length ? rows.map(x => `<article class="cw-asset"><div class="cw-art" aria-hidden="true">${x.kind === "image" ? "▧" : x.kind === "video" ? "▷" : "♫"}</div><div class="cw-asset-body"><span class="cw-tag">${esc(x.source_tool.replaceAll("_", " "))} · ${esc(x.kind)}</span><h3>${esc(x.title)}</h3><p class="cw-muted">${esc(x.project || "No project")} · ${x.source_url ? "Provider-hosted reference" : "Private file"}${x.parent_id ? " · New version" : ""}</p><p class="cw-muted">${esc(x.alt_text || "Description needed")}<br>Unreviewed · training not permitted</p><button data-asset="${esc(x.id)}">Open &amp; describe</button></div></article>`).join("") : '<div class="cw-empty"><h3>A home for your creative work</h3><p>Import a finished image, clip, or audio file—or save an OpenArt result. Try clearing filters if you have already imported files.</p></div>';
+  document.getElementById("creativeAssets").innerHTML = rows.length ? rows.map(x => `<article class="cw-asset"><div class="cw-art" aria-hidden="true">${x.kind === "image" ? "▧" : x.kind === "video" ? "▷" : "♫"}</div><div class="cw-asset-body"><span class="cw-tag">${esc(CreativeMedia.sourceLabel(x.source_tool))} · ${esc(x.kind)}</span><h3>${esc(x.title)}</h3><p class="cw-muted">${esc(x.project || "No project")} · ${x.source_url ? "Provider-hosted reference" : "Private file"}${x.parent_id ? " · New version" : ""}</p><p class="cw-muted">${esc(x.alt_text || "Description needed")}<br>Unreviewed · training not permitted</p><button data-asset="${esc(x.id)}">Open &amp; describe</button></div></article>`).join("") : '<div class="cw-empty"><h3>A home for your creative work</h3><p>Import a finished image, clip, or audio file—or save an OpenArt result. Try clearing filters if you have already imported files.</p></div>';
   document.querySelectorAll("[data-asset]").forEach(b => b.onclick = () => creativeAction(b, ctx => creativeOpenAsset(b.dataset.asset, ctx)));
 }
 async function renderCreativeWorkspace(view) {
@@ -106,7 +108,7 @@ async function creativeOpenAsset(id, ctx) {
   const pane = document.getElementById("creativeDetail");
   pane.innerHTML = `<div class="cw-panel" style="margin-top:24px"><h3>${esc(asset.title)}</h3>${url ? asset.kind === "image" ? `<img class="cw-preview" src="${esc(url)}" alt="${esc(asset.alt_text)}">` : `<${asset.kind} class="cw-preview" src="${esc(url)}" controls preload="metadata"></${asset.kind}>` : `<p class="cw-notice">This is a provider-hosted reference, not a private file copy. Opening it contacts OpenArt. Download it there and import the file here if you need a retained copy.</p><a href="${esc(CreativeMedia.providerUrl(asset.source_url))}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Open selected OpenArt result</a>`}
     ${url ? `<p><a href="${esc(url)}" download="${esc(asset.title)}.${esc(CreativeMedia.TYPES[asset.mime] || 'bin')}">Download private copy</a></p>` : ""}
-    <form id="creativeEdit"><label>Title<input name="title" maxlength="200" value="${esc(asset.title)}" required></label><div class="cw-row"><label>Project<input name="project" maxlength="120" value="${esc(asset.project)}"></label><label>Persona<select name="persona_id">${creativePersonaOptions(asset.persona_id)}</select></label></div><label>Description / alt text<textarea name="alt_text" maxlength="2000">${esc(asset.alt_text)}</textarea></label><label>Notes<textarea name="notes" maxlength="4000">${esc(asset.notes)}</textarea></label><div class="cw-actions"><button type="submit" class="cw-primary">Save description</button><button type="button" id="creativeDraft">Start a private text draft</button><button type="button" id="creativeRemove">Remove from library</button></div></form><p class="cw-muted">Text drafts can reference this asset by title and ID. Media attachment and media approval are not enabled in the four-channel mobile milestone.</p></div>`;
+    <form id="creativeEdit" data-asset-id="${esc(id)}"><label>Title<input name="title" maxlength="200" value="${esc(asset.title)}" required></label><div class="cw-row"><label>Project<input name="project" maxlength="120" value="${esc(asset.project)}"></label><label>Persona<select name="persona_id">${creativePersonaOptions(asset.persona_id)}</select></label></div><label>Description / alt text<textarea name="alt_text" maxlength="2000">${esc(asset.alt_text)}</textarea></label><label>Notes<textarea name="notes" maxlength="4000">${esc(asset.notes)}</textarea></label><div class="cw-actions"><button type="submit" class="cw-primary">Save description</button><button type="button" id="creativeDraft">Start a private text draft</button><button type="button" id="creativeRemove">Remove from library</button></div></form><p class="cw-muted">Text drafts can reference this asset by title and ID. Media attachment and media approval are not enabled in the four-channel mobile milestone.</p></div>`;
   pane.scrollIntoView({ behavior: "smooth", block: "start" });
   document.getElementById("creativeEdit").onsubmit = e => { e.preventDefault(); creativeAction(e.submitter, async ctx => {
     const input = Object.fromEntries(new FormData(e.target)); const meta = CreativeMedia.metadata({ ...asset, ...input, rights_confirmed: true }, ctx.owner, myPersonas);
@@ -114,7 +116,12 @@ async function creativeOpenAsset(id, ctx) {
     const r = await sb.from("owner_media_library").update(changes).eq("id", id).eq("owner", ctx.owner).select("id"); creativeAssert(ctx);
     if (r.error || r.data?.length !== 1) throw new Error("Description could not be saved."); Object.assign(asset, changes); creativeAssetCards(); creativeStatus("Description saved. Approval remains separate.");
   }); };
-  document.getElementById("creativeDraft").onclick = () => { if (!asset.persona_id) { creativeStatus("Assign and save an owned persona first."); return; } ownerAppOpenPrivateDraft(asset.persona_id); const input = document.getElementById("ownerMobileDraftGuidance"); if (input) input.value = `Creative reference only (not attached or approved): ${asset.title}\nLibrary ID: ${asset.id}\n${asset.alt_text}`; };
+  const continuation = document.createElement("div");
+  continuation.className = "cw-notice";
+  continuation.innerHTML = `<b>Continue with this saved asset</b><p>From ${esc(CreativeMedia.sourceLabel(asset.source_tool))} → your private MyPersonas draft → separate AliaSpaces page review. Save any changes first. Only the reference title, ID, source and description enter the text draft; media stays private. Training and publishing stay off.</p><button type="button" id="creativePage">View assigned AliaSpaces page</button><p class="cw-muted">Viewing a page does not publish it or attach this asset.</p>`;
+  pane.appendChild(continuation);
+  document.getElementById("creativeDraft").onclick = e => creativeContinueAsset(id, ctx, e.target, "draft");
+  document.getElementById("creativePage").onclick = e => creativeContinueAsset(id, ctx, e.target, "page");
   document.getElementById("creativeRemove").onclick = e => creativeAction(e.target, async ctx => {
     if (!confirm("Remove this library entry" + (asset.storage_path ? " and its private file copy" : "") + "? Original files in your creative tool are unaffected.")) return;
     if (asset.storage_path) { const r = await sb.storage.from("creative-private").remove([asset.storage_path]); creativeAssert(ctx); if (r.error) throw new Error("File removal failed. The library entry was retained."); }
@@ -122,8 +129,26 @@ async function creativeOpenAsset(id, ctx) {
     if (r.error || r.data?.length !== 1) throw new Error("The entry could not be removed. Refresh and retry entry cleanup."); creativeState.page = 0; await creativeLoadLibrary(ctx); creativeStatus("Removed from your library.");
   });
 }
+function creativeContinueAsset(id, openedContext, button, destination) {
+  return creativeAction(button, async ctx => {
+    creativeAssert(openedContext);
+    const asset = creativeState.assets.find(row => row.id === id && row.owner === ctx.owner);
+    const form = document.getElementById("creativeEdit");
+    if (!form || form.dataset.assetId !== id) throw new Error("Reopen the saved asset before continuing.");
+    const plan = CreativeMedia.handoff(asset, ctx.owner, myPersonas, Object.fromEntries(new FormData(form)));
+    if (destination === "page") {
+      if (!plan.pageRoute) throw new Error("This persona has no saved AliaSpaces handle. Open its owner settings first.");
+      go(plan.pageRoute);
+    } else if (destination === "draft") {
+      if (document.getElementById("ownerPrivateDraftModal")) throw new Error("Finish or cancel the open private draft before starting another.");
+      ownerAppOpenPrivateDraft(plan.personaId);
+      const guidance = document.getElementById("ownerMobileDraftGuidance");
+      if (guidance && document.getElementById("ownerPrivateDraftModal")) guidance.value = plan.guidance;
+    }
+  });
+}
 async function creativeLoadCreate(ctx) {
-  document.getElementById("creativeContent").innerHTML = `<section class="cw-panel"><h3>OpenArt</h3><p class="cw-muted">Use your own OpenArt projects and credits. Connecting does not generate anything.</p><div id="creativeConnection">Checking connection…</div><div class="cw-actions"><button id="creativeConnect">Connect / reconnect OpenArt</button><button id="creativeRefresh">Refresh workspace</button><button id="creativeDisconnect">Disconnect</button></div></section><div id="creativeComposer"></div><section class="cw-panel"><h3>Recent generations</h3><div id="creativeJobs">Load your connection to see generation history.</div></section><section class="cw-panel"><h3>Bring your existing work</h3><p>Export a file from Soul Concept / Persona Studio, DaVinci, Foxy, Higgsfield, or Freebeat and import it into your library. Desktop projects and original files stay in their current home.</p><a href="#/library">Open media library →</a><p class="cw-muted">Higgsfield and Freebeat generation connectors are planned after this OpenArt workflow.</p></section>`;
+  document.getElementById("creativeContent").innerHTML = `<section class="cw-panel"><h3>OpenArt</h3><p class="cw-muted">Use your own OpenArt projects and credits. Connecting does not generate anything.</p><div id="creativeConnection">Checking connection…</div><div class="cw-actions"><button id="creativeConnect">Connect / reconnect OpenArt</button><button id="creativeRefresh">Refresh workspace</button><button id="creativeDisconnect">Disconnect</button></div></section><div id="creativeComposer"></div><section class="cw-panel"><h3>Recent generations</h3><div id="creativeJobs">Load your connection to see generation history.</div></section><section class="cw-panel"><h3>Bring your existing work</h3><p>Export a file from Soulular / Soul Concept, DaVinci, Foxy, Higgsfield, or Freebeat and import it into your library. Desktop projects and original files stay in their current home.</p><a href="#/library">Open media library →</a><p class="cw-muted">Higgsfield and Freebeat generation connectors are planned after this OpenArt workflow.</p></section>`;
   document.getElementById("creativeConnect").onclick = e => creativeAction(e.target, async ctx => { const r = await creativeInvoke("openart-connect", { action: "start" }, ctx); const u = new URL(r.url); if (u.protocol !== "https:" || u.hostname !== "openart.ai" || u.username || u.password || u.port) throw new Error("The authorization destination was not recognized."); location.assign(u.href); });
   document.getElementById("creativeRefresh").onclick = () => renderCreativeWorkspace("create");
   document.getElementById("creativeDisconnect").onclick = e => creativeAction(e.target, async ctx => { if (!confirm("Disconnect MyPersonas from OpenArt? Existing files in OpenArt are retained.")) return; await creativeInvoke("openart-connect", { action: "disconnect" }, ctx); await renderCreativeWorkspace("create"); });
