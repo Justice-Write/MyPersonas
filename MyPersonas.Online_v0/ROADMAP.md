@@ -7,7 +7,9 @@
 > other modal conversions and a separate Reddit contract; PR22 remains open with
 > migration 080 unapplied and no live moderation capability. The protected phone's
 > MyPersonas code-2 shell is backed by reconciled source and remains untouched.
-> Complete the final exact-source package, exact-main backend artifact and signed-in
+> The final-main `35ee29c` exact-source package is complete: 125 members /
+> 83,998,450 bytes, zero parity failures, with 40 media/archive items still requiring
+> destination-specific review. Complete the exact-main backend artifact and signed-in
 > private canary before dispatching the gated Pages release. Reusable code,
 > owner-approved content packs and private runtime data remain explicit separate
 > layers. See `../docs/PROJECT-STOCKTAKE-20261030.md`.
