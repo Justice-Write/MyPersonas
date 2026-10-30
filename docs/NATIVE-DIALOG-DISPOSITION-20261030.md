@@ -42,7 +42,7 @@ The full per-function baseline locations and dispositions are in
 The [Supabase getSession reference](https://supabase.com/docs/reference/javascript/auth-getsession)
 was checked: it supplies the raw session from client storage and may refresh it.
 Server authentication, AAL2, exact account binding and RLS remain authoritative.
-No database or provider query was run for this source-only change; verification
+No live database or provider query was run for this source-only change; verification
 uses synthetic sessions and mocked requests under the no-live-operations boundary.
 
 ## Deliberately retained browser-dependent flows
@@ -74,5 +74,5 @@ Executable regressions cover delayed answers, cancellation, owner/view/auth chan
 changed entities/forms, MFA handoffs, exact accepted operations and session lookup
 races. Static disposition checks prevent new unclassified native calls. Full local
 suite and final hosted checks are recorded in the root handoff and PR receipt.
-No foreground UI, private data, provider, database, migration or device operation
+No foreground UI, private data, provider, live database, migration or device operation
 was used to satisfy these checks.
