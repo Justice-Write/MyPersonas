@@ -1,13 +1,15 @@
 # MyPersonas automation control plane — Roadmap
 
-> October 30 project stocktake: the remote source and CI are current, but the live
-> Pages site remains the September 24 deployment and the last backend release is not
-> bound to current main. The authorized phone's MyPersonas code-2 debug shell is now
-> backed by reconciled source: a clean build matches package metadata, signer and all
-> 15 APK entry payloads, while its outer APK bytes/hash differ and are recorded. The
-> existing install and state remain untouched. Complete the exact-main backend artifact plus signed-in
-> private canary, and only then dispatch the gated Pages release. Generic packages,
-> owner-approved persona content and private runtime data are now explicit separate
+> October 30 project stocktake: product source is current through PR42 / `1f0137e`
+> and merged-main CI is green, but the live Pages site remains the September 24
+> `acadc5d` deployment and the latest backend run retains no exact-current release
+> artifact. PR14 is closed after its current security design; PR20 remains open for
+> other modal conversions and a separate Reddit contract; PR22 remains open with
+> migration 080 unapplied and no live moderation capability. The protected phone's
+> MyPersonas code-2 shell is backed by reconciled source and remains untouched.
+> Complete the final exact-source package, exact-main backend artifact and signed-in
+> private canary before dispatching the gated Pages release. Reusable code,
+> owner-approved content packs and private runtime data remain explicit separate
 > layers. See `../docs/PROJECT-STOCKTAKE-20261030.md`.
 
 > October 29 release continuation: Pages package verification is implemented and tested (533 tests pass; 81 exact-source website members). Deployment still needs the workflow's current migration, backend-artifact and private-canary evidence. Android owner-shell packaging and physical-phone acceptance are separate from website release. See `../docs/RELEASE-PACKAGE-20261029.md`; AliaSpaces/Akasha is owned by the parallel release chat.
@@ -281,10 +283,15 @@ larger product phase remains.
       verify request/accept events plus reconnect/focus fallback under RLS.
 - [x] Comments and reactions on feed posts
 - [x] Feed pagination + hashtag browse pages
-- [~] Per-platform glyph bank: all 42 current `PLATS` entries have bounded inline and
+- [x] Per-platform glyph bank: all 42 current `PLATS` entries have bounded inline and
       standalone SVG glyphs, a typed component map, current link/ledger/owner-portal
-      consumers, exact Pages packaging rules and focused source tests. This is a local
-      source slice from PR20; release and signed-in visual acceptance remain unverified.
+      consumers, exact Pages packaging rules and focused source tests. PR40 merged the
+      bounded source slice; deployed and signed-in visual acceptance remain unverified.
+- [~] Owner-dialog modernization: PR42 merged the hardened dialog primitive and only
+      `owner-app.js`'s nine already-async native-dialog calls. Remaining dialog
+      conversions stay in PR20. Authenticated Chromium, Android WebView and
+      assistive-technology acceptance remain unverified; Reddit compatibility is a
+      separate contract and must not reuse permissive UUID/scope/expiry fallbacks.
 - [x] Proper "act as persona" picker modal for social actions
 - [~] Extensions page: full escaped/bounded catalog cards, GitHub release history, and
       checked-in fallbacks for Concept + Personas are complete locally. Publish real GitHub

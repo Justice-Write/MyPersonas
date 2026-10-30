@@ -10,11 +10,12 @@ credentials, private chat identifiers, device identifiers or owner-media paths.
 |---|---|---|
 | MyPersonas | Canonical private owner/control plane | Owns provider connections, private drafts and approvals, automation, entitlements, audit and the current production-migration authority. |
 | AliaSpaces | Separate first-party social product | Owns public persona presentation, discovery, feeds and social interaction. Shared contracts must remain narrow, versioned and owner-scoped. |
-| Personas | Companion desktop/mobile work | A separate application lineage. Preserve its state and migrate through explicit readers; do not treat it as the MyPersonas web package. |
-| Soulular / Soul Concept | Private creative and reference-media system | Models, reference libraries, training controls, generated media and creative history remain separate from MyPersonas packages. |
+| Persona Studio / Personas | Private desktop/mobile companion tooling | A separate application lineage. Preserve its state and migrate through explicit readers; do not treat it as the MyPersonas web package. |
+| Soulular / Soul Concept | Private creative and reference-media tooling | Models, reference libraries, training controls, generated media and creative history remain separate from MyPersonas packages. |
 | Soul Concept Engine | Consent/provenance infrastructure | Related contracts and tooling, but a separate repository and release track. |
-| Castleborn / CREATE and persona-brand sites | Consumers of persona/canon/content workflows | Private canon and brand workspaces are data, not generic installer members. Each site keeps its own deploy authority. |
-| Noo YouNiverse | Independently deployed brand site with a reviewed source mirror here | The canonical site repository remains its build/deploy authority. Mirroring source into MyPersonas is not a deployment. |
+| Castleborn / CREATE | Consumer of persona/canon/content workflows | Private canon and game workspaces are data, not generic installer members. Its repositories and releases remain independent. |
+| Noo YouNiverse, Being Tea Co, PrintMason and persona-brand sites | Consumers of owner-approved persona content | Each site keeps its own source and deploy authority. A MyPersonas mirror, link or draft is not a site deployment. |
+| Social-management and creator operations | Downstream planning and staging | Drafts, approvals and destination content packs may be prepared here; provider posting remains separately gated and disabled by default. |
 
 The current MyPersonas v0 tree is transitional and still contains historical
 AliaSpaces/social UI. Source location does not change permanent product ownership;
@@ -37,12 +38,12 @@ pull over the owner checkout to make its status look current.
 
 | Layer | Verified state | What it does not prove |
 |---|---|---|
-| Remote source | Main is pushed through `a1a4e6e`; merged-main CI run `41051296609` passed all five substantive jobs. The complete current local suite reports 559/559 passing. | A green merged revision is not deployed or accepted on a device. |
-| GitHub Pages | `https://mypersonas.online` responds over HTTPS. The last successful Pages deployment is revision `acadc5decd4333b4258e86a91cc76c1836ef523c` from September 24, 2026. | The live site is not current `main`. |
-| Backend release | The latest recorded successful backend workflow is revision `813126414fa7554e78f38f6944014b011f5c84cc`; its run retains no exact-main release artifact. | It cannot satisfy the current Pages workflow's exact-revision binding. |
-| Pages candidate | The current allowlist selects 82 exact-source members, including the public sites/apps checklist. A fresh private ZIP from `a1a4e6e` has SHA-256 `6712c6f3f2b4ba9add7d45edbbd2c121961caa2bc4c433fc4331e4a528968476`; verifier and byte-parity audit passed with 0 failures. | Filename and byte checks do not certify media consent, archive contents, credentials hidden inside text, deployment or signed-in behavior. |
-| MyPersonas Android | The proven version-code-2 / `0.1.1-debug` source inputs are reconciled. A clean build matches the installed/retained package ID, SDK levels, signer certificate and all 15 APK entry payloads. | The rebuilt outer APK container is 736 bytes larger and has a different whole-file hash, so it is not claimed byte-identical. The installed package remains untouched; do not downgrade, uninstall or reinstall merely to prove source provenance. |
-| Desktop | No MyPersonas or AliaSpaces Windows installer/PWA installation is evidenced. Personas and Soul Concept are separate installed applications. | Their presence is not a MyPersonas desktop release. |
+| Remote source | Product source is reconciled through `1f0137e` (PR42); merged-main CI run `41068633552` passed all five substantive jobs. This documentation-only successor adds no runtime capability. PR39–PR42 are merged, PR14 is closed as superseded, and PR20/PR22 remain open for their unresolved unique scope. | A green merged revision is not deployed or accepted on a device. |
+| GitHub Pages | `https://mypersonas.online` responds over HTTPS. The last successful Pages deployment is revision `acadc5d` in run `35981622035` from September 24, 2026. | The live site is not current `main`. |
+| Backend release | The latest recorded successful backend workflow is revision `8131264` in run `38448350086`; the run retains zero release artifacts. | It cannot satisfy the current Pages workflow's exact-revision binding. |
+| Pages candidate | The verified private package from the prior `e7f47bf` main selected 125 exact-source members and passed byte-parity checks with no failures. PR42 and this documentation supersede it; a fresh package from final exact main is still pending. | Filename and byte checks do not certify media consent, archive contents, credentials hidden inside text, deployment or signed-in behavior. |
+| Phone applications | MyPersonas local code 2 and cloud code 1 are installed; the reconciled code-2 source baseline remains the protected upgrade reference. AliaSpaces production and acceptance shells are code 7. Separate Soul Concept and Persona Studio applications are also present. | Presence is not current-main deployment, provider acceptance or authorization to reinstall. Preserve app state and do not downgrade merely to create a new receipt. |
+| Windows applications | No MyPersonas or AliaSpaces native Windows install was found. Browser-profile inspection was intentionally excluded, so PWA installation is unconfirmed rather than disproved. Persona Studio and Soul Concept are separate installed applications. | Their presence is not a MyPersonas desktop release, and their private libraries are not installer inputs. |
 | Provider publishing | `publishing_enabled` remains false; saved approvals and manual plans are not provider sends. | No social post, queue or schedule is live merely because source or drafts exist. |
 
 The Pages workflow is manual by design. A release needs current migration/provider
@@ -66,13 +67,16 @@ The installation model has three explicit layers:
    exports, models/adapters, logs, caches, backups and device/app sandboxes. This is
    never an installer payload.
 
-The repository contains a large ignored `outputs/` tree used for research, media,
-approvals and working evidence. It is not source and must remain excluded. The
-tracked persona/avatar/banner and launch assets are identity-bearing content even
-when intentionally public; move toward an owner-approved content sidecar instead of
-assuming they belong in every reusable build. Installed creative-application roots
-also contain large owner reference libraries, so copying an installed directory is
-not a valid packaging method.
+Fresh machine inventory confirms that ignored outputs, owner reference media,
+generated media and private application/runtime state are much larger than the
+reusable source and runtime binaries. Exact private sizes and locations remain in
+the owner-only audit. The repository's ignored `outputs/` tree is used for research,
+media, approvals and working evidence; it is not source and must remain excluded.
+Tracked persona/avatar/banner and launch assets are identity-bearing content even
+when intentionally public, so they should move toward destination-specific,
+owner-approved content sidecars instead of being assumed to belong in every build.
+Copying an installed creative-application directory is never a valid packaging
+method because those roots also contain private libraries and runtime state.
 
 Secrets, signing inputs, local environment files and production credentials stay
 outside repositories and artifacts. A development debug keystore is never a
@@ -81,28 +85,35 @@ must never be promoted as release artifacts.
 
 ## Roadmap continuation
 
-1. **Completed:** the family handoff/private-draft review is reconciled, all nine
-   declared historical receipt hashes reproduce and the complete suite is green.
-2. **In progress:** older conflicting pull requests are triaged by unique change.
-   PR8, PR15, PR23 and PR25 are closed only after verified supersession. PR20 and
-   PR22 retain unique work; PR14 requires a current security/release redesign for
-   its feed, push, Expo, SDK and migration proposals. Preserve them for focused
-   extraction rather than bulk merge or deletion.
-3. **Source provenance completed:** MyPersonas Android version code 2 now has a
+1. **Current-main stocktake completed through PR42:** PR39 records the safe PR14
+   security/release redesign and PR14 is closed; PR40 carries the bounded PR20 glyph
+   bank; PR41 records the PR22 moderation security design; and PR42 carries the
+   hardened nine-call owner-dialog slice. Exact-main CI is green. None of those
+   source merges is a deployment, provider send or device acceptance receipt.
+2. **Preserve unresolved pull requests:** PR20 remains open for the remaining modal
+   conversions and a separately hardened Reddit contract; do not import its
+   permissive UUID, scope or expiry fallbacks. PR22 remains open until the owner
+   resolves authority/recusal, reporter privacy, immutable evidence/events,
+   retention/legal hold, transitions, duplicate handling and cross-product
+   authority. Migration 080 is unapplied and no live moderation capability exists.
+3. **Source provenance completed:** MyPersonas Android version code 2 has a
    reviewed canonical source baseline. The clean candidate matches its manifest,
    package/version, signer and every APK entry payload; the differing outer container
    hash is recorded. Keep the already-installed code-2 package and its state. Any
    future code-3+ upgrade still needs export/backup, manifest/signer checks and
    launch/sign-in acceptance. Never uninstall to solve a signer or version problem.
-4. Confirm the authenticated production migration/provider ledger. Run the backend
+4. **Package closeout pending:** rebuild the private exact-source package from final
+   main after this documentation lands; retain the earlier 125-member package only
+   as superseded evidence. Package parity still does not authorize a deployment.
+5. Confirm the authenticated production migration/provider ledger. Run the backend
    release for the exact intended main revision, retain its artifact and complete
    the signed-in private canary.
-5. Dispatch the gated Pages workflow only with those current facts. Read back live
+6. Dispatch the gated Pages workflow only with those current facts. Read back live
    hashes, routes and signed-in owner workflows after deployment.
-6. Continue the MyPersonas/AliaSpaces extraction with one deployment owner per
+7. Continue the MyPersonas/AliaSpaces extraction with one deployment owner per
    function/migration and complete unrelated-account privacy, real-phone MFA and
    native save/restore acceptance in AliaSpaces' own release lane.
-7. Externalize owner content and creative libraries from reusable installers; add a
+8. Externalize owner content and creative libraries from reusable installers; add a
    release manifest with source revision, artifact hash, signer, package/version,
    data path, migration policy and post-update readback.
 
