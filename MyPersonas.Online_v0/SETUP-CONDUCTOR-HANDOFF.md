@@ -97,7 +97,7 @@ After steps 1–3 are live-verified, create one low-value, expiring, tightly cap
 ### 5. Revenue sequence
 
 1. PrintMason: release current shop pages; create one hidden $19 Payhip product; test purchase, delivery, refund, receipt, tax/payout assumptions; then make it public.
-2. Being Tea Co: verify the full consent email sequence, Search Console, and Bookshop application. Use the existing editorial library instead of generating more content.
+2. Being Tea Co: verify the full consent email sequence, Search Console, and Bookshop application. Use the existing editorial library instead of generating more content. Akiko Sasaki (`@castleborn.akiko`) is the public Being Tea Co host; the former Brother Kāruṇya / `brother_karunya` identity is retired and must not be restored. Akiko's Castleborn family connections and details remain private-by-default; this host decision does not make them public.
 3. Fix My Frozen PC: fix TLS and deploy bounded intake/Ask Brom; publish real owner-supplied hours, territory, and prices.
 4. MyPersonas: finish the centralized request-review workflow. A fail-closed phase-1 local
    intake now provides exact-origin CORS, bounded JSON, Turnstile verification, rotating

@@ -149,7 +149,7 @@ Each folder holds the persona's `*-MASTER-*-ROADMAP-PROMPT.md` (system prompt/br
 are superseded.** The roster:
 
 - `adam-contractors-club/` — Adam Atiq · contractor/trades
-- `akiko-being-tea-launch-2026-08-08/` — Akiko Sasaki · Being Tea Co (tea) — largest kit; site in `outputs/beingteaco-website/`
+- `akiko-being-tea-launch-2026-08-08/` — Akiko Sasaki (`@castleborn.akiko`) · Being Tea Co (tea) — largest kit; site in `outputs/beingteaco-website/`. **Owner ruling carried forward from 2026-09-18:** Akiko is the public Being Tea Co host. The former Brother Kāruṇya / `brother_karunya` identity is retired and must not be restored. It must not be used as a tea host. Akiko's Castleborn family connections and details remain private-by-default.
 - `alexei-print-mason/` — Alexei Grigoriev · Print Mason (printing)
 - `avi-launch-2026-08-08/` — Avi Dev · Always Cooked Just Right (cooking)
 - `brom-fix-my-frozen-pc/` — Brom Grigoriev · PC repair
@@ -178,7 +178,9 @@ verified live persona row. Enki's surname remains unconfirmed; do not infer it.
 
 ### Consolidated + platform content
 - `MyPersonas.Online_v0/content/persona-launch-pack-2026-08-01.json` — all bios, purposes, topics,
-  hashtags, campaigns in one place (includes the Castleborn creator-voice definition).
+  hashtags, campaigns in one place (includes the Castleborn creator-voice definition). It no
+  longer contains `brother_karunya`; use Akiko Sasaki / `@castleborn.akiko` as the public Being
+  Tea Co host without making her private Castleborn family details public.
 - `MyPersonas.Online_v0/content/wais-launch-2026-08-08/` — WAIS launch kit (brand voice roadmap,
   30-post approval pack, chat starter, visual prompt matrix, platform-compliance notes).
 - `MyPersonas.Online_v0/persona-briefs/2026-08-10-persona-updates.md` — cross-persona update log.
