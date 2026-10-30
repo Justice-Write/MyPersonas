@@ -37,10 +37,10 @@ pull over the owner checkout to make its status look current.
 
 | Layer | Verified state | What it does not prove |
 |---|---|---|
-| Remote source | Main and recent pull requests are pushed; current-main CI is green. The family private-handoff review is reconciled separately and its complete local suite reports 556/556 passing. | A green branch is not merged, deployed or accepted on a device. |
+| Remote source | Main is pushed through `a1a4e6e`; merged-main CI run `41051296609` passed all five substantive jobs. The complete current local suite reports 559/559 passing. | A green merged revision is not deployed or accepted on a device. |
 | GitHub Pages | `https://mypersonas.online` responds over HTTPS. The last successful Pages deployment is revision `acadc5decd4333b4258e86a91cc76c1836ef523c` from September 24, 2026. | The live site is not current `main`. |
 | Backend release | The latest recorded successful backend workflow is revision `813126414fa7554e78f38f6944014b011f5c84cc`; its run retains no exact-main release artifact. | It cannot satisfy the current Pages workflow's exact-revision binding. |
-| Pages candidate | The current allowlist selects 82 exact-source members, including the public sites/apps checklist, and the verifier rejects extras, changed bytes, links and common private filenames. | Filename and byte checks do not certify media consent, archive contents, credentials hidden inside text or signed-in behavior. |
+| Pages candidate | The current allowlist selects 82 exact-source members, including the public sites/apps checklist. A fresh private ZIP from `a1a4e6e` has SHA-256 `6712c6f3f2b4ba9add7d45edbbd2c121961caa2bc4c433fc4331e4a528968476`; verifier and byte-parity audit passed with 0 failures. | Filename and byte checks do not certify media consent, archive contents, credentials hidden inside text, deployment or signed-in behavior. |
 | MyPersonas Android | The proven version-code-2 / `0.1.1-debug` source inputs are reconciled. A clean build matches the installed/retained package ID, SDK levels, signer certificate and all 15 APK entry payloads. | The rebuilt outer APK container is 736 bytes larger and has a different whole-file hash, so it is not claimed byte-identical. The installed package remains untouched; do not downgrade, uninstall or reinstall merely to prove source provenance. |
 | Desktop | No MyPersonas or AliaSpaces Windows installer/PWA installation is evidenced. Personas and Soul Concept are separate installed applications. | Their presence is not a MyPersonas desktop release. |
 | Provider publishing | `publishing_enabled` remains false; saved approvals and manual plans are not provider sends. | No social post, queue or schedule is live merely because source or drafts exist. |
@@ -84,8 +84,10 @@ must never be promoted as release artifacts.
 1. **Completed:** the family handoff/private-draft review is reconciled, all nine
    declared historical receipt hashes reproduce and the complete suite is green.
 2. **In progress:** older conflicting pull requests are triaged by unique change.
-   The fully superseded branch was closed; the remaining candidates are retained for
-   focused extraction rather than bulk merge or deletion.
+   PR8, PR15, PR23 and PR25 are closed only after verified supersession. PR20 and
+   PR22 retain unique work; PR14 requires a current security/release redesign for
+   its feed, push, Expo, SDK and migration proposals. Preserve them for focused
+   extraction rather than bulk merge or deletion.
 3. **Source provenance completed:** MyPersonas Android version code 2 now has a
    reviewed canonical source baseline. The clean candidate matches its manifest,
    package/version, signer and every APK entry payload; the differing outer container
