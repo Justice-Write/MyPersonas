@@ -2,9 +2,10 @@
 
 > October 30 project stocktake: the remote source and CI are current, but the live
 > Pages site remains the September 24 deployment and the last backend release is not
-> bound to current main. The authorized phone has a newer MyPersonas debug shell than
-> canonical source can reproduce, so it must be preserved rather than downgraded.
-> Reconcile source/signing, complete exact-main backend artifact plus signed-in
+> bound to current main. The authorized phone's MyPersonas code-2 debug shell is now
+> backed by reconciled source: a clean build matches package metadata, signer and all
+> 15 APK entry payloads, while its outer APK bytes/hash differ and are recorded. The
+> existing install and state remain untouched. Complete the exact-main backend artifact plus signed-in
 > private canary, and only then dispatch the gated Pages release. Generic packages,
 > owner-approved persona content and private runtime data are now explicit separate
 > layers. See `../docs/PROJECT-STOCKTAKE-20261030.md`.

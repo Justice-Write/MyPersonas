@@ -39,14 +39,24 @@ public class OwnerActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        com.portfolio.guide.AppGuide.install(this);
         setContentView(R.layout.activity_owner);
+        com.portfolio.guide.WindowSafety.apply(this);
         web = findViewById(R.id.ownerWeb);
         WebSettings settings = web.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(false);
         settings.setAllowContentAccess(false);
+        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         web.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                Uri page = Uri.parse(url);
+                if (!"https".equals(page.getScheme()) || !"mypersonas.online".equals(page.getHost())) return;
+                String css = "body{background:#fafaf7!important;color:#10213b}h1,h2{font-family:Georgia,serif!important;font-weight:400!important;letter-spacing:-.025em}button,input,select{min-height:48px}button{border-radius:24px}input,textarea,select{border-radius:14px} :focus-visible{outline:3px solid #5778b0;outline-offset:3px}";
+                view.evaluateJavascript("(()=>{let s=document.getElementById('personas-mobile-design');if(!s){s=document.createElement('style');s.id='personas-mobile-design';document.head.appendChild(s)}s.textContent=" + JSONObject.quote(css) + ";})()", null);
+            }
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 Uri uri = request.getUrl();
@@ -84,11 +94,7 @@ public class OwnerActivity extends Activity {
     }
 
     boolean allowedOwnerUrl(String url) {
-        if (url == null) return false;
-        return url.startsWith("https://mypersonas.online/")
-            || url.startsWith("http://10.0.2.2:")
-            || url.startsWith("http://127.0.0.1:")
-            || url.startsWith("http://localhost:");
+        return OwnerUrlPolicy.allowed(url, BuildConfig.DEBUG);
     }
 
     boolean online() {
@@ -175,9 +181,12 @@ public class OwnerActivity extends Activity {
     void importPrefs() {
         File in = new File(getExternalFilesDir(null), "owner-mobile-prefs.json");
         try (FileInputStream stream = new FileInputStream(in)) {
-            byte[] raw = new byte[(int) in.length()];
-            int read = stream.read(raw);
-            JSONObject bundle = new JSONObject(new String(raw, 0, Math.max(read, 0), StandardCharsets.UTF_8));
+            long length = in.length();
+            if (length <= 0 || length > 65536) throw new IllegalStateException("Invalid preferences file size");
+            byte[] raw = new byte[(int) length];
+            new java.io.DataInputStream(stream).readFully(raw);
+            if (stream.read() != -1) throw new IllegalStateException("Preferences file changed during import");
+            JSONObject bundle = new JSONObject(new String(raw, StandardCharsets.UTF_8));
             if (!EXPORT_VERSION.equals(bundle.optString("version"))) {
                 throw new IllegalStateException("Unrecognized export version");
             }

@@ -41,7 +41,7 @@ pull over the owner checkout to make its status look current.
 | GitHub Pages | `https://mypersonas.online` responds over HTTPS. The last successful Pages deployment is revision `acadc5decd4333b4258e86a91cc76c1836ef523c` from September 24, 2026. | The live site is not current `main`. |
 | Backend release | The latest recorded successful backend workflow is revision `813126414fa7554e78f38f6944014b011f5c84cc`; its run retains no exact-main release artifact. | It cannot satisfy the current Pages workflow's exact-revision binding. |
 | Pages candidate | The allowlist selects 81 exact-source members and the verifier rejects extras, changed bytes, links and common private filenames. | Filename and byte checks do not certify media consent, archive contents, credentials hidden inside text or signed-in behavior. |
-| MyPersonas Android | A newer owner debug shell is installed on the authorized phone than the APK reproducible from this repository. The installed package is version code 2 / `0.1.1-debug`; the reviewed source candidate is code 1 / `0.1.0-debug`. | Installed code 2 is not yet reproducible from the canonical source/signing record. Do not downgrade or uninstall it. |
+| MyPersonas Android | The proven version-code-2 / `0.1.1-debug` source inputs are reconciled. A clean build matches the installed/retained package ID, SDK levels, signer certificate and all 15 APK entry payloads. | The rebuilt outer APK container is 736 bytes larger and has a different whole-file hash, so it is not claimed byte-identical. The installed package remains untouched; do not downgrade, uninstall or reinstall merely to prove source provenance. |
 | Desktop | No MyPersonas or AliaSpaces Windows installer/PWA installation is evidenced. Personas and Soul Concept are separate installed applications. | Their presence is not a MyPersonas desktop release. |
 | Provider publishing | `publishing_enabled` remains false; saved approvals and manual plans are not provider sends. | No social post, queue or schedule is live merely because source or drafts exist. |
 
@@ -81,15 +81,17 @@ must never be promoted as release artifacts.
 
 ## Roadmap continuation
 
-1. Reconcile the family handoff/private-draft review with exact current `main`, make
-   its historical receipt hashes reproducible, rerun the full suite and complete
-   review before merge.
-2. Preserve and triage older conflicting pull requests by unique change, not branch
-   age. Close only after equivalence/supersession is recorded.
-3. Reconcile MyPersonas Android version-code-2 source and signing provenance. Build
-   an equal-or-newer package, verify its manifest/hash/signer, then perform a
-   data-preserving upgrade and launch/sign-in acceptance. Never uninstall to solve a
-   signer or version problem.
+1. **Completed:** the family handoff/private-draft review is reconciled, all nine
+   declared historical receipt hashes reproduce and the complete suite is green.
+2. **In progress:** older conflicting pull requests are triaged by unique change.
+   The fully superseded branch was closed; the remaining candidates are retained for
+   focused extraction rather than bulk merge or deletion.
+3. **Source provenance completed:** MyPersonas Android version code 2 now has a
+   reviewed canonical source baseline. The clean candidate matches its manifest,
+   package/version, signer and every APK entry payload; the differing outer container
+   hash is recorded. Keep the already-installed code-2 package and its state. Any
+   future code-3+ upgrade still needs export/backup, manifest/signer checks and
+   launch/sign-in acceptance. Never uninstall to solve a signer or version problem.
 4. Confirm the authenticated production migration/provider ledger. Run the backend
    release for the exact intended main revision, retain its artifact and complete
    the signed-in private canary.
