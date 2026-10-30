@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "id": "PFR-010-owner-private-draft-manual-parity-20261024",
+  "createdUtc": "2026-10-24 16:58:37 UTC",
+  "scope": "LOCAL_DOCUMENTATION_SOURCE_PARITY_ONLY",
+  "worktree": "<private-local-root>/Documents/w/om",
+  "branch": "codex/owner-workflow-manual-20261024",
+  "baseRevision": "813126414fa7554e78f38f6944014b011f5c84cc",
+  "acceptance": {
+    "deliverable": "Private four-channel owner draft/review guide with exact source labels, binding/size/media limits, saved-byte and AAL2 preview gates, manual planning and uncertain-response cautions.",
+    "completedBoundedSlice": true,
+    "fourProductManualRequirementComplete": false,
+    "appOrSqlChanged": false,
+    "liveOrInstalledAcceptance": false
+  },
+  "changedPaths": [
+    "MyPersonas.Online_v0/OWNER-PRIVATE-DRAFT-GUIDE.md",
+    "MyPersonas.Online_v0/OWNER-MOBILE-COMMAND-CENTER.md",
+    "MyPersonas.Online_v0/ROADMAP.md",
+    "tests/owner-private-workflow-manual-parity.test.mjs"
+  ],
+  "verification": {
+    "command": "node --test --test-concurrency=1 tests/owner-private-workflow-manual-parity.test.mjs tests/mobile-owner-workflow.test.mjs tests/mobile-private-draft-authorization.test.mjs tests/content-package-preview-gate.test.mjs tests/owner-mobile-command-center.test.mjs tests/owner-research-content-hardening.test.mjs",
+    "passed": 42,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "durationMs": 420.7921,
+    "newParityTests": 10,
+    "scope": "Static source/SQL inspection, parsed scripts, VM DOM stubs and synthetic pure-helper inputs. No actual Supabase/backend/browser/device/provider workflow, SQL execution or applied-ledger verification.",
+    "logPath": "<private-local-root>/Documents/Projects/MyPersonas/Reports and deliverables/Hourly-Roadmap-20261024/owner-workflow-manual-final.log",
+    "logSha256": "682a238e7005bd148f468ab3889547246202e9726542f9564dc5c6591a75f92a",
+    "artifactAndSourceSealsBeforeAfterMatched": 9,
+    "applicationSqlDiffEmpty": true,
+    "independentSourceReview": {
+      "result": "CLEAR after corrections",
+      "scope": "Guide and command-center diff versus main8131264; read-only, not security or runtime acceptance",
+      "corrections": [
+        "Only eligible non-suspended owned provider rows count; ineligible extras ignored",
+        "Full media-plan inspection in exact preview, not editor indicator",
+        "Close reopened editor before proposed time card",
+        "Blank title default, discard/no-autosave and Matrix Accounts/OAuth distinctions",
+        "AAL2 requirement explicitly documented"
+      ]
+    },
+    "freshReader": {
+      "questions": 8,
+      "passed": 8,
+      "result": "No blocking ambiguity after refinements; document comprehension only"
+    }
+  },
+  "seals": [
+    {
+      "Path": "MyPersonas.Online_v0/OWNER-PRIVATE-DRAFT-GUIDE.md",
+      "SHA256": "282ed6ede94c40b42f4613b4cd0c955fecc9c95e7e75044f67b66e3e857e8a6c"
+    },
+    {
+      "Path": "MyPersonas.Online_v0/OWNER-MOBILE-COMMAND-CENTER.md",
+      "SHA256": "8426dfeee9b59049774cf7074534637824a2319c6e27517d8e910db0ba93d78b"
+    },
+    {
+      "Path": "MyPersonas.Online_v0/ROADMAP.md",
+      "SHA256": "761d8c63fe24c7b5749da939cb61391fbf9109b5f449dfeeb03ea5f66e78c6bc"
+    },
+    {
+      "Path": "tests/owner-private-workflow-manual-parity.test.mjs",
+      "SHA256": "8b44e204404e28cf26d10a98e0c32acecd34e12f85cb62ed0ccaf7231f946a11"
+    },
+    {
+      "Path": "MyPersonas.Online_v0/owner-app.js",
+      "SHA256": "4f4c07cb123a3dfb4a15030383448a7a1e477a4668e2670df7d35237677db881"
+    },
+    {
+      "Path": "MyPersonas.Online_v0/mobile-owner-workflow.js",
+      "SHA256": "83fba1b969b4df1f2640c24eb539e3f0f25c45b0ae6c948302b03c99d68fdfa0"
+    },
+    {
+      "Path": "MyPersonas.Online_v0/sql-updates/073-content-package-preview-gate.sql",
+      "SHA256": "547b9ab2816399ef67ba46a5cbeb01b9428a7386c467e515b453261cd3ca105c"
+    },
+    {
+      "Path": "MyPersonas.Online_v0/sql-updates/077-mobile-private-draft-workflow.sql",
+      "SHA256": "9fa8fdd0f6a172823a0ff60b535d25dd583b36c462c4064efcbf465e9cdc972d"
+    },
+    {
+      "Path": "MyPersonas.Online_v0/index.html",
+      "SHA256": "9e56f8f885e4c96c0015142ce03dcc4dd461e0fd2b7a98a76f2946e4b00638c6"
+    }
+  ],
+  "localPreparationIssue": {
+    "error": "Initial long-path worktree add refused a historical tmp file: Filename too long. Git removed failed worktree; created branch retained.",
+    "recovery": "Reused same branch at shorter <private-local-root>/Documents/w/om. No global Git config change, recursive delete or owner-file reset."
+  },
+  "remaining": [
+    "Actual linked migration/release status",
+    "Signed-in two-account isolation",
+    "Actual phone/browser create-save-reload-preview-approve/manual-plan acceptance",
+    "Unknown outcome reconciliation/idempotency implementation not added or qualified",
+    "Complete four-product manuals and current native/cloud acceptance"
+  ],
+  "preservation": {
+    "trainingEnabled": false,
+    "publishingEnabled": false,
+    "ownerDataModelsInstalledAppAccessed": false,
+    "canonicalDirtyOwnerCheckoutPreserved": true,
+    "providerOperations": false,
+    "secretAccess": false,
+    "download": false,
+    "install": false,
+    "merge": false,
+    "deploy": false,
+    "migration": false,
+    "push": false,
+    "gpuOrGeneration": false,
+    "purchasesOrPaidCredits": false
+  },
+  "supabaseGuidance": {
+    "scope": "Read-only source-backed documentation, no Supabase feature/query/schema implementation. Changelog fetched as text and official RPC reference checked; no linked project tools or keys accessed.",
+    "urls": [
+      "https://supabase.com/changelog.md",
+      "https://supabase.com/docs/reference/javascript/rpc"
+    ]
+  },
+  "localCommit": "Recorded externally in hourly checkpoint after commit to avoid self-referential receipt.",
+  "publicRedaction": {
+    "machineIdentityPathsRemoved": true,
+    "privateOriginalRetainedOutsideSource": true,
+    "scope": "Historical receipt metadata redacted; not a new hash or runtime acceptance claim"
+  }
+}

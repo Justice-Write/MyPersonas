@@ -45,5 +45,22 @@
     return items.filter(x => (!kind || x.kind === kind) && (!source || x.source_tool === source) && (!persona || x.persona_id === persona) &&
       (!term || [x.title, x.project, x.notes, x.alt_text].join(" ").toLowerCase().includes(term)));
   }
-  root.CreativeMedia = Object.freeze({ MAX_BYTES, TYPES, SOURCES, uuid, fileType, validateBytes, providerUrl, unpack, modes, metadata, filter });
+  function sourceLabel(source) {
+    // Preserve the deployed source enum and all existing rows.
+    return source === "soul_concept" ? "Soulular / Soul Concept" : String(source || "upload").replaceAll("_", " ");
+  }
+  function handoff(asset, owner, personas, edited) {
+    if (!uuid(owner) || !asset || asset.owner !== owner || !uuid(asset.id)) throw new Error("Reopen this asset in your own private library.");
+    const persona = (Array.isArray(personas) ? personas : []).find(p => p.id === asset.persona_id && p.owner === owner);
+    if (!persona || !uuid(persona.id)) throw new Error("Assign and save an owned persona first.");
+    for (const key of ["title", "persona_id", "project", "alt_text", "notes"]) {
+      if (String(edited[key] || "") !== String(asset[key] || "")) throw new Error("Save your description and persona changes before continuing.");
+    }
+    const handle = typeof persona.handle === "string" && /^[a-z0-9][a-z0-9._-]{0,99}$/i.test(persona.handle) ? persona.handle : "";
+    return Object.freeze({ personaId: persona.id, personaName: persona.name || "Owned persona", source: sourceLabel(asset.source_tool),
+      pageRoute: handle ? "p/" + encodeURIComponent(handle) : "",
+      guidance: `Creative reference only (not attached or approved): ${String(asset.title || "").slice(0,200)}\nLibrary ID: ${asset.id}\nCreated with: ${sourceLabel(asset.source_tool)}\n${String(asset.alt_text || "").slice(0,2000)}`,
+      training_allowed: false, publishing_enabled: false });
+  }
+  root.CreativeMedia = Object.freeze({ MAX_BYTES, TYPES, SOURCES, uuid, fileType, validateBytes, providerUrl, unpack, modes, metadata, filter, sourceLabel, handoff });
 })(globalThis);

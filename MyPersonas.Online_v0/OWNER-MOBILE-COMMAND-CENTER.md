@@ -1,8 +1,14 @@
 # Owner mobile command center
 
-_Local implementation contract, 2026-08-22. This document separates the installable
-owner experience that is implemented in this checkout from native and desktop capabilities
-that still require packaging, deployment, and device verification._
+_Architecture contract begun 2026-08-22, with the private draft/review instructions
+source-checked on 2026-10-24. Source implementation is separate from deployment,
+packaging and signed-in device acceptance; dated release statements are not a fresh
+verification of the linked backend._
+
+For the exact owner steps, use [Create and review a private four-channel kit](OWNER-PRIVATE-DRAFT-GUIDE.md).
+It covers account-binding prerequisites, the text-only composer, saved edits,
+separate approval/manual-schedule previews and uncertain-response handling. The
+walkthrough does not publish or authorize a release.
 
 ## Product shape
 
@@ -28,10 +34,12 @@ publishing remains behind the separate immutable-media approval path.
 - `#/owner`: mobile home with persona picker, searchable owned-persona sheet, private
   four-channel draft composer, review queue, context-aware sticky CTA, voice card, owner chat,
   briefing, queue, account portal, AI route, and activity entry points.
-  `publishing_enabled` stays false. Migration 077 is local/unapplied.
+  `publishing_enabled` stays false. Migration 077 supplies the private creation RPC;
+  its current linked apply state must be checked against the actual release ledger.
   The sticky phone CTA hides over sheets, previews, and focused fields. Reject uses
   `delete_owner_content_package_draft` and never publishes. More → Export / import prefs
-  writes only the local selected-persona helper, not draft bodies.
+  transfers selected-persona preferences and bounded draft-ID references, not draft
+  bodies, media or authentication. It is not a draft backup.
 - `#/briefs`: account-wide research queue with persona/status filters, short/study/full
   reading modes, source links, owner comments, text highlights, image references, topic
   approval/rejection, and brief-to-content-kit generation.

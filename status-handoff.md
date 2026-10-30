@@ -46,7 +46,7 @@
 
 
 ## In progress
-- None. Release enforcement merged in PR27; audit and startup-test follow-through are committed in PR26.
+- None. Public-safe source projection prepared and verified; pending PR review and existing release prerequisites.
 ## Current state
 Integrated release/audit candidate; backend evidence and private canary remain unverified. PR28 records a newer installed Android shell than the rebuilt candidate: preserve it; do not downgrade.
 ## Work log
@@ -80,3 +80,6 @@ PR27 merged as main35c6db9fd61d9f87b90eff9b0b25bb168bfc815d. All five PR checks 
 Android offline packaging SUCCEEDED (34tasks) after setting JAVA_TOOL_OPTIONS to short existing java.io.tmpdir and jdk.net.unixdomain.tmpdir directories. Initial failures are retained in private logs. Candidate APK SHA256a3842919112a733ac25c97fc9c7dd25d4daa79c92c024d2fb43e08712454906b: online.mypersonas.owner.debug.local, versionCode1,0.1.0-debug,targetSDK34. It was NOT installed because the authorized phone already has the SAME package at versionCode2,0.1.1-debug,targetSDK36,lastupdatedSeptember30. Preserve newer installation and data; reconcile its source before an upgrade. No downgrade/uninstall or private-account writes. The installed base APK was read back for program/signature verification, without reading app sandbox/user records.
 
 Remaining: current exact-main backend artifact/private canary for production Pages and signed-in acceptance; canonical source reconciliation for the newer installed owner shell. Public website ZIP remains81exact-source files, private/local, not deployed. AliaSpaces/Akasha remains in its separate active release chat; Soulular/personal/model/media stores unchanged.
+
+## Public-safe source projection — 2026-10-30
+Recovered existing family transfer and owner-private-draft guide source into a current-main review branch. Original historical commits are not parents of this branch; private original documentation/receipt retained outside source. Public docs replace personal machine/evidence paths with placeholders. Fixed one roadmap context conflict by preserving both the current release notice and historical guide note. Final555Node tests pass with0failures/skips, frontend syntax and diff checks pass. No SQL/deployment/provider/runtime/owner-data/phone changes. This source review does not claim live family transfer or two-account acceptance. Source originally39e897a/e79f85f and26c712e; published projection has redacted metadata.
