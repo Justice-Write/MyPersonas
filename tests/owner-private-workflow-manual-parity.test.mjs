@@ -285,10 +285,11 @@ test("approval and subsequent manual schedule remain separate from provider send
 
 test("reject is a confirmed destructive draft deletion rather than reversible hiding", () => {
   const reject = appFunction("ownerAppRejectPackage");
-  const confirmAt = reject.indexOf('confirm("Delete this owner-review draft? Nothing is published. This cannot be undone.")');
+  const confirmAt = reject.indexOf('await appConfirm("Delete this owner-review draft? Nothing is published. This cannot be undone."');
   const deleteAt = reject.indexOf('sb.rpc("delete_owner_content_package_draft"');
   assert.ok(confirmAt !== -1 && deleteAt > confirmAt);
-  assert.match(reject.slice(confirmAt, deleteAt), /return/);
+  assert.match(reject.slice(confirmAt, deleteAt), /destructive:\s*true/);
+  assert.match(reject.slice(confirmAt, deleteAt), /ownerAppDialogEntityCurrent/);
   assert.match(prose, /Reject draft asks to delete the owner-review draft/i);
   assert.match(prose, /cannot be undone/i);
   assert.match(prose, /not a reversible hide button or a provider deletion/i);
