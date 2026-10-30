@@ -76,3 +76,7 @@ races. Static disposition checks prevent new unclassified native calls. Full loc
 suite and final hosted checks are recorded in the root handoff and PR receipt.
 No foreground UI, private data, provider, live database, migration or device operation
 was used to satisfy these checks.
+
+## Later synthetic browser checkpoint
+
+See [browser qualification](BROWSER-DIALOG-QUALIFICATION-20261030.md): nine headless Edge checks now establish shared-dialog popup activation and existing synthetic callback behavior. They expose concrete popup-feedback/cancellation semantics; all five native calls and full acceptance gates remain.
