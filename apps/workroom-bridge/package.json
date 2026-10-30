@@ -13,6 +13,6 @@
     "check": "node --check main.cjs && node --check provider-policy.cjs"
   },
   "devDependencies": {
-    "electron": "44.9.3"
+    "electron": "44.10.0"
   }
 }
