@@ -6,6 +6,15 @@
 does not authorize a deployment, database migration, DNS change, provider
 permission, publication, payment activation, or account change.
 
+## Domains (owner ruling 2026-10-31)
+
+- `aliaspaces.com` is the social media site.
+- `mypersonas.online` is reserved for managing the AI-assisted persona platform
+  that runs inside AliaSpaces.
+
+Until the independent AliaSpaces client is ready, both domains serve the same
+live build, split by view. See `docs/DOMAIN-SPLIT.md`.
+
 ## MyPersonas owns
 
 - External-provider credentials, token refresh, official-API publishing workers,

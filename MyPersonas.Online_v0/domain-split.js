@@ -1,0 +1,150 @@
+// Domain split (owner ruling 2026-10-31):
+//   aliaspaces.com     — the AliaSpaces social site (persona pages, feeds, persona view).
+//   mypersonas.online  — reserved for managing the AI-assisted persona platform
+//                        (owner workspace, creative tools, automation, providers).
+// Both domains serve this same build. This file decides which domain a view
+// belongs to. It loads before the app, has no dependencies, and never redirects
+// on any other host (localhost, previews, tests keep every view).
+(() => {
+  "use strict";
+
+  const SOCIAL_ORIGIN = "https://aliaspaces.com";
+  const CONTROL_ORIGIN = "https://mypersonas.online";
+  const SOCIAL_HOSTS = Object.freeze(["aliaspaces.com", "www.aliaspaces.com"]);
+  const CONTROL_HOSTS = Object.freeze(["mypersonas.online", "www.mypersonas.online"]);
+  // The owner workspace. Mirrors PERSONA_VIEW_OWNER_ROUTES in persona-view.js;
+  // tests/domain-split.test.mjs keeps the two lists identical. The Overview
+  // owner home ("owner" outside Persona view) is also management.
+  const CONTROL_VIEWS = Object.freeze([
+    "create", "library", "studio", "edit", "review", "persona-settings", "business-settings",
+    "agent-board", "platform-queue", "briefs", "schedule", "fan-inbox",
+    "activity", "notifications", "discovery", "onboard",
+  ]);
+  // Public social surfaces. They always render on aliaspaces.com.
+  const SOCIAL_VIEWS = Object.freeze(["p", "b", "tag", "search", "friend-invite"]);
+  // Added to every cross-domain hop. A page that arrives with it never bounces
+  // straight back, so a stale deployment on either side cannot cause a loop.
+  const HOP_PARAM = "hop";
+
+  const controlViews = new Set(CONTROL_VIEWS);
+  const socialViews = new Set(SOCIAL_VIEWS);
+
+  function roleFor(hostname) {
+    const host = String(hostname || "").toLowerCase();
+    if (SOCIAL_HOSTS.includes(host)) return "social";
+    if (CONTROL_HOSTS.includes(host)) return "control";
+    return "local";
+  }
+
+  function pathFromHash(hash) {
+    return String(hash || "").replace(/^#\/?/, "");
+  }
+
+  function viewFromPath(path) {
+    return String(path || "").split("/")[0];
+  }
+
+  function hopUrl(origin, path) {
+    return `${origin}/?${HOP_PARAM}=1#/${path}`;
+  }
+
+  // Which domain owns this view. "both" means it renders wherever it is opened.
+  function owner(view, state = {}) {
+    if (controlViews.has(view)) return "control";
+    if (socialViews.has(view)) return "social";
+    if (view === "owner" && state.ready && state.mode !== "persona") return "control";
+    return "both";
+  }
+
+  // Pure decision: the URL to leave for, or null to stay.
+  function destination({ role, hash, ready = false, mode = "overview" }) {
+    if (role !== "social" && role !== "control") return null;
+    const path = pathFromHash(hash);
+    const side = owner(viewFromPath(path), { ready, mode });
+    if (role === "social" && side === "control") return hopUrl(CONTROL_ORIGIN, path);
+    if (role === "control" && side === "social") return hopUrl(SOCIAL_ORIGIN, path);
+    return null;
+  }
+
+  function cleanPublicPath(path) {
+    return String(path || "").replace(/^#?\/?/, "");
+  }
+
+  // Share links always point at the social site, except on local hosts.
+  function publicUrlFor(path, loc) {
+    const clean = cleanPublicPath(path);
+    if (roleFor(loc && loc.hostname) === "local") {
+      return `${loc.origin}${String(loc.pathname || "/").replace(/index\.html$/, "")}#/${clean}`;
+    }
+    return `${SOCIAL_ORIGIN}/#/${clean}`;
+  }
+
+  function managementUrlFor(path, loc) {
+    const clean = cleanPublicPath(path);
+    if (roleFor(loc && loc.hostname) === "local") {
+      return `${loc.origin}${String(loc.pathname || "/").replace(/index\.html$/, "")}#/${clean}`;
+    }
+    return hopUrl(CONTROL_ORIGIN, clean);
+  }
+
+  const api = {
+    SOCIAL_ORIGIN, CONTROL_ORIGIN, SOCIAL_HOSTS, CONTROL_HOSTS, CONTROL_VIEWS, SOCIAL_VIEWS, HOP_PARAM,
+    roleFor, owner, destination, publicUrlFor, managementUrlFor,
+  };
+
+  const root = typeof globalThis !== "undefined" ? globalThis : undefined;
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  const loc = root && root.location;
+  if (!loc || typeof loc.hostname !== "string") { if (root) root.MyPersonasDomains = api; return; }
+
+  const role = roleFor(loc.hostname);
+  let arrivedByHop = false;
+  try {
+    const url = new URL(loc.href);
+    if (url.searchParams.get(HOP_PARAM) === "1") {
+      arrivedByHop = true;
+      url.searchParams.delete(HOP_PARAM);
+      if (root.history && typeof root.history.replaceState === "function") {
+        root.history.replaceState(root.history.state, "", url.pathname + url.search + url.hash);
+      }
+    }
+  } catch (_) {}
+  // The other domain just sent us here for this exact view, so never send it
+  // straight back. Once the visitor moves to another view, normal rules apply.
+  const arrivalHash = arrivedByHop ? String(loc.hash || "") : null;
+
+  function leaveFor(state = {}) {
+    if (arrivalHash !== null && String(loc.hash || "") === arrivalHash) return null;
+    return destination({ role, hash: loc.hash, ready: !!state.ready, mode: state.mode });
+  }
+
+  function leave(state) {
+    const url = leaveFor(state);
+    if (!url) return false;
+    loc.replace(url);
+    return true;
+  }
+
+  // In-app navigation to another domain's view opens that domain instead of
+  // changing the hash. Returns true when it navigated away.
+  function goAcross(path, state = {}) {
+    const url = destination({ role, hash: `#/${cleanPublicPath(path)}`, ready: !!state.ready, mode: state.mode });
+    if (!url) return false;
+    loc.assign(url);
+    return true;
+  }
+
+  root.MyPersonasDomains = Object.freeze({
+    ...api,
+    role: () => role,
+    leave,
+    leaveFor,
+    goAcross,
+    publicUrl: (path) => publicUrlFor(path, loc),
+    managementUrl: (path) => managementUrlFor(path, loc),
+    socialHome: () => (role === "local" ? null : `${SOCIAL_ORIGIN}/`),
+  });
+
+  // Views that never depend on the session leave before the app boots.
+  leave({ ready: false });
+})();

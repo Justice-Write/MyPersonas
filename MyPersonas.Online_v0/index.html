@@ -33,6 +33,7 @@
 <link rel="stylesheet" href="./agent-board.css?v=20260822-2">
 <link rel="stylesheet" href="./ai-content-provenance.css?v=20260823-2">
 <link rel="stylesheet" href="./profile-image-crop.css?v=20260823-1">
+<script src="./domain-split.js?v=20261031-1"></script>
 <script src="./pwa.js" defer></script>
 <script src="./profile-image-crop.js?v=20260823-1" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7/dist/umd/supabase.min.js" integrity="sha384-BmlQlKlDvXvKoxkn5OQuUo/aJQCTXeB+Kls6EccBmG4Kf8AXvp89RtO9MtPxP/r5" crossorigin="anonymous"></script>
@@ -446,7 +447,7 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
     <span class="menuwrap" data-overview-nav>
       <button onclick="toggleSiteMenu(event)">Menu ▾</button>
       <div id="siteMenu">
-        <button onclick="siteGo('')">Discover (Entangle)</button>
+        <button onclick="closeSiteMenu();goDiscover()">Discover (Entangle)</button>
         <button onclick="siteGo('owner')">Owner home</button>
         <button onclick="siteGo('create')">Create with OpenArt</button>
         <button onclick="siteGo('library')">Private media library</button>
@@ -523,9 +524,9 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
 <script src="./image-caption-drafting.js?v=20261009-1"></script>
 <script src="./creative-media.js?v=20261013-1"></script>
 <script src="./creative-workspace.js?v=20261030-1"></script>
-<script src="./owner-app.js?v=20261013-1"></script>
+<script src="./owner-app.js?v=20261031-1"></script>
 <script src="./persona-view.js?v=20261030-1"></script>
-<script src="./platform-governance.js?v=20261030-2"></script>
+<script src="./platform-governance.js?v=20261031-1"></script>
 <script src="./agent-board.js?v=20261030-1"></script>
 <script src="./ai-content-provenance.js?v=20260823-2"></script>
 <script>
@@ -853,15 +854,20 @@ async function boundedAssetBlob(response,maxBytes=50*1024*1024){
   return blob;
 }
 async function downloadPersonaAssetCopy(button){const overlay=document.getElementById("personaAssetPreview"),url=safeHttpUrl(overlay?.dataset?.assetUrl||""),label=overlay?.dataset?.assetLabel||"Persona asset";if(!url||!button)return;button.disabled=true;button.textContent="Preparing…";try{const response=await fetch(url,{credentials:"omit",referrerPolicy:"no-referrer",cache:"no-store"});if(!response.ok)throw new Error(`Asset server returned ${response.status}`);const blob=await boundedAssetBlob(response),name=safePersonaAssetFilename(url,label,blob.type);dlBlob(name,blob);toast("Asset copy downloaded")}catch(error){toast("Direct copy was blocked. Open the original and use your browser's Save as command.")}finally{button.disabled=false;button.textContent="Save a copy"}}
-function go(h){if(typeof ownerAppToggleMore==="function")ownerAppToggleMore(false,false);location.hash="#/"+h}
+function go(h){if(typeof ownerAppToggleMore==="function")ownerAppToggleMore(false,false);if(globalThis.MyPersonasDomains&&MyPersonasDomains.goAcross(h,domainState()))return;location.hash="#/"+h}
+// Domain split: aliaspaces.com is the social site, mypersonas.online the owner workspace. See domain-split.js.
+function domainRole(){return globalThis.MyPersonasDomains?MyPersonasDomains.role():"local"}
+function domainState(){return{ready:!!session&&privateSessionReady,mode:typeof ownerAppIsPersonaMode==="function"&&ownerAppIsPersonaMode()?"persona":"overview"}}
+function goDiscover(){const home=domainRole()==="control"?MyPersonasDomains.socialHome():null;if(home){location.assign(home);return}go("")}
+function publicPageUrl(handle){return globalThis.MyPersonasDomains?MyPersonasDomains.publicUrl("p/"+handle):location.origin+location.pathname.replace(/index\.html$/,"")+"#/p/"+handle}
 async function copyText(t){
   try{if(!navigator.clipboard?.writeText)throw new Error("Clipboard unavailable");await navigator.clipboard.writeText(t);toast("Copied ✓");return true}
   catch(error){toast("Copy failed or was cancelled. Nothing was sent; review the text and try copying again.");return false}
 }
-function pageUrl(handle){return location.host+location.pathname.replace(/index\.html$/,"")+"#/p/"+handle}
+function pageUrl(handle){return publicPageUrl(handle).replace(/^https?:\/\//,"")}
 function ico(n){return `<svg class="ico" aria-hidden="true"><use href="#i-${n}"/></svg>`}
 function platformGlyph(id){const key=id&&Object.prototype.hasOwnProperty.call(PLATS,id)?id:"other";return PLATFORM_ICONS[key]()}
-function sharePage(handle){copyText(location.origin+location.pathname.replace(/index\.html$/,"")+"#/p/"+handle)}
+function sharePage(handle){copyText(publicPageUrl(handle))}
 function setMeta(title,desc){
   document.title=title;
   const set=(sel,val)=>{const m=document.querySelector(sel);if(m)m.setAttribute("content",val)};
@@ -1317,7 +1323,7 @@ function renderSidebar(){
       ${nav(view==="agent-board","agent-board","chip","Agent board")}
       ${nav(view==="platform-queue","platform-queue","shield","Staff queue")}
       ${nav(view==="discovery","discovery","chip","Legacy Brain")}
-      ${nav(view===""||view==="search","","compass","Discover")}
+      ${domainRole()==="control"?`<button class="railitem" onclick="goDiscover()">${ico("compass")}<span>Discover on AliaSpaces ↗</span></button>`:nav(view===""||view==="search","","compass","Discover")}
     </div>
     <div class="raillabel">Your personas</div>
     <div class="railpersonas">${personaRailHtml(activePid)}</div>
@@ -1340,7 +1346,9 @@ async function route(){
   document.body.classList.remove("custom-bg");document.body.style.backgroundImage="";
   document.body.classList.toggle("app-bg",!!session);
   const view=h.split("/")[0],arg=decodeURIComponent(h.split("/").slice(1).join("/")||"");
-  const ownerSurface=["owner","create","library","schedule","briefs","activity","notifications","studio"].includes(view)||!view;
+  if(globalThis.MyPersonasDomains&&MyPersonasDomains.leave(domainState()))return;
+  const siteRole=domainRole();
+  const ownerSurface=siteRole==="social"?false:siteRole==="control"?true:(["owner","create","library","schedule","briefs","activity","notifications","studio"].includes(view)||!view);
   document.getElementById("siteIdentity").textContent=ownerSurface?"MyPersonas":"AliaSpaces";
   if(ownerSurface)setMeta("MyPersonas — your private creative workspace","Organize your personas, selected creative media, and private drafts in one owner workspace. Review exact previews before approval.");
   if(typeof personaViewRouteGuard==="function"&&personaViewRouteGuard(view))return;
@@ -1350,7 +1358,8 @@ async function route(){
   if(typeof syncPersonaViewChrome==="function")syncPersonaViewChrome();
   if(typeof ownerAppMobileNav==="function")ownerAppMobileNav();
   if(session&&!privateSessionReady){if(mfaLoginGate.active)renderMfaLoginGate();else app.innerHTML='<div class="empty">Checking sign-in security…</div>';return}
-  if(!session&&!view)return renderCreativeLanding();
+  if(siteRole==="control"&&session&&!view){history.replaceState(history.state,"","#/owner");return route()}
+  if(!session&&!view&&siteRole!=="social")return renderCreativeLanding();
   if(view==="p")return renderPersonaPage(arg,false,myEpoch);
   if(view==="review")return renderPublicationReview(arg);
   if(view==="persona-settings")return renderPersonaSettings(arg);
@@ -3027,7 +3036,7 @@ function promoTexts(p,url){
 }
 function openPromo(pid){
   const p=myPersonas.find(x=>x.id===pid)||pageState.p;if(!p)return;
-  const url=location.origin+location.pathname.replace(/index\.html$/,"")+"#/p/"+p.handle;
+  const url=publicPageUrl(p.handle);
   const texts=promoTexts(p,url);
   const eU=encodeURIComponent(url);
   const o=document.createElement("div");o.className="overlay";o.id="promoOv";
