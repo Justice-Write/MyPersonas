@@ -1,6 +1,6 @@
 # MyPersonas release preflight — 2026-10-30
 
-**Last updated:** 2026-10-30 UTC
+**Last updated:** 2026-11-02 Alaska
 
 ## 0. Operating rule — every agent, every time (mandatory)
 
@@ -54,7 +54,16 @@
 
 
 
+
+
+
 ## Current state
+
+- 2026-11-02 final release review: removed four runtime anonymity/unlinkability absolutes from route/Discover/sign-in copy; public media may reveal persona connections. Actual isolated-page metadata/body assertions added. Final964 unit tests and six Edge checks pass; previous963 candidate is superseded. No release/backend change; source freeze after this commit until coordinator exact-SHA sequence completes.
+
+- 2026-11-02 Codex DOMAIN-RECONCILIATION source candidate complete: main6b099fc + regressiondaacf6a + domain98ca542 reconciled; host identity/manifest/offline metadata corrected, callback query preservation and exact GitHub workflow-path guard qualified. 963/963 tests, syntax/diff and six isolated full-page Edge checks PASS. No backend/migration changes,082/reports excluded. Candidate branch codex/domain-reconciliation-20261102; source PR/pin supplied to release coordinator01a130c5-301b, who owns merge/backend/auth/canary/deploy. Alia builder owner01a1290c-ed8c owns social artifact identity. See docs/DOMAIN-RELEASE-EVIDENCE-20261102.md. Real auth/private canary remains unverified; no independent deployment.
+
+- 2026-11-02 Codex recovered-chat source restart: remote main freshly verified6b099fc; added24 synthetic unsubscribe destination/final-confirmation regressions (39 focused/930 full tests PASS; diff check PASS). Runtime unchanged. Local-only branch codex/dialog-regressions-20261102. No competing MyPersonas dialog writer found; canonical dirty checkout preserved. See docs/SOURCE-RESTART-20261102.md. Five native flows calls remain; real browser/device acceptance and held backend/report/MFA/canary/provenance decisions remain. No push/merge/deploy/device/UI operations.
 
 - 2026-10-30 Codex BROWSER-DEFECT-FIX complete: OAuth Cancel now aborts before exchange; accepted blank model remains optional. Noopener feedback no longer falsely reports blocking; mailbox target context and business copy packet are guarded. Clipboard rejection/cancellation is handled. 906 unit tests and nine isolated Edge checks pass. Five native dialogs and real clipboard/mail-handler/WebView/provider acceptance remain; no release or personal-data operations. Earlier test-only findings below are historical.
 
@@ -117,6 +126,12 @@ Public-safe project/release/data boundaries are recorded in `docs/PROJECT-STOCKT
 - The historical workspace root is gone. Use the canonical repository through isolated worktrees and preserve the dirty owner checkout.
 - Preserve PR20 after the glyph and nine-call dialog slices. Remaining modal conversions and Reddit/provider compatibility are unresolved; the merged dialog slice does not authorize provider behavior.
 ## Work log
+
+- 2026-11-02 final release review: removed four runtime anonymity/unlinkability absolutes from route/Discover/sign-in copy; public media may reveal persona connections. Actual isolated-page metadata/body assertions added. Final964 unit tests and six Edge checks pass; previous963 candidate is superseded. No release/backend change; source freeze after this commit until coordinator exact-SHA sequence completes.
+
+- 2026-11-02 Codex DOMAIN-RECONCILIATION source candidate complete: main6b099fc + regressiondaacf6a + domain98ca542 reconciled; host identity/manifest/offline metadata corrected, callback query preservation and exact GitHub workflow-path guard qualified. 963/963 tests, syntax/diff and six isolated full-page Edge checks PASS. No backend/migration changes,082/reports excluded. Candidate branch codex/domain-reconciliation-20261102; source PR/pin supplied to release coordinator01a130c5-301b, who owns merge/backend/auth/canary/deploy. Alia builder owner01a1290c-ed8c owns social artifact identity. See docs/DOMAIN-RELEASE-EVIDENCE-20261102.md. Real auth/private canary remains unverified; no independent deployment.
+
+- 2026-11-02 Codex recovered-chat source restart: remote main freshly verified6b099fc; added24 synthetic unsubscribe destination/final-confirmation regressions (39 focused/930 full tests PASS; diff check PASS). Runtime unchanged. Local-only branch codex/dialog-regressions-20261102. No competing MyPersonas dialog writer found; canonical dirty checkout preserved. See docs/SOURCE-RESTART-20261102.md. Five native flows calls remain; real browser/device acceptance and held backend/report/MFA/canary/provenance decisions remain. No push/merge/deploy/device/UI operations.
 
 - 2026-10-30 Codex BROWSER-DEFECT-FIX complete: OAuth Cancel now aborts before exchange; accepted blank model remains optional. Noopener feedback no longer falsely reports blocking; mailbox target context and business copy packet are guarded. Clipboard rejection/cancellation is handled. 906 unit tests and nine isolated Edge checks pass. Five native dialogs and real clipboard/mail-handler/WebView/provider acceptance remain; no release or personal-data operations. Earlier test-only findings below are historical.
 

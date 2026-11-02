@@ -156,7 +156,12 @@ function ownerAppRestorePersona(uid) {
   } catch (_) {}
   const savedPersona = ownerAppSelectedPersonaStrict(saved);
   ownerAppState.selectedPersonaId = savedPersona?.id || myPersonas[0]?.id || "";
-  ownerAppState.viewMode = savedMode === "persona" && !!savedPersona ? "persona" : "overview";
+  // Domain split: Persona view is the AliaSpaces social experience, Overview is
+  // the MyPersonas owner workspace. Local hosts keep the saved choice.
+  const siteRole = globalThis.MyPersonasDomains ? globalThis.MyPersonasDomains.role() : "local";
+  ownerAppState.viewMode = siteRole === "social" ? (ownerAppSelectedPersonaStrict() ? "persona" : "overview")
+    : siteRole === "control" ? "overview"
+    : (savedMode === "persona" && !!savedPersona ? "persona" : "overview");
   ownerAppState.perspectiveGeneration += 1;
   ownerAppRememberViewMode(uid);
   if (typeof syncPersonaViewChrome === "function") syncPersonaViewChrome();
@@ -178,6 +183,9 @@ function ownerAppRememberPersona(personaId, syncCompanion = true) {
 
 function ownerAppSetViewMode(mode, navigate = true) {
   const next = mode === "persona" ? "persona" : "overview";
+  const domains = globalThis.MyPersonasDomains, siteRole = domains ? domains.role() : "local";
+  if (navigate && siteRole === "control" && next === "persona") { location.assign(`${domains.SOCIAL_ORIGIN}/#/owner`); return true; }
+  if (navigate && siteRole === "social" && next === "overview") { location.assign(domains.managementUrl("owner")); return true; }
   if (next === "persona" && !ownerAppSelectedPersonaStrict()) {
     if (typeof toast === "function") toast("Create or select a persona before entering Persona view");
     return false;

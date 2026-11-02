@@ -83,6 +83,6 @@ test("provider-capable site deployment requires both migration ledgers", () => {
   assert.match(finalGate, /\.head_sha[\s\S]*GITHUB_SHA/);
   assert.match(finalGate, /\.head_branch[\s\S]*"main"/);
   assert.match(finalGate, /\.conclusion[\s\S]*"success"/);
-  assert.match(finalGate, /supabase-deploy\\\.yml@/);
+  assert.match(finalGate, /supabase-deploy\\\.yml\(@refs\/heads\/main\)\?\$/);
   assert.match(finalGate, /git\/ref\/heads\/main[\s\S]*current_main_sha[\s\S]*GITHUB_SHA/);
 });

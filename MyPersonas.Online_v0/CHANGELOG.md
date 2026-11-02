@@ -1,5 +1,25 @@
 # Changelog — AliaSpaces / MyPersonas
 
+## Domain identity and current-source reconciliation (2026-11-02)
+
+Reconciled the social/automation domain split with current dialog fixes. Corrected MyPersonas install/offline/structured identity; runtime metadata follows host. Authentication callback queries remain on their originating host until consumed. Added executable route/MFA-readiness/metadata checks and isolated full-page smoke. Backend workflow path validation now accepts the exact GitHub bare path without weakening revision/canary gates. Source-only pending coordinated release.
+
+## Domain split: aliaspaces.com social, mypersonas.online management (2026-10-31)
+
+Status: **implemented and tested in source; not deployed.** Owner ruling: aliaspaces.com is the
+social site; mypersonas.online is reserved for managing AI-assisted personas.
+
+- New `domain-split.js` loads first. On aliaspaces.com, owner-workspace views open on
+  mypersonas.online. On mypersonas.online, public persona, business, tag, search and invite
+  views open on aliaspaces.com. Other hosts are unchanged.
+- aliaspaces.com always uses Persona view, and mypersonas.online always uses Overview.
+  Switching modes opens the other domain.
+- Share and invite links always use aliaspaces.com. Each domain has its own sign-in.
+- `?hop=1` stops redirect loops while the two domains are released at different times.
+- Needs the aliaspaces.com Supabase Auth redirect URLs before aliaspaces.com serves the site.
+
+See docs/DOMAIN-SPLIT.md in the repository root.
+
 ## Browser defect fixes - 2026-10-30 (PR48)
 
 OAuth Cancel now aborts before exchange; accepted blank model remains optional. Noopener feedback no longer falsely reports blocking; mailbox target context and business copy packet are guarded. Clipboard rejection/cancellation is handled. 906 unit tests and nine isolated Edge checks pass. Five native dialogs and real clipboard/mail-handler/WebView/provider acceptance remain; no release or personal-data operations.
