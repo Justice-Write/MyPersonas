@@ -35,6 +35,7 @@ try{
   assert.equal(new URL(page.url()).hostname,host);if(heading)assert.ok((await page.locator('#app').innerText()).includes(heading));
   assert.equal(await page.locator('meta[property="og:site_name"]').getAttribute('content'),brand);
   assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'),`https://${host}/`);
+  assert.doesNotMatch(await page.locator('body').innerText(),/never linked|identity stays private|never show who owns/i);assert.doesNotMatch(await page.locator('meta[name="description"]').getAttribute('content'),/anonymous|never linked|unlinkab/i);
   assert.deepEqual(errors,[]);results.push({url,final:page.url(),brand,rendered:true});await page.close();
  }
  console.log(JSON.stringify({browser:browser.version(),results,limits:'Synthetic signed-out backend only; real auth/MFA/canary/provider acceptance not performed'},null,2));

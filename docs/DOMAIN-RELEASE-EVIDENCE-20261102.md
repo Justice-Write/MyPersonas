@@ -66,4 +66,6 @@ values out of the public evidence report. No new migration is introduced here.
 
 ## Candidate verification
 
-963/963 Node tests PASS; all changed frontend script syntax and diff checks PASS. Six full-source-page headless Edge156 checks PASS with synthetic signed-out auth; 22 additional executable domain/metadata/workflow cases cover signed-in branches and MFA readiness with mocked data. Actual production auth/canary remains unverified. No backend/migration diff against6b099fc.
+964/964 Node tests PASS; all changed frontend script syntax and diff checks PASS. Six full-source-page headless Edge156 checks PASS with synthetic signed-out auth; 23 additional executable domain/metadata/workflow cases cover signed-in branches and MFA readiness with mocked data. Actual production auth/canary remains unverified. No backend/migration diff against6b099fc.
+
+Final review also removes runtime anonymity/unlinkability promises; rendered DOM and description assertions cover all six browser routes. Public media and linked accounts may reveal connections.

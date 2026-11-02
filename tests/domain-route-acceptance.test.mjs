@@ -63,3 +63,5 @@ test('backend workflow path guard accepts GitHub run path forms without acceptin
  for(const field of ['head_sha','head_branch','event','status','conclusion'])assert.ok(workflow.includes(`--jq .${field}`));
  assert.match(workflow,/IMAGE-CAPTION-CANARY-VERIFIED/);assert.match(workflow,/sha=\$\{GITHUB_SHA\}/);
 });
+
+test("runtime social copy does not promise anonymity or unlinkability",()=>{assert.doesNotMatch(html,/never linked to your identity|identity stays private|never show who owns|[Aa]nonymous persona pages/);});

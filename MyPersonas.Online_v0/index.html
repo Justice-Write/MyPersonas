@@ -1338,7 +1338,7 @@ async function route(){
   if(window.MyPersonasProfileCrop)window.MyPersonasProfileCrop.cancel();
   if(document.getElementById("personaAssetPreview"))closePersonaAssetPreview();
   if(document.getElementById("pageBuilderOv"))closePageBuilder(false);
-  setMeta("AliaSpaces — every persona, one home","A home page for every side of you. Create anonymous persona pages with feeds, albums, music, Top 8 friends and every account you live on — never linked to your identity.");
+  setMeta("AliaSpaces — every persona, one home","Discover persona pages, feeds, albums, music, friends and creative communities on AliaSpaces.");
   const myEpoch=++renderEpoch;
   if(typeof creativeReset==="function")creativeReset();
   if(typeof ownerAppToggleMore==="function")ownerAppToggleMore(false,false);
@@ -1399,7 +1399,7 @@ function renderSignin(){
   if(session){go("owner");return}
   app.innerHTML=`<div class="card authbox">
     <h3 class="center">Welcome to ${domainRole()==="control"?"MyPersonas":"AliaSpaces"}</h3>
-    <p class="muted center">One account, many personas. Your identity stays private — pages never show who owns them.</p>
+    <p class="muted center">One account, many personas. Review what each persona shares and its visibility settings before publishing.</p>
     <button class="btn" style="width:100%;margin-top:14px" onclick="googleSignin()">Continue with Google</button>
     <hr>
     <label>Email</label>
@@ -1656,7 +1656,7 @@ function acceptPersonaDiscoveryPage(state,raw){const fresh=(raw||[]).filter(row=
 function renderPersonaDiscoveryGrid(){const state=personaDiscovery,grid=document.getElementById("personaDiscoveryGrid"),wrap=document.getElementById("personaDiscoveryMoreWrap");if(!grid||state.epoch!==renderEpoch)return;const rows=filteredPersonaDiscovery(state.rows);grid.innerHTML=state.error&&!state.rows.length?'<div class="empty">Public personas could not be loaded. Try again.</div>':rows.map(pCard).join("")||'<div class="empty">Nothing here yet — be the first to create a page.</div>';if(wrap)wrap.innerHTML=state.done?"":`<button class="btn sec" onclick="loadMorePersonaDiscovery()" ${state.busy?"disabled":""}>${state.busy?"Loading…":state.error?"Try loading again":"Load more personas"}</button>`}
 async function loadMorePersonaDiscovery(){const state=personaDiscovery;if(state.busy||state.done)return;state.busy=true;state.error="";const requestId=++state.requestId;renderPersonaDiscoveryGrid();const result=await publicPersonaQuery(state);if(personaDiscovery!==state||state.epoch!==renderEpoch||requestId!==state.requestId)return;state.busy=false;if(result.error)state.error=result.error.message;else acceptPersonaDiscoveryPage(state,result.data||[]);renderPersonaDiscoveryGrid()}
 async function renderDiscover(q,epoch=++renderEpoch){
-  setMeta("AliaSpaces — every persona, one home","A home page for every side of you. Anonymous persona pages with feeds, albums, music, Top 8 and all your links.");
+  setMeta("AliaSpaces — every persona, one home","Discover persona pages, feeds, albums, music, friends and creative communities on AliaSpaces.");
   app.innerHTML='<div class="empty">Loading…</div>';
   const state=personaDiscovery=newPersonaDiscovery(q,epoch),discovery=await publicPersonaQuery(state);if(epoch!==renderEpoch||personaDiscovery!==state)return;if(discovery.error)state.error=discovery.error.message;else acceptPersonaDiscoveryPage(state,discovery.data||[]);const ps=filteredPersonaDiscovery(state.rows);
   let recent=[],recentError=false;
@@ -1668,7 +1668,7 @@ async function renderDiscover(q,epoch=++renderEpoch){
       <div class="card"><h3>${ico("mask")}A page for every side of you</h3>
         <p class="muted" style="font-size:14px">The artist. The gamer. The reviewer. The creator. The internet let us express our many personas — AliaSpaces gives each one its own home page, with its own look, feed, albums, music, and friends.</p></div>
       <div class="card"><h3>${ico("shield")}Anonymous by design</h3>
-        <p class="muted" style="font-size:14px">Your personas are never linked to your identity or to each other. Share what you choose, where you choose. Private and unlisted pages, blocking, and content filters keep every space one you can find peace in.</p></div>
+        <p class="muted" style="font-size:14px">Choose what each persona shares. Private and unlisted pages, blocking, and content filters help you manage visibility. Public media and account links may reveal connections between personas; review them before publishing.</p></div>
       <div class="card"><h3>${ico("spark")}Bring them to life</h3>
         <p class="muted" style="font-size:14px">Modern tools take personas beyond a profile: give each one an AI voice that helps it write and plan, link every account it lives on across the web, go live, and connect with the personas of others.</p></div>
     </div>`;
