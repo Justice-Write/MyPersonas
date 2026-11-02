@@ -36,7 +36,7 @@ test("Save and view waits for the completed save and routes with the refreshed p
   const { savePersona } = await editorSections();
   assert.match(savePersona, /async function savePersona\(destination="default"\)/);
   assert.match(savePersona, /const savedPersona=_pid\?myPersonas\.find\(p=>p\.id===_pid\):null/);
-  assert.match(savePersona, /if\(destination==="view"&&savedPersona\?\.handle\)\{go\("p\/"\+savedPersona\.handle\);return\}/);
+  assert.match(savePersona, /if\(destination==="view"&&savedPersona\?\.handle\)\{go\("owner-preview\/"\+savedPersona\.handle\);return\}/);
   assert.match(savePersona, /go\(requiresReview\?"review\/"\+_pid:"p\/"\+\(savedPersona\?\.handle\|\|handle\)\)/);
 
   const finalRefresh = savePersona.lastIndexOf("await loadMine(uid,authLoadGeneration)");

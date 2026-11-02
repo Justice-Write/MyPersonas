@@ -18,7 +18,7 @@
   const CONTROL_VIEWS = Object.freeze([
     "create", "library", "studio", "edit", "review", "persona-settings", "business-settings",
     "agent-board", "platform-queue", "briefs", "schedule", "fan-inbox",
-    "activity", "notifications", "discovery", "onboard",
+    "activity", "notifications", "discovery", "onboard", "owner-preview",
   ]);
   // Public social surfaces. They always render on aliaspaces.com.
   const SOCIAL_VIEWS = Object.freeze(["p", "b", "tag", "search", "friend-invite"]);
@@ -84,7 +84,8 @@
   function owner(view, state = {}) {
     if (controlViews.has(view)) return "control";
     if (socialViews.has(view)) return "social";
-    if (view === "owner" && state.ready && state.mode !== "persona") return "control";
+    // Both hosts need an owner entry: on social it selects an exact actor when
+    // none is active. Overview navigation explicitly opens management.
     return "both";
   }
 
@@ -130,6 +131,51 @@
   if (!loc || typeof loc.hostname !== "string") { if (root) root.MyPersonasDomains = api; return; }
 
   const role = roleFor(loc.hostname);
+  // Non-secret navigation intent only. Keep it in this tab across sign-in/MFA,
+  // never in a URL query sent to a server, and consume it only after roster load.
+  const intentKey = "aliaspaces_pending_persona_v1";
+  const blockedKey = "aliaspaces_persona_selection_required_v1";
+  let pendingIntent = null;
+  let canLeaveForAuth = true;
+  if (role === "social" && /^#\/owner\//.test(loc.hash)) {
+    pendingIntent = { id: String(loc.hash).slice("#/owner/".length), at: Date.now() };
+    let durable = false;
+    try {
+      const encoded = JSON.stringify(pendingIntent);
+      root.sessionStorage.setItem(intentKey, encoded);
+      durable = root.sessionStorage.getItem(intentKey) === encoded;
+    } catch (_) {}
+    if (!durable) {
+      // A sign-in reload must never turn a lost B intent into previously saved A.
+      // This marker carries no identity and is cleared only after a selection is saved.
+      try { root.localStorage.setItem(blockedKey, "1"); durable = root.localStorage.getItem(blockedKey) === "1"; } catch (_) {}
+    }
+    canLeaveForAuth = durable;
+    if (durable && root.history?.replaceState) root.history.replaceState(root.history.state, "", loc.pathname + loc.search + "#/owner");
+  }
+  function takePersonaIntent() {
+    if (role !== "social") return null;
+    let intent = pendingIntent;
+    pendingIntent = null;
+    let storageUnavailable = false, selectionRequired = false;
+    try { selectionRequired = root.localStorage.getItem(blockedKey) === "1"; } catch (_) {}
+    if (!intent && selectionRequired) intent = { id: "" };
+    try {
+      root.sessionStorage.setItem(intentKey + "_probe", "1");
+      root.sessionStorage.removeItem(intentKey + "_probe");
+      const saved = root.sessionStorage.getItem(intentKey);
+      if (!intent && saved) {
+        try { intent = JSON.parse(saved) || {}; } catch (_) { intent = {}; }
+      }
+      // Keep a fail-closed tombstone until the validated selection is actually
+      // persisted. A denied localStorage write must not revive an older actor.
+      if (intent || selectionRequired) root.sessionStorage.setItem(intentKey, JSON.stringify({ id: "", at: Date.now() }));
+    } catch (_) { storageUnavailable = true; }
+    if (!intent) return storageUnavailable || selectionRequired ? { id: "" } : null;
+    const valid = typeof intent.id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(intent.id)
+      && Number.isFinite(intent.at) && Date.now() >= intent.at && Date.now() - intent.at <= 15 * 60 * 1000;
+    return { id: valid ? intent.id : "" }; // Invalid intent suppresses saved-actor fallback too.
+  }
   applyIdentity(root.document, role);
   let arrivedByHop = false;
   try {
@@ -176,6 +222,14 @@
   root.MyPersonasDomains = Object.freeze({
     ...api,
     role: () => role,
+    takePersonaIntent,
+    canLeaveForAuth: () => canLeaveForAuth,
+    confirmPersonaSelection: () => {
+      pendingIntent = null;
+      try { root.localStorage.removeItem(blockedKey); } catch (_) {}
+      try { root.sessionStorage.removeItem(intentKey); } catch (_) {}
+      canLeaveForAuth = true;
+    },
     leave,
     leaveFor,
     goAcross,

@@ -4,7 +4,7 @@
 // worker is allowed to finish its session; the new worker activates after all
 // AliaSpaces tabs using the old version are closed.
 const CACHE_PREFIX = "aliaspaces-public-shell-";
-const CACHE_NAME = `${CACHE_PREFIX}2026-11-02-2`;
+const CACHE_NAME = `${CACHE_PREFIX}2026-11-02-3`;
 const PUBLIC_SHELL_PATHS = Object.freeze([
   "./offline.html",
   "./sites.html",

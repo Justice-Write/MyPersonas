@@ -136,6 +136,7 @@ function ownerAppSelectedPersonaStrict(id = ownerAppState.selectedPersonaId) {
 }
 
 function ownerAppPersonaModeActor() {
+  if (!session?.user?.id || (typeof privateSessionReady !== "undefined" && !privateSessionReady)) return null;
   return ownerAppState.viewMode === "persona" ? ownerAppSelectedPersonaStrict() : null;
 }
 
@@ -149,20 +150,29 @@ function ownerAppRememberViewMode(uid = session?.user?.id || "") {
 }
 
 function ownerAppRestorePersona(uid) {
+  if (!uid || session?.user?.id !== uid || (typeof privateSessionReady !== "undefined" && !privateSessionReady)) return;
   let saved = "", savedMode = "overview";
   try {
     saved = localStorage.getItem(ownerAppSelectionKey(uid)) || "";
     savedMode = localStorage.getItem(ownerAppViewModeKey(uid)) || "overview";
   } catch (_) {}
-  const savedPersona = ownerAppSelectedPersonaStrict(saved);
-  ownerAppState.selectedPersonaId = savedPersona?.id || myPersonas[0]?.id || "";
   // Domain split: Persona view is the AliaSpaces social experience, Overview is
   // the MyPersonas owner workspace. Local hosts keep the saved choice.
   const siteRole = globalThis.MyPersonasDomains ? globalThis.MyPersonasDomains.role() : "local";
-  ownerAppState.viewMode = siteRole === "social" ? (ownerAppSelectedPersonaStrict() ? "persona" : "overview")
+  const intent = siteRole === "social" ? globalThis.MyPersonasDomains?.takePersonaIntent?.() : null;
+  const savedPersona = ownerAppSelectedPersonaStrict(intent ? intent.id : saved);
+  ownerAppState.selectedPersonaId = savedPersona?.id || (siteRole === "social" ? "" : myPersonas[0]?.id || "");
+  ownerAppState.viewMode = siteRole === "social" ? (savedPersona && (intent || savedMode === "persona") ? "persona" : "overview")
     : siteRole === "control" ? "overview"
     : (savedMode === "persona" && !!savedPersona ? "persona" : "overview");
   ownerAppState.perspectiveGeneration += 1;
+  if (siteRole === "social") {
+    try {
+      localStorage.setItem(ownerAppSelectionKey(uid), savedPersona?.id || "");
+      if (savedPersona && localStorage.getItem(ownerAppSelectionKey(uid)) === savedPersona.id) globalThis.MyPersonasDomains?.confirmPersonaSelection?.();
+    } catch (_) {}
+    if (intent && !savedPersona && typeof toast === "function") toast("That persona is unavailable. Choose an owned persona to continue.");
+  }
   ownerAppRememberViewMode(uid);
   if (typeof syncPersonaViewChrome === "function") syncPersonaViewChrome();
 }
@@ -174,7 +184,10 @@ function ownerAppRememberPersona(personaId, syncCompanion = true) {
   if (changed && ownerAppState.viewMode === "persona") ownerAppState.perspectiveGeneration += 1;
   const uid = typeof session !== "undefined" ? session?.user?.id : "";
   if (uid) {
-    try { localStorage.setItem(ownerAppSelectionKey(uid), personaId); } catch (_) {}
+    try {
+      localStorage.setItem(ownerAppSelectionKey(uid), personaId);
+      if (localStorage.getItem(ownerAppSelectionKey(uid)) === personaId) globalThis.MyPersonasDomains?.confirmPersonaSelection?.();
+    } catch (_) {}
   }
   if (syncCompanion && typeof ownerAppSyncCompanion === "function") ownerAppSyncCompanion();
   if (typeof syncPersonaViewChrome === "function") syncPersonaViewChrome();
@@ -183,12 +196,16 @@ function ownerAppRememberPersona(personaId, syncCompanion = true) {
 
 function ownerAppSetViewMode(mode, navigate = true) {
   const next = mode === "persona" ? "persona" : "overview";
+  if (next === "persona" && (!session?.user?.id || (typeof privateSessionReady !== "undefined" && !privateSessionReady))) return false;
   const domains = globalThis.MyPersonasDomains, siteRole = domains ? domains.role() : "local";
-  if (navigate && siteRole === "control" && next === "persona") { location.assign(`${domains.SOCIAL_ORIGIN}/#/owner`); return true; }
   if (navigate && siteRole === "social" && next === "overview") { location.assign(domains.managementUrl("owner")); return true; }
   if (next === "persona" && !ownerAppSelectedPersonaStrict()) {
     if (typeof toast === "function") toast("Create or select a persona before entering Persona view");
     return false;
+  }
+  if (navigate && siteRole === "control" && next === "persona") {
+    location.assign(`${domains.SOCIAL_ORIGIN}/#/owner/${encodeURIComponent(ownerAppSelectedPersonaStrict().id)}`);
+    return true;
   }
   const changed = ownerAppState.viewMode !== next;
   ownerAppState.viewMode = next;
@@ -205,6 +222,7 @@ function ownerAppSetViewMode(mode, navigate = true) {
 }
 
 function ownerAppSelectActingPersona(personaId) {
+  if (!session?.user?.id || (typeof privateSessionReady !== "undefined" && !privateSessionReady)) return false;
   if (!ownerAppSelectedPersonaStrict(personaId)) {
     ownerAppSetViewMode("overview", false);
     if (typeof toast === "function") toast("That acting persona is no longer available");

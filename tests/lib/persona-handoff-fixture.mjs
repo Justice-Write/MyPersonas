@@ -1,0 +1,12 @@
+import {readFileSync} from 'node:fs';
+export const readSite = name => readFileSync(new URL('../../MyPersonas.Online_v0/' + name, import.meta.url), 'utf8');
+export const domainSource = readSite('domain-split.js');
+const ownerSource = readSite('owner-app.js');
+export const selectionSource = ownerSource.slice(ownerSource.indexOf('function ownerAppSelectionKey'), ownerSource.indexOf('function ownerAppInvalidatePerspective'));
+export const A = '11111111-1111-4111-8111-111111111111';
+export const B = '22222222-2222-4222-8222-222222222222';
+export const missing = '33333333-3333-4333-8333-333333333333';
+export const roster = [{id:A,name:'Synthetic A',handle:'synthetic-a'},{id:B,name:'Synthetic B',handle:'synthetic-b'}];
+export const storageKey = 'aliaspaces_owner_persona_owner-1';
+export const modeKey = 'aliaspaces_view_mode_owner-1';
+export const intentKey = 'aliaspaces_pending_persona_v1';

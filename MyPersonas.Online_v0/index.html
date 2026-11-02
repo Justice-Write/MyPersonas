@@ -33,7 +33,7 @@
 <link rel="stylesheet" href="./agent-board.css?v=20260822-2">
 <link rel="stylesheet" href="./ai-content-provenance.css?v=20260823-2">
 <link rel="stylesheet" href="./profile-image-crop.css?v=20260823-1">
-<script src="./domain-split.js?v=20261102-1"></script>
+<script src="./domain-split.js?v=20261102-2"></script>
 <script src="./pwa.js?v=20261102-2" defer></script>
 <script src="./profile-image-crop.js?v=20260823-1" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.7/dist/umd/supabase.min.js" integrity="sha384-BmlQlKlDvXvKoxkn5OQuUo/aJQCTXeB+Kls6EccBmG4Kf8AXvp89RtO9MtPxP/r5" crossorigin="anonymous"></script>
@@ -436,7 +436,7 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
     <select id="personaViewActor" aria-label="Acting persona" onchange="ownerAppSelectActingPersona(this.value)"></select>
   </div>
   <nav>
-    <button data-persona-nav onclick="go('')">Entangle</button>
+    <button data-persona-nav onclick="goDiscover()">Entangle</button>
     <button id="primaryHomeBtn" onclick="go('owner')">Personas</button>
     <button data-overview-nav onclick="go('create')">Create</button>
     <button data-overview-nav onclick="go('library')">Library</button>
@@ -524,8 +524,8 @@ main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env
 <script src="./image-caption-drafting.js?v=20261009-1"></script>
 <script src="./creative-media.js?v=20261013-1"></script>
 <script src="./creative-workspace.js?v=20261030-1"></script>
-<script src="./owner-app.js?v=20261031-1"></script>
-<script src="./persona-view.js?v=20261030-1"></script>
+<script src="./owner-app.js?v=20261102-2"></script>
+<script src="./persona-view.js?v=20261102-2"></script>
 <script src="./platform-governance.js?v=20261031-1"></script>
 <script src="./agent-board.js?v=20261030-1"></script>
 <script src="./ai-content-provenance.js?v=20260823-2"></script>
@@ -1361,6 +1361,7 @@ async function route(){
   if(siteRole==="control"&&session&&!view){history.replaceState(history.state,"","#/owner");return route()}
   if(!session&&!view&&siteRole!=="social")return renderCreativeLanding();
   if(view==="p")return renderPersonaPage(arg,false,myEpoch);
+  if(view==="owner-preview")return renderOwnerPersonaPreview(arg,false,myEpoch);
   if(view==="review")return renderPublicationReview(arg);
   if(view==="persona-settings")return renderPersonaSettings(arg);
   if(view==="business-settings")return renderBusinessSettings(arg);
@@ -1370,6 +1371,7 @@ async function route(){
   if(view==="b")return renderBusinessPage(arg);
   if(view==="owner"&&typeof ownerAppIsPersonaMode==="function"&&ownerAppIsPersonaMode())return renderPersonaViewHome(myEpoch);
   if(view==="create"||view==="library")return renderCreativeWorkspace(view);
+  if(view==="owner"&&siteRole==="social")return renderPersonaActorPicker();
   if(view==="owner")return renderOwnerCommandCenter();
   if(view==="briefs")return renderOwnerBriefs(arg);
   if(view==="schedule")return renderOwnerSchedule(arg);
@@ -1415,10 +1417,12 @@ function renderSignin(){
   </div>`;
 }
 async function googleSignin(){
+  if(globalThis.MyPersonasDomains?.canLeaveForAuth?.()===false){toast("Browser storage is unavailable. Enable site storage before continuing this persona sign-in.");return}
   const{error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});
   if(error)toast(error.message);
 }
 async function magicLink(){
+  if(globalThis.MyPersonasDomains?.canLeaveForAuth?.()===false){toast("Browser storage is unavailable. Enable site storage before continuing this persona sign-in.");return}
   const email=document.getElementById("mlEmail").value.trim();
   if(!email){toast("Enter your email");return}
   const{error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname}});
@@ -1742,19 +1746,29 @@ async function submitPublicReviewRequest(){
   const overlay=document.getElementById("reviewRequestOv"),button=document.getElementById("rrSubmit"),status=document.getElementById("rrStatus");if(!overlay||!button)return;const token=overlay.dataset.captchaToken||"",email=val("rrEmail"),reply=document.getElementById("rrReplyConsent")?.checked===true,marketing=document.getElementById("rrMarketingConsent")?.checked===true;if(!token){status.textContent="Complete the verification first.";return}if((reply||marketing)&&!email){status.textContent="An email address is required for either consent choice.";return}button.disabled=true;status.textContent="Submitting…";
   try{const response=await fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/functions/v1/request-review",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({persona_id:overlay.dataset.personaId,persona_handle:overlay.dataset.handle,idempotency_key:crypto.randomUUID(),captcha_token:token,product_name:val("rrProduct"),product_url:val("rrUrl"),requester_name:val("rrName"),requester_email:email,reason:val("rrReason"),consent_to_reply:reply,marketing_consent:marketing})}),result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||"The request could not be submitted");overlay.querySelector(".wizbox").innerHTML='<h2>Request received</h2><p>The owner decides what to test or review.</p><button class="btn" onclick="document.getElementById(\'reviewRequestOv\').remove()">Close</button>'}catch(e){status.textContent=e.message||"The request could not be submitted";button.disabled=false;if(window.turnstile&&reviewTurnstileWidget!==null)window.turnstile.reset(reviewTurnstileWidget)}
 }
-async function renderPersonaPage(handle,skipGate,epoch=++renderEpoch){
-  if(typeof ownerAppIsPersonaMode==="function"&&ownerAppIsPersonaMode())return renderPersonaModeProfile(handle,skipGate,epoch);
+async function renderOwnerPersonaPreview(handle,skipGate=false,epoch=++renderEpoch){
+  if(domainRole()==="social"){location.assign(MyPersonasDomains.managementUrl(`owner-preview/${encodeURIComponent(handle)}`));return}
+  if(!session)return renderSignin();
+  if(!privateSessionReady){app.innerHTML='<div class="empty">Checking sign-in security…</div>';return}
+  if(!myPersonas.some(p=>p.handle===handle)){app.innerHTML='<div class="empty">This preview is unavailable for your account.</div>';return}
+  return renderPersonaPage(handle,skipGate,epoch,true);
+}
+async function renderPersonaPage(handle,skipGate,epoch=++renderEpoch,ownerPreview=false){
+  if(ownerPreview&&(!session||!privateSessionReady||!myPersonas.some(p=>p.handle===handle)))return;
+  const previewPersona=ownerPreview?myPersonas.find(p=>p.handle===handle):null,previewUid=session?.user?.id,previewGeneration=authLoadGeneration;
+  const previewCurrent=()=>!ownerPreview||(session?.user?.id===previewUid&&privateSessionReady&&authLoadGeneration===previewGeneration&&myPersonas.includes(previewPersona));
+  if(!ownerPreview&&typeof ownerAppIsPersonaMode==="function"&&ownerAppIsPersonaMode())return renderPersonaModeProfile(handle,skipGate,epoch);
   app.innerHTML='<div class="empty">Loading…</div>';
   let pageResult=await sb.rpc("persona_by_handle",{h:handle}),p=pageResult.data&&pageResult.data[0];
   if(pageResult.error){const fallback=await sb.from("personas").select(PUBLIC_PERSONA_FIELDS).eq("handle",handle).eq("publication_state","published").maybeSingle();p=fallback.data}
   const owned=myPersonas.find(x=>x.handle===handle);if(owned)p=owned;
-  if(epoch!==renderEpoch)return;
+  if(epoch!==renderEpoch||!previewCurrent())return;
   if(!p){app.innerHTML=`<div class="empty">This page doesn't exist, is private, or you don't have access.<br><br>${session?"":'<button class="btn" onclick="go(\'signin\')">Sign in</button>'}</div>`;return}
   if(p.nsfw&&!skipGate&&!sessionStorage.getItem("age_ok")){
     app.innerHTML="";
     const o=document.createElement("div");o.className="overlay";
     o.innerHTML=`<div class="gate"><h2>18+ Content</h2><p>This page may contain adult content.<br>You must be 18 or older to continue.</p>
-      <div style="margin-top:16px"><button class="btn" onclick="sessionStorage.setItem('age_ok','1');this.closest('.overlay').remove();renderPersonaPage('${esc(handle)}',true)">I'm 18+, enter</button>
+      <div style="margin-top:16px"><button class="btn" onclick="sessionStorage.setItem('age_ok','1');this.closest('.overlay').remove();${ownerPreview?'renderOwnerPersonaPreview':'renderPersonaPage'}('${esc(handle)}',true)">I'm 18+, enter</button>
       <button class="btn sec" style="margin-left:8px" onclick="location.hash=''">Take me back</button></div></div>`;
     document.body.appendChild(o);return;
   }
@@ -1789,7 +1803,7 @@ async function renderPersonaPage(handle,skipGate,epoch=++renderEpoch){
   const linkedP=relationCards.filter(row=>row.dependency_kind==="linked").sort((a,b)=>a.sort_order-b.sort_order).map(toRelationPersona);
   const familyP=relationCards.filter(row=>row.dependency_kind==="family").sort((a,b)=>a.sort_order-b.sort_order).map(toRelationPersona);
   const revenue=Array.isArray(revenueRes?.data)?revenueRes.data[0]:revenueRes?.data;
-  if(epoch!==renderEpoch)return;
+  if(epoch!==renderEpoch||!previewCurrent())return;
   const pageLayout=normalizePersonaPageLayout(layoutRes?.data?.[0]?.layout);
   pageState={p,posts:posts||[],isOwner,layout:pageLayout,feedKind:"all",feedQuery:"",cursorCreatedAt:null,cursorId:null,feedDone:(posts||[]).length<PERSONA_FEED_PAGE_SIZE,feedLoading:false,feedRequestId:0,feedError:postsError?.message||""};
   advanceDescendingCursor(pageState,posts||[]);
@@ -2552,7 +2566,7 @@ function renderStudio(){
       <div class="ph" style="${safeBgStyle(p.banner_url)}"></div>
       <div class="pb"><div class="av" style="${safeBgStyle(p.avatar_url)}"></div>
       <b>${esc(p.name)}</b><span class="muted">@${esc(p.handle)} · ${esc(p.visibility)}</span>
-      <div style="margin-top:8px"><button class="btn sm" onclick="go('p/${esc(p.handle)}')">View</button>
+      <div style="margin-top:8px"><button class="btn sm" onclick="go('owner-preview/${esc(p.handle)}')">View</button>
       <button class="btn sec sm" onclick="go('edit/${p.id}')">Edit</button>
       <button class="btn sec sm" onclick="openPersonaChat('${p.id}')">Chat</button></div></div>
     </div>`).join("")||'<div class="empty">No personas yet — create your first!</div>'}</div>
@@ -3482,7 +3496,7 @@ async function savePersona(destination="default"){
   if(editId!==startEditId||epoch!==renderEpoch||session?.user?.id!==uid)return;
   const savedPersona=_pid?myPersonas.find(p=>p.id===_pid):null,requiresReview=!!savedPersona?.publication_state&&savedPersona.publication_state!=="published";
   toast(requiresReview?"Saved as draft — review the page before publishing":"Saved");
-  if(destination==="view"&&savedPersona?.handle){go("p/"+savedPersona.handle);return}
+  if(destination==="view"&&savedPersona?.handle){go("owner-preview/"+savedPersona.handle);return}
   go(requiresReview?"review/"+_pid:"p/"+(savedPersona?.handle||handle));
 }
 async function deletePersona(){const dialog=ownerWorkflowDialogs();

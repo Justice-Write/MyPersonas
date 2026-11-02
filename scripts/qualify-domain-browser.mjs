@@ -1,7 +1,8 @@
 // Full source-page smoke on intercepted hosts with synthetic signed-out auth.
 // No network leaves Playwright routing; no personal profile or live backend.
 import {readFile} from 'node:fs/promises';
-import {resolve,extname} from 'node:path';
+import {extname} from 'node:path';
+import {fixturePath} from './lib/fixture-path.mjs';
 import {pathToFileURL,fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
 const {chromium}=await import(pathToFileURL(process.argv[2]).href);
@@ -17,8 +18,8 @@ try{
  await context.route('**/*',async route=>{
   const url=new URL(route.request().url());
   if(!['mypersonas.online','aliaspaces.com'].includes(url.hostname))return route.fulfill({status:200,body:'',contentType:'application/javascript'});
-  const path=resolve(root,'.'+(url.pathname==='/'?'/index.html':decodeURIComponent(url.pathname)));
-  if(!path.startsWith(resolve(root)+'\\'))return route.abort();
+  const path=await fixturePath(root,url.pathname);
+  if(!path)return route.abort();
   try{const body=await readFile(path),type={'.html':'text/html','.js':'application/javascript','.css':'text/css','.webmanifest':'application/manifest+json','.svg':'image/svg+xml'}[extname(path)]||'application/octet-stream';return route.fulfill({body,contentType:type});}catch{return route.fulfill({status:404,body:'fixture missing'});}
  });
  for(const [url,host,brand,heading] of [
@@ -38,6 +39,21 @@ try{
   assert.doesNotMatch(await page.locator('body').innerText(),/never linked|identity stays private|never show who owns/i);assert.doesNotMatch(await page.locator('meta[name="description"]').getAttribute('content'),/anonymous|never linked|unlinkab/i);
   assert.deepEqual(errors,[]);results.push({url,final:page.url(),brand,rendered:true});await page.close();
  }
- console.log(JSON.stringify({browser:browser.version(),results,limits:'Synthetic signed-out backend only; real auth/MFA/canary/provider acceptance not performed'},null,2));
+ // Real full-page owner preview with a synthetic authenticated roster. The
+ // backend remains the intercepted empty fixture; no private records are read.
+ const preview=await context.newPage(),previewErrors=[];preview.on('pageerror',e=>previewErrors.push(e.message));
+ await preview.goto('https://mypersonas.online/');await preview.waitForFunction(()=>typeof renderOwnerPersonaPreview==='function'&&document.querySelector('#app')?.textContent.trim().length>20);
+ await preview.evaluate(()=>{
+   session={user:{id:'synthetic-owner'}};privateSessionReady=true;
+   myPersonas=[{id:'11111111-1111-4111-8111-111111111111',handle:'synthetic-a',name:'Synthetic A'},
+     {id:'22222222-2222-4222-8222-222222222222',handle:'synthetic-b',name:'Synthetic B',visibility:'private',publication_state:'draft'}];
+   ownerAppState.selectedPersonaId=myPersonas[0].id;ownerAppState.viewMode='overview';
+   go('owner-preview/synthetic-b');
+ });
+ await preview.waitForFunction(()=>document.querySelector('#app')?.textContent.includes('Edit page'));
+ assert.equal(new URL(preview.url()).hostname,'mypersonas.online');
+ assert.ok((await preview.locator('#app').innerText()).includes('Synthetic B'));
+ assert.deepEqual(previewErrors,[]);results.push({url:preview.url(),rendered:true,privateSiblingPreview:true});await preview.close();
+ console.log(JSON.stringify({browser:browser.version(),results,limits:'Synthetic backend and owner preview roster only; real auth/MFA/canary/provider acceptance not performed'},null,2));
  await context.close();
 }finally{await browser.close();}
