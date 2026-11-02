@@ -4,6 +4,19 @@ import vm from 'node:vm';
 import {readFile} from 'node:fs/promises';
 
 const source=await readFile(new URL('../MyPersonas.Online_v0/pwa.js',import.meta.url),'utf8');
+test('versioned helper URL bypasses exact public-shell cache matching',async()=>{
+  const worker=await readFile(new URL('../MyPersonas.Online_v0/service-worker.js',import.meta.url),'utf8');
+  const html=await readFile(new URL('../MyPersonas.Online_v0/index.html',import.meta.url),'utf8');
+  const script=html.match(/<script src="(\.\/pwa\.js\?v=[^"]+)" defer>/)?.[1];assert.ok(script);
+  const events=new Map();const cached={marker:'old cached helper'};
+  vm.runInNewContext(worker,{URL,self:{registration:{scope:'https://mypersonas.online/'},addEventListener:(name,fn)=>events.set(name,fn)},caches:{open:async()=>({match:async()=>cached})}});
+  let handled=false;
+  events.get('fetch')({request:{method:'GET',mode:'cors',url:new URL(script,'https://mypersonas.online/').href},respondWith(){handled=true;}});
+  assert.equal(handled,false,'versioned request must reach network instead of old exact-match cache');
+  let response;
+  events.get('fetch')({request:{method:'GET',mode:'cors',url:'https://mypersonas.online/pwa.js'},respondWith(value){response=value;}});
+  assert.equal(await response,cached,'unversioned public-shell cache behavior is preserved');
+});
 function page(hostname,{mobile=false,registrationFails=false}={}){
   const elements=new Map(),events=new Map(),updates=new Map(),registrations=[],warnings=[];
   const mount={insertBefore(node){node.isConnected=true;node.parentNode=this;elements.set(node.id,node);}};

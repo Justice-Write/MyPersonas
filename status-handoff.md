@@ -63,7 +63,7 @@
 
 ## Current state
 
-2026-11-02: PWA label follow-up tested (972/972), ready for coordinator PR review. See docs/PWA-IDENTITY-RELEASE-20261102.md. Source-only change; prior deployed release remains95edd7f until coordinator releases the follow-up.
+2026-11-02: PWA label follow-up tested (973/973), ready for coordinator PR review. See docs/PWA-IDENTITY-RELEASE-20261102.md. Source-only change; prior deployed release remains95edd7f until coordinator releases the follow-up.
 
 - 2026-11-02 final release review: removed four runtime anonymity/unlinkability absolutes from route/Discover/sign-in copy; public media may reveal persona connections. Actual isolated-page metadata/body assertions added. Final964 unit tests and six Edge checks pass; previous963 candidate is superseded. No release/backend change; source freeze after this commit until coordinator exact-SHA sequence completes.
 
@@ -135,7 +135,7 @@ Public-safe project/release/data boundaries are recorded in `docs/PROJECT-STOCKT
 - Preserve PR20 after the glyph and nine-call dialog slices. Remaining modal conversions and Reddit/provider compatibility are unresolved; the merged dialog slice does not authorize provider behavior.
 ## Work log
 
-- 2026-11-02 Codex: PWA host identity follow-up completed locally on codex/pwa-host-identity-20261102: pwa.js labels now follow control/social host; eight event-driven tests added, full972tests/syntax pass. Only shipped file changed is pwa.js; backend tree, image-caption helper, app index and workflows unchanged from95edd7f. See docs/PWA-IDENTITY-RELEASE-20261102.md for exact-object evidence and reused-canary limits. Source lane prepares commit/PR only; coordinator owns merge, exact-main backend receipt and fresh deployed browser checks. No paid calls, deploys or installs.
+- 2026-11-02 Codex: PWA host identity follow-up completed locally on codex/pwa-host-identity-20261102: pwa.js labels now follow control/social host; nine event-driven tests added, full973tests/syntax pass. Shipped changes: pwa.js labels, one index script query and ordinary public-shell cache version suffix; backend tree, image-caption helper, inline application callbacks and workflows unchanged from95edd7f. See docs/PWA-IDENTITY-RELEASE-20261102.md for exact-object evidence and reused-canary limits. Source lane prepares commit/PR only; coordinator owns merge, exact-main backend receipt and fresh deployed browser checks. No paid calls, deploys or installs.
 
 - 2026-11-02 final release review: removed four runtime anonymity/unlinkability absolutes from route/Discover/sign-in copy; public media may reveal persona connections. Actual isolated-page metadata/body assertions added. Final964 unit tests and six Edge checks pass; previous963 candidate is superseded. No release/backend change; source freeze after this commit until coordinator exact-SHA sequence completes.
 
