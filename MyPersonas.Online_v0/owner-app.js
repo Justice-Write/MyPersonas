@@ -167,7 +167,10 @@ function ownerAppRestorePersona(uid) {
     : (savedMode === "persona" && !!savedPersona ? "persona" : "overview");
   ownerAppState.perspectiveGeneration += 1;
   if (siteRole === "social") {
-    try { localStorage.setItem(ownerAppSelectionKey(uid), savedPersona?.id || ""); } catch (_) {}
+    try {
+      localStorage.setItem(ownerAppSelectionKey(uid), savedPersona?.id || "");
+      if (savedPersona && localStorage.getItem(ownerAppSelectionKey(uid)) === savedPersona.id) globalThis.MyPersonasDomains?.confirmPersonaSelection?.();
+    } catch (_) {}
     if (intent && !savedPersona && typeof toast === "function") toast("That persona is unavailable. Choose an owned persona to continue.");
   }
   ownerAppRememberViewMode(uid);
@@ -181,7 +184,10 @@ function ownerAppRememberPersona(personaId, syncCompanion = true) {
   if (changed && ownerAppState.viewMode === "persona") ownerAppState.perspectiveGeneration += 1;
   const uid = typeof session !== "undefined" ? session?.user?.id : "";
   if (uid) {
-    try { localStorage.setItem(ownerAppSelectionKey(uid), personaId); } catch (_) {}
+    try {
+      localStorage.setItem(ownerAppSelectionKey(uid), personaId);
+      if (localStorage.getItem(ownerAppSelectionKey(uid)) === personaId) globalThis.MyPersonasDomains?.confirmPersonaSelection?.();
+    } catch (_) {}
   }
   if (syncCompanion && typeof ownerAppSyncCompanion === "function") ownerAppSyncCompanion();
   if (typeof syncPersonaViewChrome === "function") syncPersonaViewChrome();

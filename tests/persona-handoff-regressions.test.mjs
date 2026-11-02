@@ -7,10 +7,10 @@ import {tmpdir} from 'node:os';
 import {insideRoot,fixturePath} from '../scripts/lib/fixture-path.mjs';
 import {readSite,domainSource,selectionSource,A,B,missing,roster,storageKey,modeKey,intentKey} from './lib/persona-handoff-fixture.mjs';
 const store = (entries=[]) => { const map=new Map(entries); return {getItem:k=>map.get(k)??null,setItem:(k,v)=>map.set(k,String(v)),removeItem:k=>map.delete(k)}; };
-function boot(href,{saved=A,mode='persona',ready=true,owned=roster,tab=store(),uid='owner-1'}={}) {
+function boot(href,{saved=A,mode='persona',ready=true,owned=roster,tab=store(),uid='owner-1',persistent=null}={}) {
   const url=new URL(href),events=[];
   const location={get href(){return url.href},get hostname(){return url.hostname},get origin(){return url.origin},get pathname(){return url.pathname},get search(){return url.search},get hash(){return url.hash},assign:x=>events.push(x),replace:x=>events.push(x)};
-  const ctx=vm.createContext({URL,location,sessionStorage:tab,localStorage:store([[storageKey,saved],[modeKey,mode]]),session:uid?{user:{id:uid}}:null,privateSessionReady:ready,myPersonas:structuredClone(owned),ownerAppState:{selectedPersonaId:'',viewMode:'overview',perspectiveGeneration:0},history:{state:null,replaceState(_s,_t,next){url.href=new URL(next,url).href}},toast(){},Date});
+  const ctx=vm.createContext({URL,location,sessionStorage:tab,localStorage:persistent||store([[storageKey,saved],[modeKey,mode]]),session:uid?{user:{id:uid}}:null,privateSessionReady:ready,myPersonas:structuredClone(owned),ownerAppState:{selectedPersonaId:'',viewMode:'overview',perspectiveGeneration:0},history:{state:null,replaceState(_s,_t,next){url.href=new URL(next,url).href}},toast(){},Date});
   vm.runInContext(domainSource+'\n'+selectionSource,ctx);
   return {ctx,url,events};
 }
@@ -43,7 +43,33 @@ test('pending intent survives same-tab sign-in reload but foreign roster cannot 
 });
 test('expired pending intent refuses fallback and is consumed',()=>{
   const tab=store([[intentKey,JSON.stringify({id:B,at:Date.now()-16*60*1000})]]);
-  const {ctx}=boot('https://aliaspaces.com/#/owner',{tab});ctx.ownerAppRestorePersona('owner-1');assert.equal(ctx.ownerAppPersonaModeActor(),null);assert.equal(tab.getItem(intentKey),null);
+  const {ctx}=boot('https://aliaspaces.com/#/owner',{tab});ctx.ownerAppRestorePersona('owner-1');assert.equal(ctx.ownerAppPersonaModeActor(),null);assert.equal(JSON.parse(tab.getItem(intentKey)).id,'');
+});
+for(const recovered of [false,true])test(`denied session storage then auth reload refuses saved A, storage recovered=${recovered}`,()=>{
+  const persistent=store([[storageKey,A],[modeKey,'persona']]),tab=store();tab.setItem=()=>{throw Error('Denied')};
+  const first=boot(`https://aliaspaces.com/#/owner/${B}`,{persistent,tab,uid:null});
+  assert.equal(first.ctx.MyPersonasDomains.canLeaveForAuth(),true,'durable no-identity marker permits sign-in');
+  const next=boot('https://aliaspaces.com/#/owner',{persistent,tab:recovered?store():tab});
+  next.ctx.ownerAppRestorePersona('owner-1');assert.equal(next.ctx.ownerAppPersonaModeActor(),null);assert.equal(persistent.getItem(storageKey),'');
+  next.ctx.ownerAppSelectActingPersona(B);assert.equal(next.ctx.ownerAppPersonaModeActor().id,B);assert.equal(persistent.getItem('aliaspaces_persona_selection_required_v1'),null);
+});
+test('both stores denied retains intent fragment and blocks OAuth/magic-link transition',async()=>{
+  const denied=store();denied.setItem=()=>{throw Error('Denied')};
+  const {ctx,url}=boot(`https://aliaspaces.com/#/owner/${B}`,{tab:denied,persistent:denied,uid:null});
+  assert.equal(url.hash,`#/owner/${B}`);assert.equal(ctx.MyPersonasDomains.canLeaveForAuth(),false);
+  const html=readSite('index.html'),start=html.indexOf('async function googleSignin()'),end=html.indexOf('async function passwordSignin()',start);
+  assert.ok(end>start);ctx.sb={auth:{signInWithOAuth(){throw Error('Must not leave for OAuth')},signInWithOtp(){throw Error('Must not send link')}}};
+  vm.runInContext(html.slice(start,end),ctx);await ctx.googleSignin();await ctx.magicLink();
+});
+test('denied local selection persistence leaves a tombstone that prevents stale A after reload',()=>{
+  const persistent=store([[storageKey,A],[modeKey,'persona']]),tab=store();persistent.setItem=()=>{throw Error('Denied')};
+  const first=boot(`https://aliaspaces.com/#/owner/${B}`,{persistent,tab});first.ctx.ownerAppRestorePersona('owner-1');assert.equal(first.ctx.ownerAppPersonaModeActor().id,B);
+  const next=boot('https://aliaspaces.com/#/owner',{persistent,tab});next.ctx.ownerAppRestorePersona('owner-1');assert.equal(next.ctx.ownerAppPersonaModeActor(),null);
+});
+test('failed newer B handoff overrides an older unconsumed A intent after storage recovers',()=>{
+  const persistent=store([[storageKey,A],[modeKey,'persona']]),tab=store([[intentKey,JSON.stringify({id:A,at:Date.now()})]]),set=tab.setItem;
+  tab.setItem=()=>{throw Error('Denied')};boot(`https://aliaspaces.com/#/owner/${B}`,{persistent,tab,uid:null});tab.setItem=set;
+  const next=boot('https://aliaspaces.com/#/owner',{persistent,tab});next.ctx.ownerAppRestorePersona('owner-1');assert.equal(next.ctx.ownerAppPersonaModeActor(),null);
 });
 test('control switch checks exact owned selection before generating fragment-only transfer',()=>{
   const {ctx,events}=boot('https://mypersonas.online/#/owner');ctx.ownerAppState.selectedPersonaId=missing;

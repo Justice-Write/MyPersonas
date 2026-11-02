@@ -1417,10 +1417,12 @@ function renderSignin(){
   </div>`;
 }
 async function googleSignin(){
+  if(globalThis.MyPersonasDomains?.canLeaveForAuth?.()===false){toast("Browser storage is unavailable. Enable site storage before continuing this persona sign-in.");return}
   const{error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});
   if(error)toast(error.message);
 }
 async function magicLink(){
+  if(globalThis.MyPersonasDomains?.canLeaveForAuth?.()===false){toast("Browser storage is unavailable. Enable site storage before continuing this persona sign-in.");return}
   const email=document.getElementById("mlEmail").value.trim();
   if(!email){toast("Enter your email");return}
   const{error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname}});

@@ -19,14 +19,18 @@ try {
     ['destination previously B',B,B,roster,B],['deleted destination selection',missing,B,roster,B],
     ['intended persona no longer owned',A,B,[roster[0]],null],
     ['sign-in reload before roster ready',A,B,roster,B],
+    ['session storage denied then sign-in reload',A,B,roster,null],
   ]) {
     const context=await browser.newContext({serviceWorkers:'block'});
-    await context.addInitScript(({saved,storageKey,modeKey})=>{
+    await context.addInitScript(({saved,storageKey,modeKey,label})=>{
       window.fetch=()=>{throw Error('Network forbidden')};window.XMLHttpRequest=function(){throw Error('Network forbidden')};window.WebSocket=function(){throw Error('Network forbidden')};
       if(location.hostname==='aliaspaces.com'&&!sessionStorage.getItem('fixture-seeded')){
         localStorage.setItem(storageKey,saved);localStorage.setItem(modeKey,'persona');sessionStorage.setItem('fixture-seeded','1');
       }
-    },{saved,storageKey,modeKey});
+      if(location.hostname==='aliaspaces.com'&&label==='session storage denied then sign-in reload'){
+        const original=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(this===sessionStorage)throw Error('Synthetic session storage denied');return original.call(this,key,value)};
+      }
+    },{saved,storageKey,modeKey,label});
     await context.route('**/*',route=>{
       const u=new URL(route.request().url());
       if(['https://mypersonas.online','https://aliaspaces.com'].includes(u.origin)&&u.pathname==='/'){fixtures++;return route.fulfill({body:html,contentType:'text/html'});}
@@ -36,7 +40,7 @@ try {
     await page.evaluate(({selected,storageKey})=>{privateSessionReady=true;ownerAppState.selectedPersonaId=selected;localStorage.setItem(storageKey,selected);ownerAppSetViewMode('persona');},{selected,storageKey});
     await page.waitForURL('https://aliaspaces.com/#/owner');await page.waitForFunction(()=>window.fixtureReady);
     assert.equal(await page.evaluate(()=>ownerAppPersonaModeActor()),null,'MFA/roster not ready');
-    if(label==='sign-in reload before roster ready'){
+    if(label==='sign-in reload before roster ready'||label==='session storage denied then sign-in reload'){
       await page.reload();await page.waitForFunction(()=>window.fixtureReady);
       assert.equal(await page.evaluate(()=>ownerAppPersonaModeActor()),null);
     }
