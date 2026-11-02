@@ -61,7 +61,12 @@
 
 
 
+
+
 ## Current state
+
+2026-11-02 current: PERSONA-REVIEW-FIX candidate complete,1003tests/6cross-origin/7fullpage browser checks pass. Committed and pushed as PR52; hosted CI pending, coordinator review/merge next. Latest production baseline is MyPersonas a1fa8a6 / AliaSpaces bb7027e; candidate is not deployed. Earlier entries below are dated history. See docs/PERSONA-IDENTITY-REVIEW-FIXES-20261102.md.
+
 
 2026-11-02: PWA label follow-up tested (973/973), ready for coordinator PR review. See docs/PWA-IDENTITY-RELEASE-20261102.md. Source-only change; prior deployed release remains95edd7f until coordinator releases the follow-up.
 
@@ -109,6 +114,9 @@ Public-safe project/release/data boundaries are recorded in `docs/PROJECT-STOCKT
 
 ## Next steps
 
+Current priority: coordinator review and merge scoped persona fixes plus disjoint release guard, pin final upstream source in AliaSpaces, build/deploy both exact revisions and verify live. No paid model calls or phone installs in this source lane. Older next steps below retain their dated context.
+
+
 2026-11-02 follow-up: coordinator reviews/merges PWA label PR, obtains new exact-main backend receipt, verifies unchanged backend/helper objects before carrying API evidence forward, then deploys and checks both host identities live.
 
 0. Use docs/NATIVE-DIALOG-DISPOSITION-20261030.md as the current dialog queue: local conversions are complete for94 eligible calls; the5 retained calls are3 browser-integration gates, not unspecified implementation backlog. Do not re-count qualified application dialog methods as native calls.
@@ -134,6 +142,8 @@ Public-safe project/release/data boundaries are recorded in `docs/PROJECT-STOCKT
 - The historical workspace root is gone. Use the canonical repository through isolated worktrees and preserve the dirty owner checkout.
 - Preserve PR20 after the glyph and nine-call dialog slices. Remaining modal conversions and Reddit/provider compatibility are unresolved; the merged dialog slice does not authorize provider behavior.
 ## Work log
+
+- 2026-11-02 UTC / Codex: PERSONA-REVIEW-FIX source candidate complete in isolated codex/persona-review-fixes-20261102 from a1fa8a6. Exact actor fragment transfer and fail-closed restoration, management private preview, Entangle Discover, portable fixture containment, tests and release documentation. Full1003tests, frontend syntax,6 actual cross-origin Edge cases and7 fullpage Edge checks PASS; no network continuations. Canonical dirty checkout preserved. Committed/pushed PR52; hosted CI pending and coordinator review next; coordinator owns merge, two-site packaging/deployment and live readback. No backend/schema/provider/model/device changes. See docs/PERSONA-IDENTITY-REVIEW-FIXES-20261102.md.
 
 - 2026-11-02 Codex: PWA host identity follow-up completed locally on codex/pwa-host-identity-20261102: pwa.js labels now follow control/social host; nine event-driven tests added, full973tests/syntax pass. Shipped changes: pwa.js labels, one index script query and ordinary public-shell cache version suffix; backend tree, image-caption helper, inline application callbacks and workflows unchanged from95edd7f. See docs/PWA-IDENTITY-RELEASE-20261102.md for exact-object evidence and reused-canary limits. Source lane prepares commit/PR only; coordinator owns merge, exact-main backend receipt and fresh deployed browser checks. No paid calls, deploys or installs.
 

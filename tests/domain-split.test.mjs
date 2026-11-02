@@ -61,7 +61,7 @@ test("aliaspaces.com sends management views to mypersonas.online and keeps socia
   }
   assert.equal(d("#/owner"), null, "owner waits for the session");
   assert.equal(d("#/owner", { ready: true, mode: "persona" }), null, "Persona view is the social home");
-  assert.equal(d("#/owner", { ready: true, mode: "overview" }), "https://mypersonas.online/?hop=1#/owner");
+  assert.equal(d("#/owner", { ready: true, mode: "overview" }), null, "social owner entry offers explicit actor selection");
 });
 
 test("mypersonas.online sends public social views to aliaspaces.com and keeps management", () => {
@@ -105,8 +105,8 @@ test("a page leaves before the app boots when its view belongs to the other doma
   const owner = await boot("https://aliaspaces.com/#/owner");
   assert.deepEqual(owner.calls.replace, [], "owner depends on the signed-in mode");
   assert.equal(owner.api.leave({ ready: true, mode: "persona" }), false);
-  assert.equal(owner.api.leave({ ready: true, mode: "overview" }), true);
-  assert.deepEqual(owner.calls.replace, ["https://mypersonas.online/?hop=1#/owner"]);
+  assert.equal(owner.api.leave({ ready: true, mode: "overview" }), false);
+  assert.deepEqual(owner.calls.replace, [], "inactive social actors can select explicitly without a management bounce");
 });
 
 test("a hop never bounces straight back, so a stale deployment cannot loop", async () => {
@@ -150,7 +150,7 @@ test("the app wires the split into loading, routing, modes and share links", asy
   assert.match(html, /function sharePage\(handle\)\{copyText\(publicPageUrl\(handle\)\)\}/);
   assert.match(html, /onclick="closeSiteMenu\(\);goDiscover\(\)">Discover \(Entangle\)/);
   assert.match(governance, /MyPersonasDomains\.publicUrl\(`friend-invite\/\$\{personaId\}`\)/);
-  assert.match(ownerApp, /siteRole === "social" \? \(ownerAppSelectedPersonaStrict\(\) \? "persona" : "overview"\)/);
-  assert.match(ownerApp, /siteRole === "control" && next === "persona"\) \{ location\.assign/);
+  assert.match(ownerApp, /takePersonaIntent/);
+  assert.match(ownerApp, /siteRole === "control" && next === "persona"\) \{\s+location\.assign/);
   assert.match(ownerApp, /siteRole === "social" && next === "overview"\) \{ location\.assign\(domains\.managementUrl\("owner"\)\)/);
 });

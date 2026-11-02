@@ -5,10 +5,18 @@
 const PERSONA_VIEW_OWNER_ROUTES = new Set([
   "create", "library", "studio", "edit", "review", "persona-settings", "business-settings",
   "agent-board", "platform-queue", "briefs", "schedule", "fan-inbox",
-  "activity", "notifications", "discovery", "onboard",
+  "activity", "notifications", "discovery", "onboard", "owner-preview",
 ]);
 
 let personaViewFeedState = null;
+
+function renderPersonaActorPicker() {
+  if (!session) return renderSignin();
+  if (!privateSessionReady) { app.innerHTML = '<div class="empty">Checking sign-in security…</div>'; return; }
+  app.innerHTML = `<div class="card"><h2>Choose your acting persona</h2><p>No persona is active. Select the exact persona you want to use on AliaSpaces.</p>
+    ${(myPersonas || []).map(p => `<button class="btn" onclick="ownerAppSelectActingPersona('${esc(p.id)}')">${esc(p.name)} · @${esc(p.handle)}</button>`).join(" ") || '<p>Create a persona in MyPersonas to get started.</p>'}
+    <p><button class="btn sec" onclick="ownerAppSetViewMode('overview')">Open MyPersonas management</button></p></div>`;
+}
 
 function personaViewModeGuard() {
   return {

@@ -53,7 +53,7 @@ for(const host of ['aliaspaces.com','mypersonas.online'])test(`${host} preserves
 test('management package identity keeps installed-app id and private cache boundary',()=>{
  const manifest=JSON.parse(read('manifest.webmanifest'));assert.equal(manifest.short_name,'MyPersonas');for(const key of ['id','scope','start_url'])assert.equal(manifest[key],'./');assert.ok(manifest.shortcuts.every(s=>!s.description.startsWith('Open your AliaSpaces')));
  assert.match(html, /name="apple-mobile-web-app-title" content="MyPersonas"/);assert.match(html, /"@type":"WebSite","name":"MyPersonas"/);assert.match(read('offline.html'),/<title>Offline — MyPersonas<\/title>/);
- const worker=read('service-worker.js'),shell=worker.slice(worker.indexOf('const PUBLIC_SHELL_PATHS'),worker.indexOf('const SCOPE_URL'));assert.doesNotMatch(shell,/index\.html|domain-split\.js|owner-app\.js/);assert.match(worker,/2026-11-02-2/);
+ const worker=read('service-worker.js'),shell=worker.slice(worker.indexOf('const PUBLIC_SHELL_PATHS'),worker.indexOf('const SCOPE_URL'));assert.doesNotMatch(shell,/index\.html|domain-split\.js|owner-app\.js/);assert.match(worker,/2026-11-02-3/);
 });
 test('backend workflow path guard accepts GitHub run path forms without accepting other workflows or refs',()=>{
  const workflow=readFileSync(new URL('../.github/workflows/pages.yml',import.meta.url),'utf8');

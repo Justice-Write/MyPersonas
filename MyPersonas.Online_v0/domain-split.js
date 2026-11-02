@@ -18,7 +18,7 @@
   const CONTROL_VIEWS = Object.freeze([
     "create", "library", "studio", "edit", "review", "persona-settings", "business-settings",
     "agent-board", "platform-queue", "briefs", "schedule", "fan-inbox",
-    "activity", "notifications", "discovery", "onboard",
+    "activity", "notifications", "discovery", "onboard", "owner-preview",
   ]);
   // Public social surfaces. They always render on aliaspaces.com.
   const SOCIAL_VIEWS = Object.freeze(["p", "b", "tag", "search", "friend-invite"]);
@@ -84,7 +84,8 @@
   function owner(view, state = {}) {
     if (controlViews.has(view)) return "control";
     if (socialViews.has(view)) return "social";
-    if (view === "owner" && state.ready && state.mode !== "persona") return "control";
+    // Both hosts need an owner entry: on social it selects an exact actor when
+    // none is active. Overview navigation explicitly opens management.
     return "both";
   }
 
@@ -130,6 +131,31 @@
   if (!loc || typeof loc.hostname !== "string") { if (root) root.MyPersonasDomains = api; return; }
 
   const role = roleFor(loc.hostname);
+  // Non-secret navigation intent only. Keep it in this tab across sign-in/MFA,
+  // never in a URL query sent to a server, and consume it only after roster load.
+  const intentKey = "aliaspaces_pending_persona_v1";
+  let pendingIntent = null;
+  if (role === "social" && /^#\/owner\//.test(loc.hash)) {
+    pendingIntent = { id: String(loc.hash).slice("#/owner/".length), at: Date.now() };
+    try { root.sessionStorage.setItem(intentKey, JSON.stringify(pendingIntent)); } catch (_) {}
+    if (root.history?.replaceState) root.history.replaceState(root.history.state, "", loc.pathname + loc.search + "#/owner");
+  }
+  function takePersonaIntent() {
+    if (role !== "social") return null;
+    let intent = pendingIntent;
+    pendingIntent = null;
+    try {
+      const saved = root.sessionStorage.getItem(intentKey);
+      root.sessionStorage.removeItem(intentKey);
+      if (!intent && saved) {
+        try { intent = JSON.parse(saved) || {}; } catch (_) { intent = {}; }
+      }
+    } catch (_) {}
+    if (!intent) return null;
+    const valid = typeof intent.id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(intent.id)
+      && Number.isFinite(intent.at) && Date.now() >= intent.at && Date.now() - intent.at <= 15 * 60 * 1000;
+    return { id: valid ? intent.id : "" }; // Invalid intent suppresses saved-actor fallback too.
+  }
   applyIdentity(root.document, role);
   let arrivedByHop = false;
   try {
@@ -176,6 +202,7 @@
   root.MyPersonasDomains = Object.freeze({
     ...api,
     role: () => role,
+    takePersonaIntent,
     leave,
     leaveFor,
     goAcross,

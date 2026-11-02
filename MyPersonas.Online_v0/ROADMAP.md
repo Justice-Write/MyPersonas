@@ -1,5 +1,9 @@
 # MyPersonas automation control plane — Roadmap
 
+## Persona identity review fixes — 2026-11-02
+
+Source candidate: exact persona continuity across the MyPersonas/AliaSpaces hop, inactive selection after missing/deleted identities, management-owned private previews, desktop Discover navigation and portable browser fixture containment. 1003 unit tests, six isolated cross-origin browser cases and seven full-page checks pass. See [contract and verification](../docs/PERSONA-IDENTITY-REVIEW-FIXES-20261102.md). Coordinator review, final merged packaging, two-site deployment and live readback remain the next release steps. The prior production baseline is MyPersonas `a1fa8a6` and AliaSpaces `bb7027e`; older dated deployment notes below are historical.
+
 ## Browser defect fixes - 2026-10-30 (PR48)
 
 OAuth Cancel now aborts before exchange; accepted blank model remains optional. Noopener feedback no longer falsely reports blocking; mailbox target context and business copy packet are guarded. Clipboard rejection/cancellation is handled. 906 unit tests and nine isolated Edge checks pass. Five native dialogs and real clipboard/mail-handler/WebView/provider acceptance remain; no release or personal-data operations.
