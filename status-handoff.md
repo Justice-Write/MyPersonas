@@ -202,3 +202,6 @@ Remaining: current exact-main backend artifact/private canary for production Pag
 
 ## Public-safe source projection — 2026-10-30
 Recovered existing family transfer and owner-private-draft guide source into a current-main review branch. Original historical commits are not parents of this branch; private original documentation/receipt retained outside source. Public docs replace personal machine/evidence paths with placeholders. Fixed one roadmap context conflict by preserving both the current release notice and historical guide note. Final555Node tests pass with0failures/skips, frontend syntax and diff checks pass. No SQL/deployment/provider/runtime/owner-data/phone changes. This source review does not claim live family transfer or two-account acceptance. Source originally39e897a/e79f85f and26c712e; published projection has redacted metadata.
+
+## Work log — release guards
+2026-11-02 Codex coordinator: prepared shared upstream production-release lease with sole-consumer receipt, active backend source/JWT verification and Alia consumer guards;21focused/994fulltests pass, YAML/diff checks pass. Independent Alia review prompted queued-start/duplicate-consumer guards; addressed and tested. Source-only, not deployed; frontend and Alia builder/native work remains separate. No phone/private data changes.
