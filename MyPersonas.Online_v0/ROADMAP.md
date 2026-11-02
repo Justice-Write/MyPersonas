@@ -600,3 +600,8 @@ larger product phase remains.
       Documentation completion does not activate publishing, implement the three-way
       memory contract, migrate an account, deploy a backend/site or establish
       signed-in two-account/device/provider acceptance.
+
+
+### November 2 domain reconciliation
+
+Automation/persona management stays on MyPersonas; social pages and persona view stay on AliaSpaces. Source reconciliation includes latest dialog regressions, host identity/manifest/offline metadata and actual-route tests. See ../docs/DOMAIN-SPLIT.md and ../docs/DOMAIN-RELEASE-EVIDENCE-20261102.md. Backend/auth/canary and deployment remain release-coordinator work, not completed by source tests.

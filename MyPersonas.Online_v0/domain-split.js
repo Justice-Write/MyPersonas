@@ -36,6 +36,38 @@
     return "local";
   }
 
+  function identityFor(role) {
+    const social = role === "social";
+    return {
+      name: social ? "AliaSpaces" : "MyPersonas",
+      title: social ? "AliaSpaces — every persona, one home" : "MyPersonas — your private creative workspace",
+      description: social ? "Discover persona pages, feeds, friends and creative communities on AliaSpaces." : "Manage personas, creative media, automation and private drafts. Review exact previews before approval.",
+      origin: social ? SOCIAL_ORIGIN : CONTROL_ORIGIN,
+    };
+  }
+
+  function applyIdentity(doc, role) {
+    if (!doc || role === "local") return;
+    const identity = identityFor(role);
+    doc.title = identity.title;
+    const set = (selector, attribute, value) => doc.querySelector(selector)?.setAttribute(attribute, value);
+    set('link[rel="canonical"]', "href", `${identity.origin}/`);
+    for (const [selector, value] of [
+      ['meta[name="description"]', identity.description],
+      ['meta[property="og:site_name"]', identity.name],
+      ['meta[property="og:title"]', identity.title],
+      ['meta[property="og:description"]', identity.description],
+      ['meta[property="og:url"]', `${identity.origin}/`],
+      ['meta[property="og:image"]', `${identity.origin}/assets/hero.png`],
+      ['meta[name="twitter:title"]', identity.title],
+      ['meta[name="twitter:description"]', identity.description],
+      ['meta[name="twitter:image"]', `${identity.origin}/assets/hero.png`],
+      ['meta[name="apple-mobile-web-app-title"]', identity.name],
+    ]) set(selector, "content", value);
+    const schema = doc.querySelector('script[type="application/ld+json"]');
+    if (schema) schema.textContent = JSON.stringify({"@context":"https://schema.org","@type":"WebSite",name:identity.name,url:`${identity.origin}/`,description:identity.description});
+  }
+
   function pathFromHash(hash) {
     return String(hash || "").replace(/^#\/?/, "");
   }
@@ -89,7 +121,7 @@
 
   const api = {
     SOCIAL_ORIGIN, CONTROL_ORIGIN, SOCIAL_HOSTS, CONTROL_HOSTS, CONTROL_VIEWS, SOCIAL_VIEWS, HOP_PARAM,
-    roleFor, owner, destination, publicUrlFor, managementUrlFor,
+    roleFor, identityFor, applyIdentity, owner, destination, publicUrlFor, managementUrlFor,
   };
 
   const root = typeof globalThis !== "undefined" ? globalThis : undefined;
@@ -98,6 +130,7 @@
   if (!loc || typeof loc.hostname !== "string") { if (root) root.MyPersonasDomains = api; return; }
 
   const role = roleFor(loc.hostname);
+  applyIdentity(root.document, role);
   let arrivedByHop = false;
   try {
     const url = new URL(loc.href);
@@ -114,6 +147,12 @@
   const arrivalHash = arrivedByHop ? String(loc.hash || "") : null;
 
   function leaveFor(state = {}) {
+    // Finish same-origin authentication before considering a cross-domain route.
+    // Never forward callback queries or tokens to the other host.
+    try {
+      const url = new URL(loc.href);
+      if (url.searchParams.has("code") || url.searchParams.has("error") || /(?:^#|[&])(?:access_token|refresh_token|error)=/.test(url.hash)) return null;
+    } catch (_) {}
     if (arrivalHash !== null && String(loc.hash || "") === arrivalHash) return null;
     return destination({ role, hash: loc.hash, ready: !!state.ready, mode: state.mode });
   }

@@ -55,7 +55,10 @@
 
 
 
+
 ## Current state
+
+- 2026-11-02 Codex DOMAIN-RECONCILIATION source candidate complete: main6b099fc + regressiondaacf6a + domain98ca542 reconciled; host identity/manifest/offline metadata corrected, callback query preservation and exact GitHub workflow-path guard qualified. 963/963 tests, syntax/diff and six isolated full-page Edge checks PASS. No backend/migration changes,082/reports excluded. Candidate branch codex/domain-reconciliation-20261102; source PR/pin supplied to release coordinator01a130c5-301b, who owns merge/backend/auth/canary/deploy. Alia builder owner01a1290c-ed8c owns social artifact identity. See docs/DOMAIN-RELEASE-EVIDENCE-20261102.md. Real auth/private canary remains unverified; no independent deployment.
 
 - 2026-11-02 Codex recovered-chat source restart: remote main freshly verified6b099fc; added24 synthetic unsubscribe destination/final-confirmation regressions (39 focused/930 full tests PASS; diff check PASS). Runtime unchanged. Local-only branch codex/dialog-regressions-20261102. No competing MyPersonas dialog writer found; canonical dirty checkout preserved. See docs/SOURCE-RESTART-20261102.md. Five native flows calls remain; real browser/device acceptance and held backend/report/MFA/canary/provenance decisions remain. No push/merge/deploy/device/UI operations.
 
@@ -120,6 +123,8 @@ Public-safe project/release/data boundaries are recorded in `docs/PROJECT-STOCKT
 - The historical workspace root is gone. Use the canonical repository through isolated worktrees and preserve the dirty owner checkout.
 - Preserve PR20 after the glyph and nine-call dialog slices. Remaining modal conversions and Reddit/provider compatibility are unresolved; the merged dialog slice does not authorize provider behavior.
 ## Work log
+
+- 2026-11-02 Codex DOMAIN-RECONCILIATION source candidate complete: main6b099fc + regressiondaacf6a + domain98ca542 reconciled; host identity/manifest/offline metadata corrected, callback query preservation and exact GitHub workflow-path guard qualified. 963/963 tests, syntax/diff and six isolated full-page Edge checks PASS. No backend/migration changes,082/reports excluded. Candidate branch codex/domain-reconciliation-20261102; source PR/pin supplied to release coordinator01a130c5-301b, who owns merge/backend/auth/canary/deploy. Alia builder owner01a1290c-ed8c owns social artifact identity. See docs/DOMAIN-RELEASE-EVIDENCE-20261102.md. Real auth/private canary remains unverified; no independent deployment.
 
 - 2026-11-02 Codex recovered-chat source restart: remote main freshly verified6b099fc; added24 synthetic unsubscribe destination/final-confirmation regressions (39 focused/930 full tests PASS; diff check PASS). Runtime unchanged. Local-only branch codex/dialog-regressions-20261102. No competing MyPersonas dialog writer found; canonical dirty checkout preserved. See docs/SOURCE-RESTART-20261102.md. Five native flows calls remain; real browser/device acceptance and held backend/report/MFA/canary/provenance decisions remain. No push/merge/deploy/device/UI operations.
 

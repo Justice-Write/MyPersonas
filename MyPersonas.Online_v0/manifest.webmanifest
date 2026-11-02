@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "AliaSpaces — every persona, one home",
-  "short_name": "AliaSpaces",
-  "description": "Create and manage distinct persona spaces from one owner-controlled home.",
+  "name": "MyPersonas \u2014 your private creative workspace",
+  "short_name": "MyPersonas",
+  "description": "Manage personas, creative media, automation and private drafts in your owner workspace.",
   "lang": "en-US",
   "dir": "ltr",
   "start_url": "./",
@@ -11,8 +11,8 @@
   "background_color": "#f7fafd",
   "theme_color": "#1877f2",
   "categories": [
-    "social",
-    "productivity"
+    "productivity",
+    "business"
   ],
   "prefer_related_applications": false,
   "icons": [
@@ -39,7 +39,7 @@
     {
       "name": "Your studio",
       "short_name": "Studio",
-      "description": "Open your AliaSpaces persona studio.",
+      "description": "Open your MyPersonas automation studio.",
       "url": "./#/studio",
       "icons": [
         {
@@ -52,7 +52,7 @@
     {
       "name": "Discovery inbox",
       "short_name": "Brain",
-      "description": "Open the AliaSpaces discovery inbox.",
+      "description": "Open the MyPersonas discovery inbox.",
       "url": "./#/discovery",
       "icons": [
         {

@@ -159,7 +159,7 @@ jobs:
           test "$(gh api "${backend_api}" --jq .event)" = "workflow_dispatch"
           test "$(gh api "${backend_api}" --jq .status)" = "completed"
           test "$(gh api "${backend_api}" --jq .conclusion)" = "success"
-          gh api "${backend_api}" --jq .path | grep -Eq '^\.github/workflows/supabase-deploy\.yml@'
+          gh api "${backend_api}" --jq .path | grep -Eq '^\.github/workflows/supabase-deploy\.yml(@refs/heads/main)?$'
           current_main_sha="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq .object.sha)"
           test "${current_main_sha}" = "${GITHUB_SHA}" || {
             echo "Release blocked: this Pages revision is no longer the current main tip."

@@ -1,5 +1,9 @@
 # Changelog — AliaSpaces / MyPersonas
 
+## Domain identity and current-source reconciliation (2026-11-02)
+
+Reconciled the social/automation domain split with current dialog fixes. Corrected MyPersonas install/offline/structured identity; runtime metadata follows host. Authentication callback queries remain on their originating host until consumed. Added executable route/MFA-readiness/metadata checks and isolated full-page smoke. Backend workflow path validation now accepts the exact GitHub bare path without weakening revision/canary gates. Source-only pending coordinated release.
+
 ## Domain split: aliaspaces.com social, mypersonas.online management (2026-10-31)
 
 Status: **implemented and tested in source; not deployed.** Owner ruling: aliaspaces.com is the
