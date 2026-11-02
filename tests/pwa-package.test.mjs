@@ -236,7 +236,7 @@ test("the app head and Pages artifact include the complete PWA shell", async () 
   assert.match(html, /<link rel="icon" type="image\/svg\+xml" href="\.\/icon\.svg">/);
   assert.match(html, /<meta name="theme-color" content="#1877f2">/);
   assert.match(html, /<link rel="apple-touch-icon" sizes="180x180" href="\.\/icon-180\.png">/);
-  assert.match(html, /<script src="\.\/pwa\.js" defer><\/script>/);
+  assert.match(html, /<script src="\.\/pwa\.js\?v=20261102-2" defer><\/script>/);
 
   for (const releasePath of [
     "/assets/",

@@ -139,7 +139,7 @@ test("the app wires the split into loading, routing, modes and share links", asy
     readFile(path.join(repoRoot, ".github/workflows/pages.yml"), "utf8"),
   ]);
   const splitTag = html.indexOf('<script src="./domain-split.js?v=');
-  assert.ok(splitTag > 0 && splitTag < html.indexOf('<script src="./pwa.js" defer>'), "loads first, without defer");
+  assert.ok(splitTag > 0 && splitTag < html.indexOf('<script src="./pwa.js?v=20261102-2" defer>'), "loads first, without defer");
   assert.doesNotMatch(html, /domain-split\.js\?v=[^"]*" (?:defer|async)/);
   assert.ok(workflow.includes("--include '/domain-split.js'"), "published by Pages");
   const route = html.slice(html.indexOf("async function route(){"), html.indexOf("// ---------- sign in ----------"));

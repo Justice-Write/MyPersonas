@@ -1,6 +1,9 @@
 (() => {
   "use strict";
 
+  const appName = ["aliaspaces.com", "www.aliaspaces.com"].includes(location.hostname.toLowerCase())
+    ? "AliaSpaces" : "MyPersonas";
+
   const canUseServiceWorker = "serviceWorker" in navigator;
   const isSecureContextForWorker = location.protocol === "https:" ||
     ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
@@ -78,10 +81,10 @@
       const choice = await promptEvent.userChoice;
       installButton.hidden = true;
       showStatus(
-        choice?.outcome === "accepted" ? "AliaSpaces installation started." : "Installation canceled."
+        choice?.outcome === "accepted" ? `${appName} installation started.` : "Installation canceled."
       );
     } catch {
-      showStatus("The browser could not open its install prompt. Use the browser menu to install AliaSpaces.", true);
+      showStatus(`The browser could not open its install prompt. Use the browser menu to install ${appName}.`, true);
     } finally {
       installButton.disabled = false;
     }
@@ -89,7 +92,7 @@
 
   function reportWaitingUpdate(registration) {
     if (registration.waiting && navigator.serviceWorker.controller) {
-      showStatus("An AliaSpaces update is ready. Close every AliaSpaces tab and reopen the app to apply it.", true);
+      showStatus(`${appName} has an update ready. Close every ${appName} tab and reopen the app to apply it.`, true);
     }
   }
 
@@ -110,7 +113,7 @@
     deferredInstallPrompt = event;
     ensureInstallUi();
     installButton.textContent = "Install app";
-    installButton.setAttribute("aria-label", "Install AliaSpaces on this device");
+    installButton.setAttribute("aria-label", `Install ${appName} on this device`);
     installButton.hidden = false;
   });
 
@@ -118,13 +121,13 @@
     deferredInstallPrompt = null;
     ensureInstallUi();
     installButton.hidden = true;
-    showStatus("AliaSpaces was installed.");
+    showStatus(`${appName} was installed.`);
   });
 
   if ((isAppleMobile || isAndroidBrowser) && !isStandalone()) {
     ensureInstallUi();
     installButton.textContent = "Install help";
-    installButton.setAttribute("aria-label", "Show AliaSpaces installation instructions");
+    installButton.setAttribute("aria-label", `Show ${appName} installation instructions`);
     installButton.hidden = false;
   }
 
@@ -140,7 +143,7 @@
       });
       watchForUpdates(registration);
     } catch (error) {
-      console.warn("AliaSpaces offline shell registration failed.", error);
+      console.warn(`${appName} offline shell registration failed.`, error);
     }
   });
 })();
