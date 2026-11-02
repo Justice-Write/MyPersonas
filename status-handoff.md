@@ -63,9 +63,10 @@
 
 
 
+
 ## Current state
 
-2026-11-02 current: PERSONA-REVIEW-FIX candidate complete,1003tests/6cross-origin/7fullpage browser checks pass. Committed and pushed as PR52; hosted CI pending, coordinator review/merge next. Latest production baseline is MyPersonas a1fa8a6 / AliaSpaces bb7027e; candidate is not deployed. Earlier entries below are dated history. See docs/PERSONA-IDENTITY-REVIEW-FIXES-20261102.md.
+2026-11-02 current: PERSONA-REVIEW-FIX plus release-guard main2d18f8b integrated,1024tests/6cross-origin/7fullpage browser checks pass. Committed and pushed as PR52; hosted CI pending, coordinator review/merge next. Latest production baseline is MyPersonas a1fa8a6 / AliaSpaces bb7027e; candidate is not deployed. Earlier entries below are dated history. See docs/PERSONA-IDENTITY-REVIEW-FIXES-20261102.md.
 
 
 2026-11-02: PWA label follow-up tested (973/973), ready for coordinator PR review. See docs/PWA-IDENTITY-RELEASE-20261102.md. Source-only change; prior deployed release remains95edd7f until coordinator releases the follow-up.
@@ -143,6 +144,9 @@ Current priority: coordinator review and merge scoped persona fixes plus disjoin
 - Preserve PR20 after the glyph and nine-call dialog slices. Remaining modal conversions and Reddit/provider compatibility are unresolved; the merged dialog slice does not authorize provider behavior.
 ## Work log
 
+- 2026-11-02 UTC / Codex: integrated coordinator release-guard main2d18f8b into PR52 with both work logs preserved. Combined1024tests, frontend syntax,6cross-origin and7fullpage Edge checks PASS. Source freeze after push; hosted CI/coordinator merge and two-site release next. Backend/helper byte identity unchanged.
+
+
 - 2026-11-02 UTC / Codex: PERSONA-REVIEW-FIX source candidate complete in isolated codex/persona-review-fixes-20261102 from a1fa8a6. Exact actor fragment transfer and fail-closed restoration, management private preview, Entangle Discover, portable fixture containment, tests and release documentation. Full1003tests, frontend syntax,6 actual cross-origin Edge cases and7 fullpage Edge checks PASS; no network continuations. Canonical dirty checkout preserved. Committed/pushed PR52; hosted CI pending and coordinator review next; coordinator owns merge, two-site packaging/deployment and live readback. No backend/schema/provider/model/device changes. See docs/PERSONA-IDENTITY-REVIEW-FIXES-20261102.md.
 
 - 2026-11-02 Codex: PWA host identity follow-up completed locally on codex/pwa-host-identity-20261102: pwa.js labels now follow control/social host; nine event-driven tests added, full973tests/syntax pass. Shipped changes: pwa.js labels, one index script query and ordinary public-shell cache version suffix; backend tree, image-caption helper, inline application callbacks and workflows unchanged from95edd7f. See docs/PWA-IDENTITY-RELEASE-20261102.md for exact-object evidence and reused-canary limits. Source lane prepares commit/PR only; coordinator owns merge, exact-main backend receipt and fresh deployed browser checks. No paid calls, deploys or installs.
@@ -212,3 +216,6 @@ Remaining: current exact-main backend artifact/private canary for production Pag
 
 ## Public-safe source projection — 2026-10-30
 Recovered existing family transfer and owner-private-draft guide source into a current-main review branch. Original historical commits are not parents of this branch; private original documentation/receipt retained outside source. Public docs replace personal machine/evidence paths with placeholders. Fixed one roadmap context conflict by preserving both the current release notice and historical guide note. Final555Node tests pass with0failures/skips, frontend syntax and diff checks pass. No SQL/deployment/provider/runtime/owner-data/phone changes. This source review does not claim live family transfer or two-account acceptance. Source originally39e897a/e79f85f and26c712e; published projection has redacted metadata.
+
+## Work log — release guards
+2026-11-02 Codex coordinator: prepared shared upstream production-release lease with sole-consumer receipt, active backend source/JWT verification and Alia consumer guards;21focused/994fulltests pass, YAML/diff checks pass. Independent Alia review prompted queued-start/duplicate-consumer guards; addressed and tested. Source-only, not deployed; frontend and Alia builder/native work remains separate. No phone/private data changes.

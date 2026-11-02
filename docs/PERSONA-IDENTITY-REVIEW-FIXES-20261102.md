@@ -26,7 +26,7 @@ The intent is per tab. Moving authentication to a different tab does not transfe
 
 ## Verification
 
-- `npm test`: **1003/1003 pass**, including 30 new executable identity, preview and containment cases.
+- `npm test`: **1024/1024 pass** after integrating release-guard main `2d18f8b39c515424a0106c844347c0990ad756ab`, including 30 new executable identity, preview and containment cases.
 - Ten delayed preview completions cover logout, account changes, revoked readiness, auth generation changes and removed roster membership at both asynchronous phases. No stale private DOM writes.
 - `node scripts/check-frontend-syntax.mjs`: pass.
 - `scripts/qualify-persona-handoff-browser.mjs <playwright-module> <browser-executable>`: **6/6 pass** in Edge 156.0.4314.50. Actual cross-origin navigation, separate origin storage, reload durability, old A/empty/deleted destination state, unavailable B and a pre-roster sign-in reload are exercised. 25 fixture navigations; zero network continuations.
@@ -38,4 +38,4 @@ Browser authentication, MFA readiness and roster data are synthetic. All browser
 
 ## Next owner
 
-Review and merge the source PR through the coordinator, combine the disjoint release-guard lane, pin AliaSpaces to the final merged revision, build both exact-source artifacts and deploy through the coordinated release workflow. Read back both sites and retain clear separation between source tests, live deployment evidence and physical-device acceptance. Keep private runtime records outside reusable packages and preserve the dirty canonical checkout.
+Review and merge the source PR through the coordinator, retain the integrated release-guard lane, pin AliaSpaces to the final merged revision, build both exact-source artifacts and deploy through the coordinated release workflow. Read back both sites and retain clear separation between source tests, live deployment evidence and physical-device acceptance. Keep private runtime records outside reusable packages and preserve the dirty canonical checkout.

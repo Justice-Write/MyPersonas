@@ -2,7 +2,7 @@
 
 ## Persona identity review fixes — 2026-11-02
 
-Source candidate: exact persona continuity across the MyPersonas/AliaSpaces hop, inactive selection after missing/deleted identities, management-owned private previews, desktop Discover navigation and portable browser fixture containment. 1003 unit tests, six isolated cross-origin browser cases and seven full-page checks pass. See [contract and verification](../docs/PERSONA-IDENTITY-REVIEW-FIXES-20261102.md). Coordinator review, final merged packaging, two-site deployment and live readback remain the next release steps. The prior production baseline is MyPersonas `a1fa8a6` and AliaSpaces `bb7027e`; older dated deployment notes below are historical.
+Source candidate: exact persona continuity across the MyPersonas/AliaSpaces hop, inactive selection after missing/deleted identities, management-owned private previews, desktop Discover navigation and portable browser fixture containment. 1024 unit tests after integrating the coordinated release guard, six isolated cross-origin browser cases and seven full-page checks pass. See [contract and verification](../docs/PERSONA-IDENTITY-REVIEW-FIXES-20261102.md). Coordinator review, final merged packaging, two-site deployment and live readback remain the next release steps. The prior production baseline is MyPersonas `a1fa8a6` and AliaSpaces `bb7027e`; older dated deployment notes below are historical.
 
 ## Browser defect fixes - 2026-10-30 (PR48)
 
