@@ -1,0 +1,63 @@
+name: Hold backend lock for AliaSpaces release
+on:
+  workflow_dispatch:
+    inputs:
+      social_sha:
+        description: Exact reviewed AliaSpaces main SHA
+        required: true
+        type: string
+      backend_run_id:
+        description: Successful exact-main image-caption backend run
+        required: true
+        type: string
+      release_confirmation:
+        description: COORDINATED-SOCIAL-RELEASE-VERIFIED
+        required: true
+        type: string
+permissions:
+  actions: read
+  contents: read
+concurrency:
+  group: production-release
+  queue: max
+  cancel-in-progress: false
+jobs:
+  lease:
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SOCIAL_SHA: ${{ inputs.social_sha }}
+      BACKEND_RUN_ID: ${{ inputs.backend_run_id }}
+      RELEASE_CONFIRMATION: ${{ inputs.release_confirmation }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - uses: supabase/setup-cli@46f7f98c7f948ad727d22c1e67fab04c223a0520
+        with:
+          version: 2.115.0
+      - name: Verify reviewed lease authority and active backend
+        run: |
+          test "${RELEASE_CONFIRMATION}" = "COORDINATED-SOCIAL-RELEASE-VERIFIED"
+          node scripts/social-release-lease.mjs issue
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: social-release-lease-${{ github.run_id }}
+          path: .release-lease/lease.json
+          retention-days: 7
+      - name: Bind the sole downstream consumer before allowing publication
+        run: node scripts/social-release-lease.mjs claim
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: social-release-consumer-${{ github.run_id }}
+          path: .release-lease/consumer.json
+          retention-days: 7
+      - name: Hold upstream lock until AliaSpaces completes
+        run: node scripts/social-release-lease.mjs hold
